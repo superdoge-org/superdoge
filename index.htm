@@ -135,36 +135,31 @@
     <p>Telegram | Twitter | GitHub (Coming Soon)</p>
   </footer>
 
-<script>
 (async () => {
   const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
-  const token = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
-  const wbnb = '0xbb4CdB9CBd36B01bD1cBaEB4EDe08D9173bc095c'; // ✅ WBNB
-const lpAddresses = [
-  '0x1b96b92314c44b159149f7e0303511fb2fc4774f',
-  '0x3e1a9f3b3f46dfcbf3d8b7288e716545fb79bc3a'
-];
-
+  const wbnb = '0xbb4CdB9CBd36B01bD1cBaEB4EDe08D9173bc095c';
+  const lpAddresses = [
+    '0x1b96b92314c44b159149f7e0303511fb2fc4774f',
+    '0x3e1a9f3b3f46dfcbf3d8b7288e716545fb79bc3a'
+  ];
 
   const fetchJson = url => fetch(url).then(r => r.json()).then(d => d.result);
 
+  // Get BNB balances for each LP contract (amount of WBNB in LPs)
   const bnbBalances = await Promise.all(lpAddresses.map(addr =>
     fetchJson(`https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${wbnb}&address=${addr}&tag=latest&apikey=${apiKey}`)
   ));
-  console.log('BNB balances (raw):', bnbBalances);
-
   const totalBNB = bnbBalances.reduce((s, b) => s + Number(b)/1e18, 0);
-  console.log('Total BNB across LPs:', totalBNB);
 
-  const bnbPriceData = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
-  console.log('BNB price in USD:', bnbPriceData.ethusd);
+  // Fetch current BNB price in USD
+  const bnbPriceUsd = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
 
-  const liquidityUSD = totalBNB * Number(bnbPriceData.ethusd) * 2;
-  console.log('Total Liquidity USD:', liquidityUSD);
+  // Calculate total liquidity in USD (BNB + SUPDOG sides)
+  const liquidityUSD = totalBNB * Number(bnbPriceUsd.ethusd) * 2;
 
-  document.getElementById('liquidity').innerText = '$' + liquidityUSD.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  document.getElementById('liquidity').innerText = '$' + liquidityUSD.toLocaleString(undefined, {maximumFractionDigits:0});
 })();
-</script>
+
 
 
 
