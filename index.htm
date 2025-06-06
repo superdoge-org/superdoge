@@ -135,33 +135,84 @@
     <p>Telegram | Twitter | GitHub (Coming Soon)</p>
   </footer>
 
-(async () => {
-  const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
-  const wbnb = '0xbb4CdB9CBd36B01bD1cBaEB4EDe08D9173bc095c';
-  const lpAddresses = [
-    '0x1b96b92314c44b159149f7e0303511fb2fc4774f',
-    '0x3e1a9f3b3f46dfcbf3d8b7288e716545fb79bc3a'
+<div id="liquidity">Loading liquidity...</div>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
+<script>
+  const web3 = new Web3('https://bsc-dataseed.binance.org/'); // BSC public RPC
+
+  const LP_ABI = [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getReserves",
+      "outputs": [
+        { "internalType": "uint112", "name": "_reserve0", "type": "uint112" },
+        { "internalType": "uint112", "name": "_reserve1", "type": "uint112" },
+        { "internalType": "uint32", "name": "_blockTimestampLast", "type": "uint32" }
+      ],
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "token0",
+      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "token1",
+      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "type": "function"
+    }
   ];
 
-  const fetchJson = url => fetch(url).then(r => r.json()).then(d => d.result);
+  async function getLiquidity(lpAddress) {
+    const lpContract = new web3.eth.Contract(LP_ABI, lpAddress);
+    const [reserve0, reserve1] = await lpContract.methods.getReserves().call();
+    const token0 = await lpContract.methods.token0().call();
+    const token1 = await lpContract.methods.token1().call();
+    return { reserve0, reserve1, token0, token1 };
+  }
 
-  // Get BNB balances for each LP contract (amount of WBNB in LPs)
-  const bnbBalances = await Promise.all(lpAddresses.map(addr =>
-    fetchJson(`https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${wbnb}&address=${addr}&tag=latest&apikey=${apiKey}`)
-  ));
-  const totalBNB = bnbBalances.reduce((s, b) => s + Number(b)/1e18, 0);
+  async function main() {
+    const lpAddresses = [
+      '0x6096BD38eC74579026E51DAC897f3A16800177DA', // replace with your LPs
+      '0x4b9c179b34f02da39a5940c363c20216e0e19c1c'
+    ];
 
-  // Fetch current BNB price in USD
-  const bnbPriceUsd = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
+    // BNB (wrapped BNB) address on BSC
+    const wbnbAddress = '0xbb4CdB9CBd36B01bD1cBaEB4EDe08D9173bc095c';
 
-  // Calculate total liquidity in USD (BNB + SUPDOG sides)
-  const liquidityUSD = totalBNB * Number(bnbPriceUsd.ethusd) * 2;
+    let totalWbnbReserve = 0;
 
-  document.getElementById('liquidity').innerText = '$' + liquidityUSD.toLocaleString(undefined, {maximumFractionDigits:0});
-})();
+    for (const lp of lpAddresses) {
+      const { reserve0, reserve1, token0, token1 } = await getLiquidity(lp);
+      
+      if (token0.toLowerCase() === wbnbAddress.toLowerCase()) {
+        totalWbnbReserve += Number(reserve0);
+      } else if (token1.toLowerCase() === wbnbAddress.toLowerCase()) {
+        totalWbnbReserve += Number(reserve1);
+      }
+    }
 
+    // Convert from wei (1e18)
+    totalWbnbReserve = totalWbnbReserve / 1e18;
 
+    // Fetch current BNB price from BscScan API or any price API
+    const response = await fetch('https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=YOUR_API_KEY');
+    const data = await response.json();
+    const bnbPrice = Number(data.result.ethusd);
 
+    const liquidityUSD = totalWbnbReserve * bnbPrice * 2; // x2 because LP contains equal parts token & WBNB
+
+    document.getElementById('liquidity').innerText = `Liquidity: $${liquidityUSD.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+  }
+
+  main().catch(console.error);
+</script>
 
 
 
