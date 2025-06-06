@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>SuperDoge (SUPDOG) Stats</title>
-<style>
-  body { font-family: Arial, sans-serif; background:#121212; color:#eee; padding:20px; max-width: 600px; margin: auto; }
-  h1 { text-align: center; }
-  p { font-size: 1.2em; margin: 10px 0; }
-  .loading { color: #777; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SuperDoge (SUPDOG) Stats</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#121212; color:#eee; padding:20px; max-width: 600px; margin: auto; }
+    h1 { text-align: center; }
+    p { font-size: 1.2em; margin: 10px 0; }
+    .loading { color: #777; }
+  </style>
 </head>
 <body>
 
@@ -24,7 +24,7 @@
 
 <script>
 (async () => {
-  const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S'; // Your BscScan API key
+  const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
   const tokenAddress = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
 
   const charityWallets = [
@@ -35,18 +35,22 @@
 
   const burnAddress = '0x000000000000000000000000000000000000dEaD';
 
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   async function fetchJSON(url) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    return await res.json();
+    const data = await res.json();
+    console.log("Fetched from", url, data);
+    return data;
   }
 
   async function getBNBBalance(address) {
     const url = `https://api.bscscan.com/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
-    console.log('Fetching BNB balance from:', url);
     const data = await fetchJSON(url);
-    console.log('BNB balance response:', data);
-    if (data.status !== '1') throw new Error('Error fetching BNB balance: ' + (data.message || 'unknown error'));
+    if (data.status !== '1') throw new Error('Error fetching BNB balance');
     return parseFloat(data.result) / 1e18;
   }
 
@@ -81,55 +85,72 @@
   async function getHolderCount() {
     const url = `https://api.bscscan.com/api?module=token&action=getTokenHolderCount&contractaddress=${tokenAddress}&apikey=${apiKey}`;
     const data = await fetchJSON(url);
-    if (data.status !== '1') return 'N/A';
+    if (data.status !== '1') throw new Error('Error fetching holders');
     return data.result;
   }
 
   async function getTransactionCount() {
     const url = `https://api.bscscan.com/api?module=account&action=txlist&address=${tokenAddress}&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
     const data = await fetchJSON(url);
-    if (data.status !== '1') return 'N/A';
+    if (data.status !== '1') throw new Error('Error fetching tx count');
     return data.result.length;
   }
 
   try {
-    // Sequential fetch of charity wallets to avoid rate limit
+    console.log("Fetching charity balances...");
     const charityBNBs = [];
     for (const wallet of charityWallets) {
-      const balance = await getBNBBalance(wallet);
-      charityBNBs.push(balance);
-      // Delay 300ms between requests
-      await new Promise(r => setTimeout(r, 300));
+      charityBNBs.push(await getBNBBalance(wallet));
+      await delay(400);
     }
     const totalCharityBNB = charityBNBs.reduce((a, b) => a + b, 0);
+    console.log("Charity BNB balances raw:", charityBNBs);
 
-    // Burned tokens
+    await delay(400);
+    console.log("Fetching burned tokens...");
     const burnedTokens = await getTokenBalance(burnAddress);
 
-    // Total supply
+    await delay(400);
+    console.log("Fetching total supply...");
     const totalSupply = await getTokenSupply();
 
-    // Circulating supply
     const circulatingSupply = totalSupply - burnedTokens;
 
-    // BNB price
-    const bnbPrice = await getBNBPrice();
+    await delay(400);
+    let bnbPrice = 0;
+    try {
+      console.log("Fetching BNB price...");
+      bnbPrice = await getBNBPrice();
+    } catch (e) {
+      console.error("Error in getBNBPrice:", e);
+    }
 
-    // Token price USD
+    await delay(400);
+    console.log("Fetching token USD price...");
     const tokenPrice = await getTokenPriceUSD();
 
-    // Market Cap
     const marketCap = circulatingSupply * tokenPrice;
 
-    // Holders count
-    const holders = await getHolderCount();
+    await delay(400);
+    let holders = 'N/A';
+    try {
+      console.log("Fetching holders count...");
+      holders = await getHolderCount();
+    } catch (e) {
+      console.error("Error fetching holders:", e);
+    }
 
-    // Transactions count
-    const txCount = await getTransactionCount();
+    await delay(400);
+    let txCount = 'N/A';
+    try {
+      console.log("Fetching transaction count...");
+      txCount = await getTransactionCount();
+    } catch (e) {
+      console.error("Error fetching tx count:", e);
+    }
 
-    // Update UI
     document.getElementById('charity-donations').innerText =
-      `${totalCharityBNB.toFixed(3)} BNB ($${(totalCharityBNB * bnbPrice).toFixed(0)})`;
+      `${totalCharityBNB.toFixed(3)} BNB` + (bnbPrice ? ` ($${(totalCharityBNB * bnbPrice).toFixed(0)})` : '');
 
     document.getElementById('burned-tokens').innerText =
       `${burnedTokens.toLocaleString(undefined, {maximumFractionDigits: 0})} SUPDOG`;
@@ -141,7 +162,6 @@
       `$${marketCap.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
 
     document.getElementById('holders').innerText = holders;
-
     document.getElementById('txcount').innerText = txCount;
 
   } catch (err) {
