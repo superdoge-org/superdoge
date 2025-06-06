@@ -24,7 +24,7 @@
 
 <script>
 (async () => {
-  const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S'; // <-- Replace with your BscScan API key
+  const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S'; // Your BscScan API key
   const tokenAddress = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
 
   const charityWallets = [
@@ -36,108 +36,166 @@
   const burnAddress = '0x000000000000000000000000000000000000dEaD';
 
   async function fetchJSON(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-    return await res.json();
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+      const data = await res.json();
+      console.log(`Fetched from ${url}`, data);
+      return data;
+    } catch (err) {
+      console.error(`Fetch error for ${url}:`, err);
+      throw err;
+    }
   }
 
   async function getBNBBalance(address) {
-    const url = `https://api.bscscan.com/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
-    const data = await fetchJSON(url);
-    if (data.status !== '1') throw new Error('Error fetching BNB balance');
-    return parseFloat(data.result) / 1e18;
+    try {
+      const url = `https://api.bscscan.com/api?module=account&action=balance&address=${address}&tag=latest&apikey=${apiKey}`;
+      const data = await fetchJSON(url);
+      if (data.status !== '1') throw new Error('Error fetching BNB balance');
+      return parseFloat(data.result) / 1e18;
+    } catch (err) {
+      console.error(`Error in getBNBBalance for ${address}:`, err);
+      return null; // return null on error
+    }
   }
 
   async function getTokenBalance(address) {
-    const url = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${tokenAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
-    const data = await fetchJSON(url);
-    if (data.status !== '1') throw new Error('Error fetching token balance');
-    return parseFloat(data.result) / 1e18;
+    try {
+      const url = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${tokenAddress}&address=${address}&tag=latest&apikey=${apiKey}`;
+      const data = await fetchJSON(url);
+      if (data.status !== '1') throw new Error('Error fetching token balance');
+      return parseFloat(data.result) / 1e18;
+    } catch (err) {
+      console.error(`Error in getTokenBalance for ${address}:`, err);
+      return null;
+    }
   }
 
   async function getTokenSupply() {
-    const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${tokenAddress}&apikey=${apiKey}`;
-    const data = await fetchJSON(url);
-    if (data.status !== '1') throw new Error('Error fetching token supply');
-    return parseFloat(data.result) / 1e18;
+    try {
+      const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${tokenAddress}&apikey=${apiKey}`;
+      const data = await fetchJSON(url);
+      if (data.status !== '1') throw new Error('Error fetching token supply');
+      return parseFloat(data.result) / 1e18;
+    } catch (err) {
+      console.error('Error in getTokenSupply:', err);
+      return null;
+    }
   }
 
   async function getBNBPrice() {
-    const url = `https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`;
-    const data = await fetchJSON(url);
-    if (data.status !== '1') throw new Error('Error fetching BNB price');
-    return parseFloat(data.result.ethusd);
+    try {
+      const url = `https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`;
+      const data = await fetchJSON(url);
+      if (data.status !== '1') throw new Error('Error fetching BNB price');
+      return parseFloat(data.result.ethusd);
+    } catch (err) {
+      console.error('Error in getBNBPrice:', err);
+      return null;
+    }
   }
 
   async function getTokenPriceUSD() {
-    const url = `https://api.dexscreener.com/latest/dex/tokens/${tokenAddress}`;
-    const data = await fetchJSON(url);
-    if (!data.pairs || data.pairs.length === 0) return 0;
-    return parseFloat(data.pairs[0].priceUsd);
+    try {
+      const url = `https://api.dexscreener.com/latest/dex/tokens/${tokenAddress}`;
+      const data = await fetchJSON(url);
+      if (!data.pairs || data.pairs.length === 0) return 0;
+      return parseFloat(data.pairs[0].priceUsd);
+    } catch (err) {
+      console.error('Error in getTokenPriceUSD:', err);
+      return 0;
+    }
   }
 
   async function getHolderCount() {
-    const url = `https://api.bscscan.com/api?module=token&action=getTokenHolderCount&contractaddress=${tokenAddress}&apikey=${apiKey}`;
-    const data = await fetchJSON(url);
-    if (data.status !== '1') return 'N/A';
-    return data.result;
+    try {
+      const url = `https://api.bscscan.com/api?module=token&action=getTokenHolderCount&contractaddress=${tokenAddress}&apikey=${apiKey}`;
+      const data = await fetchJSON(url);
+      if (data.status !== '1') return 'N/A';
+      return data.result;
+    } catch (err) {
+      console.error('Error in getHolderCount:', err);
+      return 'N/A';
+    }
   }
 
   async function getTransactionCount() {
-    const url = `https://api.bscscan.com/api?module=account&action=txlist&address=${tokenAddress}&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
-    const data = await fetchJSON(url);
-    if (data.status !== '1') return 'N/A';
-    return data.result.length;
+    try {
+      const url = `https://api.bscscan.com/api?module=account&action=txlist&address=${tokenAddress}&startblock=0&endblock=99999999&sort=desc&apikey=${apiKey}`;
+      const data = await fetchJSON(url);
+      if (data.status !== '1') return 'N/A';
+      return data.result.length;
+    } catch (err) {
+      console.error('Error in getTransactionCount:', err);
+      return 'N/A';
+    }
   }
 
   try {
-    // Charity BNB donations total
-    const charityBNBs = await Promise.all(charityWallets.map(getBNBBalance));
+    console.log("Fetching charity balances...");
+    const charityBNBsRaw = await Promise.all(charityWallets.map(getBNBBalance));
+    console.log("Charity BNB balances raw:", charityBNBsRaw);
+
+    // Filter out nulls from any failed fetches
+    const charityBNBs = charityBNBsRaw.filter(x => x !== null);
     const totalCharityBNB = charityBNBs.reduce((a, b) => a + b, 0);
 
-    // Burned tokens
+    console.log("Fetching burned tokens...");
     const burnedTokens = await getTokenBalance(burnAddress);
+    console.log("Burned tokens:", burnedTokens);
 
-    // Total supply
+    console.log("Fetching total supply...");
     const totalSupply = await getTokenSupply();
+    console.log("Total supply:", totalSupply);
 
-    // Circulating supply
-    const circulatingSupply = totalSupply - burnedTokens;
+    const circulatingSupply = (totalSupply !== null && burnedTokens !== null) ? totalSupply - burnedTokens : null;
 
-    // BNB price
+    console.log("Fetching BNB price...");
     const bnbPrice = await getBNBPrice();
+    console.log("BNB price:", bnbPrice);
 
-    // Token price USD
+    console.log("Fetching token USD price...");
     const tokenPrice = await getTokenPriceUSD();
+    console.log("Token USD price:", tokenPrice);
 
-    // Market Cap
-    const marketCap = circulatingSupply * tokenPrice;
+    const marketCap = (circulatingSupply !== null) ? circulatingSupply * tokenPrice : null;
 
-    // Holders count
+    console.log("Fetching holders count...");
     const holders = await getHolderCount();
+    console.log("Holders:", holders);
 
-    // Transactions count (might be large)
+    console.log("Fetching transaction count...");
     const txCount = await getTransactionCount();
+    console.log("Transactions:", txCount);
 
-    // Update UI
+    // Update UI with fallback in case of nulls
     document.getElementById('charity-donations').innerText =
-      `${totalCharityBNB.toFixed(3)} BNB ($${(totalCharityBNB * bnbPrice).toFixed(0)})`;
+      totalCharityBNB !== null && bnbPrice !== null
+        ? `${totalCharityBNB.toFixed(3)} BNB ($${(totalCharityBNB * bnbPrice).toFixed(0)})`
+        : 'N/A';
 
     document.getElementById('burned-tokens').innerText =
-      `${burnedTokens.toLocaleString(undefined, {maximumFractionDigits: 0})} SUPDOG`;
+      burnedTokens !== null
+        ? `${burnedTokens.toLocaleString(undefined, {maximumFractionDigits: 0})} SUPDOG`
+        : 'N/A';
 
     document.getElementById('circulating-supply').innerText =
-      `${circulatingSupply.toLocaleString(undefined, {maximumFractionDigits: 0})} SUPDOG`;
+      circulatingSupply !== null
+        ? `${circulatingSupply.toLocaleString(undefined, {maximumFractionDigits: 0})} SUPDOG`
+        : 'N/A';
 
     document.getElementById('market-cap').innerText =
-      `$${marketCap.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+      marketCap !== null
+        ? `$${marketCap.toLocaleString(undefined, {maximumFractionDigits: 0})}`
+        : 'N/A';
 
     document.getElementById('holders').innerText = holders;
 
     document.getElementById('txcount').innerText = txCount;
 
   } catch (err) {
-    console.error('Error loading token stats:', err);
+    console.error('Unexpected error in main script:', err);
     const els = ['charity-donations', 'burned-tokens', 'circulating-supply', 'market-cap', 'holders', 'txcount'];
     els.forEach(id => {
       document.getElementById(id).innerText = 'Error';
@@ -145,6 +203,5 @@
   }
 })();
 </script>
-
 </body>
 </html>
