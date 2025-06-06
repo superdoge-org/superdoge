@@ -137,7 +137,6 @@
 
 <div id="liquidity">Loading liquidity...</div>
 
-<script src="https://cdn.jsdelivr.net/npm/web3@1.8.0/dist/web3.min.js"></script>
 <script>
 (async () => {
   const tokenAddress = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
@@ -146,23 +145,30 @@
   try {
     const response = await fetch(url);
     const data = await response.json();
-    const pair = data.pairs[0]; // Use the most active pair
 
-    console.log("Dexscreener data:", pair); // Debug line
+    const pair = data.pairs[0]; // The most active trading pair
 
-    const liquidity = parseFloat(pair.liquidity.usd).toLocaleString(undefined, {maximumFractionDigits: 0});
+    if (!pair) {
+      console.error("No pair data found.");
+      return;
+    }
+
+    console.log("Dexscreener pair data:", pair);
+
+    const liquidityUSD = parseFloat(pair.liquidity.usd).toLocaleString(undefined, {maximumFractionDigits: 0});
     const marketCap = parseFloat(pair.fdv).toLocaleString(undefined, {maximumFractionDigits: 0});
-    const holders = "7,000+"; // Static for now until BscScan holders API is added
+    const holders = "7,000+"; // Placeholder until live holder data is added
 
-    document.getElementById('liquidity').innerText = '$' + liquidity;
+    document.getElementById('liquidity').innerText = '$' + liquidityUSD;
     document.getElementById('marketcap').innerText = '$' + marketCap;
     document.getElementById('holders').innerText = holders;
-    document.getElementById('burned').innerText = "TBD"; // To be hooked up later
-  } catch (err) {
-    console.error("Dexscreener fetch error:", err);
+    document.getElementById('burned').innerText = "TBD";
+  } catch (error) {
+    console.error("Dexscreener fetch error:", error);
   }
 })();
 </script>
+
 
 
 
