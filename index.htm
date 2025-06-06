@@ -137,29 +137,44 @@
 
 <script>
 (async () => {
-  const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
-  const token = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
-  const wbnb = '0xbb4CdB9CBd36B01bD1cBaEB4EDe08D9173bc095c';
-  const lpAddresses = ['0x6096BD38eC74579026E51DAC897f3A16800177DA', '0x4b9c179b34f02da39a5940c363c20216e0e19c1c'];
-  
-  // Helpers
-  const fetchJson = url => fetch(url).then(r => r.json()).then(d => d.result);
-  
-  // Basic token stats (as before)...
-  
-  // Get BNB reserves across LPs
-  const bnbBalances = await Promise.all(lpAddresses.map(addr =>
-    fetchJson(`https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${wbnb}&address=${addr}&tag=latest&apikey=${apiKey}`)
-  ));
-  const totalBNB = bnbBalances.reduce((s, b) => s + Number(b)/1e18, 0);
-  
-  // Convert to USD (fetch BNB price)
-  const bnbPriceUsd = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
-  const liquidityUSD = totalBNB * Number(bnbPriceUsd.ethusd) * 2;
-  
-  document.getElementById('liquidity').innerText = '$' + liquidityUSD.toLocaleString(undefined, {maximumFractionDigits:0});
+  try {
+    const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
+    const wbnb = '0xbb4CdB9CBd36B01bD1cBaEB4EDe08D9173bc095c';
+    const lpAddresses = [
+      '0x6096BD38eC74579026E51DAC897f3A16800177DA', // PancakeSwap V1
+      '0x4b9c179b34f02da39a5940c363c20216e0e19c1c'  // PancakeSwap V2
+    ];
+
+    const fetchJson = async url => {
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.result;
+    };
+
+    const bnbBalances = await Promise.all(
+      lpAddresses.map(addr =>
+        fetchJson(`https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${wbnb}&address=${addr}&tag=latest&apikey=${apiKey}`)
+      )
+    );
+
+    const totalBNB = bnbBalances.reduce((sum, val) => sum + (Number(val) / 1e18), 0);
+
+    const priceData = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
+    const bnbUsd = Number(priceData.ethusd);
+
+    const totalLiquidity = totalBNB * bnbUsd * 2;
+
+    document.getElementById('liquidity').innerText = '$' + totalLiquidity.toLocaleString(undefined, {
+      maximumFractionDigits: 0
+    });
+
+  } catch (e) {
+    console.error('Failed to load liquidity:', e);
+    document.getElementById('liquidity').innerText = 'Error';
+  }
 })();
 </script>
+
 
 </body>
 </html>
