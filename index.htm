@@ -137,37 +137,37 @@
 
 <script>
 (async () => {
-  console.log("Script started"); // Debug
-
   const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
   const token = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
-  const busd = '0xe9e7cea3dedca5984780bafc599bd69add087d56';
-  const lpAddresses = ['0x6096BD38eC74579026E51DAC897f3A16800177DA', '0x4b9c179b34f02da39a5940c363c20216e0e19c1c'];
+  const wbnb = '0xe9e7cea3dedca5984780bafc599bd69add087d56'; // BUSD
+  const lpAddresses = [
+    '0x6096BD38eC74579026E51DAC897f3A16800177DA', // V1
+    '0x4b9c179b34f02da39a5940c363c20216e0e19c1c'  // V2
+  ];
 
-  const fetchJson = async url => {
-    const response = await fetch(url);
-    const json = await response.json();
-    console.log("API response:", url, json); // Debug
-    return json.result;
-  };
+  // Helper
+  const fetchJson = url => fetch(url).then(r => r.json()).then(d => d.result);
 
+  // Get BUSD reserves across LPs
   const bnbBalances = await Promise.all(lpAddresses.map(addr =>
     fetchJson(`https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${wbnb}&address=${addr}&tag=latest&apikey=${apiKey}`)
   ));
-  console.log("BNB balances (raw):", bnbBalances); // Debug
+  console.log('BNB balances (raw):', bnbBalances);
 
-  const totalBNB = bnbBalances.reduce((s, b) => s + Number(b) / 1e18, 0);
-  console.log("Total BNB:", totalBNB); // Debug
+  const totalBNB = bnbBalances.reduce((s, b) => s + Number(b)/1e18, 0);
+  console.log('Total BNB across LPs:', totalBNB);
 
-  const bnbPrice = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
-  console.log("BNB price in USD:", bnbPrice.ethusd); // Debug
+  // Get BNB price in USD
+  const bnbPriceData = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
+  console.log('BNB price in USD:', bnbPriceData.ethusd);
 
-  const liquidityUSD = totalBNB * Number(bnbPrice.ethusd) * 2;
-  console.log("Total Liquidity USD:", liquidityUSD); // Debug
+  const liquidityUSD = totalBNB * Number(bnbPriceData.ethusd) * 2;
+  console.log('Total Liquidity USD:', liquidityUSD);
 
-  document.getElementById('liquidity').innerText = '$' + liquidityUSD.toLocaleString(undefined, {maximumFractionDigits:0});
+  document.getElementById('liquidity').innerText = '$' + liquidityUSD.toLocaleString(undefined, { maximumFractionDigits: 0 });
 })();
 </script>
+
 
 
 
