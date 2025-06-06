@@ -135,12 +135,31 @@
     <p>Telegram | Twitter | GitHub (Coming Soon)</p>
   </footer>
 
-  <script>
-    // Placeholder: Hook up BscScan or another API here
-    document.getElementById("burned").innerText = "TBD";
-    document.getElementById("liquidity").innerText = "$250,000";
-    document.getElementById("marketcap").innerText = "$250,000";
-    document.getElementById("holders").innerText = "7000+";
-  </script>
+<script>
+(async () => {
+  const apiKey = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
+  const token = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
+  const wbnb = '0xbb4CdB9CBd36B01bD1cBaEB4EDe08D9173bc095c';
+  const lpAddresses = ['0xLP1...', '0xLP2...', '0xLP3...'];
+  
+  // Helpers
+  const fetchJson = url => fetch(url).then(r => r.json()).then(d => d.result);
+  
+  // Basic token stats (as before)...
+  
+  // Get BNB reserves across LPs
+  const bnbBalances = await Promise.all(lpAddresses.map(addr =>
+    fetchJson(`https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${wbnb}&address=${addr}&tag=latest&apikey=${apiKey}`)
+  ));
+  const totalBNB = bnbBalances.reduce((s, b) => s + Number(b)/1e18, 0);
+  
+  // Convert to USD (fetch BNB price)
+  const bnbPriceUsd = await fetchJson(`https://api.bscscan.com/api?module=stats&action=bnbprice&apikey=${apiKey}`);
+  const liquidityUSD = totalBNB * Number(bnbPriceUsd.ethusd) * 2;
+  
+  document.getElementById('liquidity').innerText = '$' + liquidityUSD.toLocaleString(undefined, {maximumFractionDigits:0});
+})();
+</script>
+
 </body>
 </html>
