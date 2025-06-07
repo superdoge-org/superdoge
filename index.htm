@@ -81,24 +81,53 @@
   </div>
 
   <script>
-    const SUPDOG_SUPPLY = 1000000000;
-    const currentSupply = 989903999; // Replace with live fetch if needed
-    const burned = SUPDOG_SUPPLY - currentSupply;
-    const burnedPercent = ((burned / SUPDOG_SUPPLY) * 100).toFixed(2);
+    const apiKey = "QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S";
+    const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
+    const totalSupply = 1000000000;
 
-    document.getElementById("burnedSupply").textContent = burned.toLocaleString() + " SUPDOG";
-    document.getElementById("burnedPercent").textContent = burnedPercent + "% burned";
+    async function fetchBnbPrice() {
+      const res = await fetch("https://api.dexscreener.com/latest/dex/pairs/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23");
+      const data = await res.json();
+      return parseFloat(data.pair.priceUsd);
+    }
 
-    // Static liquidity until live source added
-    const totalLiquidityBNB = 215;
-    const tokenPriceUSD = 0.00025; // Replace with live call if needed
-    const marketCap = currentSupply * tokenPriceUSD;
+    async function fetchTokenSupply() {
+      const res = await fetch(`https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`);
+      const data = await res.json();
+      return parseFloat(data.result) / 1e9; // Convert from 9 decimals
+    }
 
-    document.getElementById("liquidity").textContent = `~${totalLiquidityBNB} BNB (~$${(totalLiquidityBNB * 650).toLocaleString()})`;
-    document.getElementById("marketCap").textContent = `$${marketCap.toLocaleString(undefined, {maximumFractionDigits: 2})}`;
-    document.getElementById("tokenPrice").textContent = `$${tokenPriceUSD}`;
-    document.getElementById("donationUSD").textContent = `~$${(836.34 * 650).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
-    document.getElementById("monthlyVolume").textContent = `Live stats coming soon`;
+    async function main() {
+      const bnbPrice = 650; // fallback
+      let livePriceUSD, currentSupply;
+
+      try {
+        livePriceUSD = await fetchBnbPrice();
+      } catch { livePriceUSD = 0.00025; }
+
+      try {
+        currentSupply = await fetchTokenSupply();
+      } catch { currentSupply = 989904000; }
+
+      const burned = totalSupply - currentSupply;
+      const burnedPercent = ((burned / totalSupply) * 100).toFixed(2);
+      const marketCap = currentSupply * livePriceUSD;
+
+      const donationBNB = 836.34 + 18.88;
+      const donationUSD = donationBNB * 650;
+      const totalLiquidityBNB = 215;
+
+      document.getElementById("burnedSupply").textContent = burned.toLocaleString() + " SUPDOG";
+      document.getElementById("burnedPercent").textContent = burnedPercent + "% burned";
+
+      document.getElementById("liquidity").textContent = `~${totalLiquidityBNB} BNB (~$${(totalLiquidityBNB * 650).toLocaleString()})`;
+      document.getElementById("marketCap").textContent = `$${marketCap.toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+      document.getElementById("tokenPrice").textContent = `$${livePriceUSD}`;
+      document.getElementById("donationUSD").textContent = `~$${donationUSD.toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+      document.getElementById("monthlyVolume").textContent = `Live stats coming soon`;
+    }
+
+    main();
   </script>
 </body>
 </html>
