@@ -3,30 +3,40 @@ const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
 const burnAddress = "0x000000000000000000000000000000000000dEaD";
 const bscScanUrl = `https://api.bscscan.com/api`;
 
-async function fetchTransfers() {
-  try {
-    const url = `${bscScanUrl}?module=account&action=tokentx&contractaddress=${contract}&page=1&offset=10000&sort=asc&apikey=${apiKey}`;
+// Fetch all pages of token transfers via pagination
+async function fetchAllTransfers() {
+  const pageSize = 10000;
+  let page = 1;
+  let allTransfers = [];
+  let hasMore = true;
+
+  while (hasMore) {
+    const url = `${bscScanUrl}?module=account&action=tokentx&contractaddress=${contract}&page=${page}&offset=${pageSize}&sort=asc&apikey=${apiKey}`;
+    console.log(`Fetching page ${page}...`);
     const res = await fetch(url);
     const data = await res.json();
 
-    if (data.status !== "1") {
-      console.error("BscScan API error:", data.message || data.result);
-      return [];
+    if (data.status !== "1" || !data.result.length) {
+      console.warn("No more results or error:", data.message || data.result);
+      hasMore = false;
+    } else {
+      allTransfers = allTransfers.concat(data.result);
+      page++;
+      hasMore = data.result.length === pageSize;
     }
-
-    console.log("Fetched transfers:", data.result.length);
-    return data.result;
-  } catch (err) {
-    console.error("Fetch error:", err);
-    return [];
   }
+
+  console.log(`Fetched ${allTransfers.length} total transfers`);
+  return allTransfers;
 }
 
+// Convert unix timestamp to year & month
 function formatDateToMonthYear(timestamp) {
   const date = new Date(timestamp * 1000);
-  return { year: date.getFullYear(), month: date.getMonth() + 1 };
+  return { year: date.getFullYear(), month: date.getMonth() + 1 }; // month: 1–12
 }
 
+// Group transfers by year-month and calculate totals
 function groupByMonth(transfers) {
   const summary = {};
 
@@ -36,94 +46,10 @@ function groupByMonth(transfers) {
 
     if (!summary[key]) {
       summary[key] = {
-        year, month, volume: 0, burned: 0, txCount: 0
-      };
-    }
-
-    const value = parseFloat(tx.value) / 1e9;
-    summary[key].volume += value;
-    summary[key].txCount += 1;
-
-    if (tx.to.toLowerCase() === burnAddress.toLowerCase()) {
-      summary[key].burned += value;
-    }
-  }
-
-  return Object.values(summary).sort((a, b) =>
-    a.year === b.year ? a.month - b.month : a.year - b.year
-  );
-}
-
-function renderTable(data) {
-  const tbody = document.querySelector("#statsTable tbody");
-  if (!tbody) {
-    console.error("Missing #statsTable tbody in HTML");
-    return;
-  }
-
-  for (const row of data) {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${row.year}</td>
-      <td>${row.month.toString().padStart(2, '0')}</td>
-      <td>${row.volume.toFixed(2)}</td>
-      <td>-</td>
-      <td>${row.burned.toFixed(2)}</td>
-      <td>-</td>
-      <td>-</td>
-      <td>${row.txCount}</td>
-      <td>${(row.volume * 0.02).toFixed(2)}</td>
-    `;
-    tbody.appendChild(tr);
-  }
-
-  new DataTable("#statsTable");
-}
-
-function renderChart(data) {
-  const canvas = document.getElementById("volumeChart");
-  if (!canvas) {
-    console.error("Missing #volumeChart in HTML");
-    return;
-  }
-
-  const ctx = canvas.getContext("2d");
-  const labels = data.map(d => `${d.year}-${String(d.month).padStart(2, "0")}`);
-  const volumes = data.map(d => d.volume);
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels,
-      datasets: [{
-        label: "Monthly Volume (SUPDOG)",
-        data: volumes,
-        backgroundColor: "rgba(255, 99, 132, 0.5)"
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true }
-      }
-    }
-  });
-}
-
-async function main() {
-  console.log("Running SUPDOG stats dashboard...");
-  const transfers = await fetchTransfers();
-
-  if (transfers.length === 0) {
-    console.warn("No transfers found — possibly a rate limit or empty token");
-    return;
-  }
-
-  const grouped = groupByMonth(transfers);
-  console.log("Grouped summary:", grouped);
-
-  renderTable(grouped);
-  renderChart(grouped);
-}
-
-main();
+        year,
+        month,
+        volume: 0,
+        burned: 0,
+        txCount: 0,
+        // Placeholders for future metrics:
+        usdValue: 0,
