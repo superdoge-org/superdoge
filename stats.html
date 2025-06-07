@@ -3,72 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUPDOG Token Stats</title>
-  <link rel="stylesheet" href="assets/styles.css" />
-  <script defer src="stats.js"></script>
+  <title>SUPDOG Stats Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #111; color: #fff; }
+    h1 { text-align: center; }
+    canvas { margin-top: 20px; }
+    table { width: 100%; margin-top: 20px; }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>SUPDOG Token - Full Analytics Dashboard</h1>
-    <p>Tracking supply, liquidity, burns, donations, and fund flows.</p>
-  </header>
+  <h1>SuperDoge (SUPDOG) Stats Dashboard</h1>
 
-  <main>
-    <section>
-      <h2>Token Metrics</h2>
-      <ul>
-        <li><strong>Total Supply:</strong> <span id="total-supply">Loading...</span></li>
-        <li><strong>Burned Supply:</strong> <span id="burned-supply">Loading...</span></li>
-        <li><strong>Market Cap (USD):</strong> <span id="market-cap">Loading...</span></li>
-        <li><strong>Token Price (USD):</strong> <span id="token-price">Loading...</span></li>
-      </ul>
-    </section>
+  <canvas id="volumeChart" height="100"></canvas>
 
-    <section>
-      <h2>Liquidity Pools</h2>
-      <ul>
-        <li><strong>PancakeSwap V1:</strong> <span id="liquidity-v1">Loading...</span></li>
-        <li><strong>PancakeSwap V2:</strong> <span id="liquidity-v2">Loading...</span></li>
-        <li><strong>PancakeSwap V3:</strong> <span id="liquidity-v3">Loading...</span></li>
-      </ul>
-    </section>
+  <table id="statsTable" class="display">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Month</th>
+        <th>Volume (SUPDOG)</th>
+        <th>Volume (USD)</th>
+        <th>SUPDOG Burned</th>
+        <th>Liquidity Δ</th>
+        <th>Holders Δ</th>
+        <th>Tx Count</th>
+        <th>2% Fund Allocated</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-    <section>
-      <h2>BNB Price</h2>
-      <p><strong>Current BNB/USD:</strong> <span id="bnb-price">Loading...</span></p>
-    </section>
-
-    <section>
-      <h2>Charity & Fund Wallets</h2>
-      <ul>
-        <li><strong>WellsBringHope:</strong> <span id="charity-1">Loading...</span></li>
-        <li><strong>ChildEnrichment:</strong> <span id="charity-2">Loading...</span></li>
-        <li><strong>Clarematrix:</strong> <span id="charity-3">Loading...</span></li>
-        <li><strong>Total Fund Balance (BNB):</strong> <span id="total-charity-bnb">Loading...</span></li>
-        <li><strong>Total Fund Value (USD):</strong> <span id="total-charity-usd">Loading...</span></li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Last 30 Days</h2>
-      <ul>
-        <li><strong>SUPDOG Volume:</strong> <span id="volume-30d">Loading...</span></li>
-        <li><strong>Burned Amount:</strong> <span id="burned-30d">Loading...</span></li>
-        <li><strong>Added to Liquidity/Charity:</strong> <span id="added-fund-30d">Loading...</span></li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Holders & Transactions</h2>
-      <ul>
-        <li><strong>Total Holders:</strong> <span id="holders">Loading...</span></li>
-        <li><strong>Total Transactions:</strong> <span id="tx-count">Loading...</span></li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <p>Powered by BscScan, DexScreener, and PancakeSwap APIs. SuperDoge.org (2025).</p>
-  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script src="stats.js"></script>
 </body>
 </html>
