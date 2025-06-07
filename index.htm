@@ -2,81 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SuperDoge (SUPDOG) – Official Site</title>
-  <link rel="stylesheet" href="assets/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SuperDoge - The First Crypto Superhero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0a0a0a;
-      color: #f0f0f0;
-    }
-    header {
-      background: linear-gradient(to right, #ff6600, #ffcc00);
-      padding: 2rem;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-      color: #000;
-    }
-    header p {
-      font-size: 1.2rem;
-      margin-top: 0.5rem;
-      color: #222;
-    }
-    #stats-overview {
-      padding: 2rem;
-      background: #111;
+      background: #0e0e0e;
       color: #fff;
     }
-    #stats-overview h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    header {
+      background: linear-gradient(135deg, #ff3cac 0%, #784ba0 100%);
+      text-align: center;
+      padding: 60px 20px;
     }
-    #stats-overview ul {
-      list-style: none;
-      padding-left: 0;
-      font-size: 1.1rem;
-      line-height: 1.8;
+    header h1 {
+      font-family: 'Bangers', cursive;
+      font-size: 4em;
+      margin: 0;
+    }
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    .stat-box {
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 12px;
+      min-width: 200px;
+      text-align: center;
+    }
+    section {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.5em;
+      color: #ff3cac;
+    }
+    .tokenomics, .how-to-buy, .charity, .media {
+      margin-top: 40px;
     }
     footer {
-      text-align: center;
-      padding: 1rem;
       background: #111;
-      color: #666;
-      font-size: 0.9rem;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+    .btn {
+      display: inline-block;
+      background: #ff3cac;
+      color: white;
+      padding: 12px 20px;
+      margin-top: 10px;
+      border-radius: 8px;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>SuperDoge (SUPDOG)</h1>
-    <p>The Community-Driven Charity & Meme Token</p>
+    <h1>SuperDoge</h1>
+    <p>The First Ever Charity Meme Coin - Crypto Superhero Returns!</p>
+    <div class="hero-stats">
+      <div class="stat-box">
+        <h3>🔥 Burned</h3>
+        <p id="burned">Loading...</p>
+      </div>
+      <div class="stat-box">
+        <h3>💧 Liquidity</h3>
+        <p id="liquidity">Loading...</p>
+      </div>
+      <div class="stat-box">
+        <h3>📈 Market Cap</h3>
+        <p id="marketcap">Loading...</p>
+      </div>
+      <div class="stat-box">
+        <h3>👥 Holders</h3>
+        <p id="holders">Loading...</p>
+      </div>
+    </div>
+    <a class="btn" href="https://pancakeswap.finance/swap?outputCurrency=0x622A1297057ea233287ce77bdBF2AB4E63609F23" target="_blank">Buy Now</a>
   </header>
 
-  <section id="stats-overview">
-    <h2>🔥 SuperDoge Project Stats</h2>
+  <section class="about">
+    <h2>About SuperDoge</h2>
+    <p>SuperDoge is a parody of Dogecoin and Superman — but with a real-world purpose. Launched in 2021, it became the first ever charity meme token, covered by CNBC, Yahoo Finance, and more. We’re community-driven, fully circulating, deflationary, and now — making a comeback.</p>
+  </section>
+
+  <section class="tokenomics">
+    <h2>Tokenomics</h2>
     <ul>
-      <li><strong>Total Supply:</strong> <span id="totalSupply">Loading...</span></li>
-      <li><strong>Burned Supply:</strong> <span id="burnedSupply">Loading...</span></li>
-      <li><strong>Liquidity (BNB):</strong> <span id="liquidity">Loading...</span></li>
-      <li><strong>Market Cap (USD):</strong> <span id="marketCap">Loading...</span></li>
-      <li><strong>30-Day Volume (SUPDOG):</strong> <span id="monthlyVolume">Loading...</span></li>
-      <li><strong>30-Day Burned:</strong> <span id="monthlyBurned">Loading...</span></li>
-      <li><strong>30-Day Liquidity Support Funded:</strong> <span id="monthlyLiquidity">Loading...</span></li>
-      <li><strong>Total BNB Donated to Charity:</strong> <span id="donationTotal">18.877</span></li>
-      <li><strong>Total USD Donated to Charity:</strong> <span id="donationUSD">Loading...</span></li>
+      <li>6% Tax on Buys & Sells</li>
+      <li>2% Burned Forever</li>
+      <li>2% Reflected to Holders</li>
+      <li>2% to Community/Charity Fund</li>
     </ul>
+    <p>Built on BNB Chain • Over 7000 Holders • Liquidity Locked • Fully Circulating Supply</p>
+  </section>
+
+  <section class="how-to-buy">
+    <h2>How to Buy SUPDOG</h2>
+    <ol>
+      <li>Install MetaMask or TrustWallet</li>
+      <li>Buy BNB and send to your wallet</li>
+      <li>Go to PancakeSwap</li>
+      <li>Swap BNB for SUPDOG</li>
+      <li>Use slippage of 6%</li>
+    </ol>
+    <p>Contract: <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></p>
+  </section>
+
+  <section class="charity">
+    <h2>Charity & Community Fund</h2>
+    <p>We’ve donated over $500,000 to real-world charities. In the new version, a 2% transaction fee will go into a community-controlled wallet to fund future causes or liquidity growth. Initial seed: 1,000,000 SUPDOG tokens.</p>
+  </section>
+
+  <section class="media">
+    <h2>Media & Proof</h2>
+    <p>Videos and screenshots of past donations, press articles, and the Certik audit will go here. Coming soon!</p>
   </section>
 
   <footer>
-    &copy; 2025 SuperDoge.org — Made with ❤️ by the community
+    <p>© 2025 SuperDoge.org — Powered by the Community</p>
+    <p>Telegram | Twitter | GitHub (Coming Soon)</p>
   </footer>
 
-  <script src="stats.js"></script>
+<div id="liquidity">Loading liquidity...</div>
+
+<script>
+(async () => {
+  const tokenAddress = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
+  const url = `https://api.dexscreener.com/latest/dex/tokens/${tokenAddress}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const pair = data.pairs[0]; // The most active trading pair
+
+    if (!pair) {
+      console.error("No pair data found.");
+      return;
+    }
+
+    console.log("Dexscreener pair data:", pair);
+
+    const liquidityUSD = parseFloat(pair.liquidity.usd).toLocaleString(undefined, {maximumFractionDigits: 0});
+    const marketCap = parseFloat(pair.fdv).toLocaleString(undefined, {maximumFractionDigits: 0});
+    const holders = "7,000+"; // Placeholder until live holder data is added
+
+    document.getElementById('liquidity').innerText = '$' + liquidityUSD;
+    document.getElementById('marketcap').innerText = '$' + marketCap;
+    document.getElementById('holders').innerText = holders;
+    document.getElementById('burned').innerText = "TBD";
+  } catch (error) {
+    console.error("Dexscreener fetch error:", error);
+  }
+})();
+</script>
+
+
+
+
 </body>
 </html>
