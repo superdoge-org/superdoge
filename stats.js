@@ -4,15 +4,27 @@ const burnAddress = "0x000000000000000000000000000000000000dEaD";
 const bscScanUrl = `https://api.bscscan.com/api`;
 
 async function fetchTransfers() {
-  const url = `${bscScanUrl}?module=account&action=tokentx&contractaddress=${contract}&page=1&offset=10000&sort=asc&apikey=${apiKey}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.result;
+  try {
+    const url = `${bscScanUrl}?module=account&action=tokentx&contractaddress=${contract}&page=1&offset=10000&sort=asc&apikey=${apiKey}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.status !== "1") {
+      console.error("BscScan API error:", data.message || data.result);
+      return [];
+    }
+
+    console.log("Fetched transfers:", data.result.length);
+    return data.result;
+  } catch (err) {
+    console.error("Fetch error:", err);
+    return [];
+  }
 }
 
 function formatDateToMonthYear(timestamp) {
   const date = new Date(timestamp * 1000);
-  return { year: date.getFullYear(), month: date.getMonth() + 1 }; // month 1–12
+  return { year: date.getFullYear(), month: date.getMonth() + 1 };
 }
 
 function groupByMonth(transfers) {
@@ -28,7 +40,7 @@ function groupByMonth(transfers) {
       };
     }
 
-    const value = parseFloat(tx.value) / 1e9; // Convert from gwei (9 decimals)
+    const value = parseFloat(tx.value) / 1e9;
     summary[key].volume += value;
     summary[key].txCount += 1;
 
@@ -44,6 +56,11 @@ function groupByMonth(transfers) {
 
 function renderTable(data) {
   const tbody = document.querySelector("#statsTable tbody");
+  if (!tbody) {
+    console.error("Missing #statsTable tbody in HTML");
+    return;
+  }
+
   for (const row of data) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
@@ -64,7 +81,13 @@ function renderTable(data) {
 }
 
 function renderChart(data) {
-  const ctx = document.getElementById("volumeChart").getContext("2d");
+  const canvas = document.getElementById("volumeChart");
+  if (!canvas) {
+    console.error("Missing #volumeChart in HTML");
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
   const labels = data.map(d => `${d.year}-${String(d.month).padStart(2, "0")}`);
   const volumes = data.map(d => d.volume);
 
@@ -88,8 +111,17 @@ function renderChart(data) {
 }
 
 async function main() {
+  console.log("Running SUPDOG stats dashboard...");
   const transfers = await fetchTransfers();
+
+  if (transfers.length === 0) {
+    console.warn("No transfers found — possibly a rate limit or empty token");
+    return;
+  }
+
   const grouped = groupByMonth(transfers);
+  console.log("Grouped summary:", grouped);
+
   renderTable(grouped);
   renderChart(grouped);
 }
