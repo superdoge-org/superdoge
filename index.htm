@@ -2,175 +2,230 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SuperDoge - The First Crypto Superhero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SuperDoge (SUPDOG) Live Stats</title>
   <style>
     body {
-      margin: 0;
+      background-color: #121212;
+      color: #eee;
       font-family: Arial, sans-serif;
-      background: #0e0e0e;
-      color: #fff;
-    }
-    header {
-      background: linear-gradient(135deg, #ff3cac 0%, #784ba0 100%);
-      text-align: center;
-      padding: 60px 20px;
-    }
-    header h1 {
-      font-family: 'Bangers', cursive;
-      font-size: 4em;
-      margin: 0;
-    }
-    .hero-stats {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 30px;
-    }
-    .stat-box {
-      background: #1f1f1f;
       padding: 20px;
-      border-radius: 12px;
-      min-width: 200px;
-      text-align: center;
-    }
-    section {
-      padding: 40px 20px;
-      max-width: 1000px;
+      max-width: 900px;
       margin: auto;
     }
-    h2 {
-      font-family: 'Bangers', cursive;
-      font-size: 2.5em;
-      color: #ff3cac;
-    }
-    .tokenomics, .how-to-buy, .charity, .media {
-      margin-top: 40px;
-    }
-    footer {
-      background: #111;
+    h1, h2, h3 {
+      color: #f4a261;
       text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      color: #aaa;
     }
-    .btn {
-      display: inline-block;
-      background: #ff3cac;
-      color: white;
-      padding: 12px 20px;
+    #stats-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: space-around;
+      margin-bottom: 40px;
+    }
+    #stats-container > div {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      flex: 1 1 260px;
+      box-shadow: 0 0 15px rgba(244, 162, 97, 0.5);
+      text-align: center;
+    }
+    #stats-container div > div {
+      font-size: 2.2rem;
       margin-top: 10px;
-      border-radius: 8px;
-      text-decoration: none;
+      color: #e76f51;
+    }
+    hr {
+      border-color: #444;
+      margin: 40px 0;
+    }
+    #monthlyStats {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(244, 162, 97, 0.5);
+      font-size: 1.3rem;
+      line-height: 1.8;
+      max-width: 400px;
+      margin: auto;
+      text-align: center;
+      color: #fff;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>SuperDoge</h1>
-    <p>The First Ever Charity Meme Coin - Crypto Superhero Returns!</p>
-    <div class="hero-stats">
-      <div class="stat-box">
-        <h3>🔥 Burned</h3>
-        <p id="burned">Loading...</p>
-      </div>
-      <div class="stat-box">
-        <h3>💧 Liquidity</h3>
-        <p id="liquidity">Loading...</p>
-      </div>
-      <div class="stat-box">
-        <h3>📈 Market Cap</h3>
-        <p id="marketcap">Loading...</p>
-      </div>
-      <div class="stat-box">
-        <h3>👥 Holders</h3>
-        <p id="holders">Loading...</p>
-      </div>
+
+  <h1>SuperDoge (SUPDOG) Live Stats</h1>
+
+  <div id="stats-container">
+    <div>
+      <h2>Total Burned</h2>
+      <div id="totalBurned">Loading...</div>
     </div>
-    <a class="btn" href="https://pancakeswap.finance/swap?outputCurrency=0x622A1297057ea233287ce77bdBF2AB4E63609F23" target="_blank">Buy Now</a>
-  </header>
+    <div>
+      <h2>Liquidity (BNB / USD)</h2>
+      <div id="liquidityBNB">Loading...</div>
+      <div id="liquidityUSD"></div>
+    </div>
+    <div>
+      <h2>Market Cap (USD)</h2>
+      <div id="marketCap">Loading...</div>
+    </div>
+    <div>
+      <h2>Token Price</h2>
+      <div id="tokenPrice">Loading...</div>
+    </div>
+    <div>
+      <h2>Total Donations (BNB / USD)</h2>
+      <div id="donationsBNB">Loading...</div>
+      <div id="donationsUSD"></div>
+    </div>
+  </div>
 
-  <section class="about">
-    <h2>About SuperDoge</h2>
-    <p>SuperDoge is a parody of Dogecoin and Superman — but with a real-world purpose. Launched in 2021, it became the first ever charity meme token, covered by CNBC, Yahoo Finance, and more. We’re community-driven, fully circulating, deflationary, and now — making a comeback.</p>
-  </section>
+  <hr />
 
-  <section class="tokenomics">
-    <h2>Tokenomics</h2>
-    <ul>
-      <li>6% Tax on Buys & Sells</li>
-      <li>2% Burned Forever</li>
-      <li>2% Reflected to Holders</li>
-      <li>2% to Community/Charity Fund</li>
-    </ul>
-    <p>Built on BNB Chain • Over 7000 Holders • Liquidity Locked • Fully Circulating Supply</p>
-  </section>
+  <h3>Monthly Running Totals</h3>
+  <div id="monthlyStats">
+    <strong>Token Burns This Month:</strong> <span id="monthlyBurned">Loading...</span><br />
+    <strong>Transaction Volume This Month (SUPDOG):</strong> <span id="monthlyVolume">Loading...</span><br />
+    <strong>Transaction Count This Month:</strong> <span id="monthlyTxCount">Loading...</span>
+  </div>
 
-  <section class="how-to-buy">
-    <h2>How to Buy SUPDOG</h2>
-    <ol>
-      <li>Install MetaMask or TrustWallet</li>
-      <li>Buy BNB and send to your wallet</li>
-      <li>Go to PancakeSwap</li>
-      <li>Swap BNB for SUPDOG</li>
-      <li>Use slippage of 6%</li>
-    </ol>
-    <p>Contract: <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></p>
-  </section>
+  <script>
+    const apiKey = "QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S";
+    const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
+    const burnAddress = "0x000000000000000000000000000000000000dEaD";
+    const charityWallets = [
+      "0x2A8500831745891D2aC01403Da08883be4D58b72",
+      "0x7Dd4eAE167bc55F9EA5df729936Dcc69af0B54B5",
+      "0xdDE25A762653baf7D53725010ab3901E6E527523",
+    ];
+    const bscScanUrl = `https://api.bscscan.com/api`;
 
-  <section class="charity">
-    <h2>Charity & Community Fund</h2>
-    <p>We’ve donated over $500,000 to real-world charities. In the new version, a 2% transaction fee will go into a community-controlled wallet to fund future causes or liquidity growth. Initial seed: 1,000,000 SUPDOG tokens.</p>
-  </section>
-
-  <section class="media">
-    <h2>Media & Proof</h2>
-    <p>Videos and screenshots of past donations, press articles, and the Certik audit will go here. Coming soon!</p>
-  </section>
-
-  <footer>
-    <p>© 2025 SuperDoge.org — Powered by the Community</p>
-    <p>Telegram | Twitter | GitHub (Coming Soon)</p>
-  </footer>
-
-<div id="liquidity">Loading liquidity...</div>
-
-<script>
-(async () => {
-  const tokenAddress = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
-  const url = `https://api.dexscreener.com/latest/dex/tokens/${tokenAddress}`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    const pair = data.pairs[0]; // The most active trading pair
-
-    if (!pair) {
-      console.error("No pair data found.");
-      return;
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      return await res.json();
     }
 
-    console.log("Dexscreener pair data:", pair);
+    async function fetchBurnedAndSupply() {
+      const supplyUrl = `${bscScanUrl}?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`;
+      const supplyData = await fetchJson(supplyUrl);
+      const totalSupply = supplyData.status === "1" ? Number(supplyData.result) / 1e9 : 0;
 
-    const liquidityUSD = parseFloat(pair.liquidity.usd).toLocaleString(undefined, {maximumFractionDigits: 0});
-    const marketCap = parseFloat(pair.fdv).toLocaleString(undefined, {maximumFractionDigits: 0});
-    const holders = "7,000+"; // Placeholder until live holder data is added
+      const burnTxUrl = `${bscScanUrl}?module=account&action=tokentx&contractaddress=${contract}&address=${burnAddress}&page=1&offset=100&sort=asc&apikey=${apiKey}`;
+      const burnTxData = await fetchJson(burnTxUrl);
 
-    document.getElementById('liquidity').innerText = '$' + liquidityUSD;
-    document.getElementById('marketcap').innerText = '$' + marketCap;
-    document.getElementById('holders').innerText = holders;
-    document.getElementById('burned').innerText = "TBD";
-  } catch (error) {
-    console.error("Dexscreener fetch error:", error);
-  }
-})();
-</script>
+      let totalBurned = 0;
+      if (burnTxData.status === "1") {
+        totalBurned = burnTxData.result.reduce((sum, tx) => sum + Number(tx.value) / 1e9, 0);
+      }
 
+      return { totalSupply, totalBurned };
+    }
 
+    async function fetchLiquidity() {
+      const dexScreenerUrl = `https://api.dexscreener.com/latest/dex/tokens/${contract}`;
+      const dexData = await fetchJson(dexScreenerUrl);
 
+      let liquidityBNB = 0;
+      let liquidityUSD = 0;
+      if (dexData.pairs && dexData.pairs.length) {
+        liquidityBNB = dexData.pairs[0].liquidity?.bnb || 0;
+        liquidityUSD = dexData.pairs[0].liquidity?.usd || 0;
+      }
 
+      return { liquidityBNB, liquidityUSD };
+    }
+
+    async function fetchTokenPrice() {
+      const dexScreenerUrl = `https://api.dexscreener.com/latest/dex/tokens/${contract}`;
+      const dexData = await fetchJson(dexScreenerUrl);
+      let priceBNB = 0;
+      let priceUSD = 0;
+      if (dexData.pairs && dexData.pairs.length) {
+        priceBNB = dexData.pairs[0].priceNative || 0;
+        priceUSD = dexData.pairs[0].priceUsd || 0;
+      }
+      return { priceBNB, priceUSD };
+    }
+
+    async function fetchDonations() {
+      let totalBNB = 0;
+      for (const addr of charityWallets) {
+        const url = `${bscScanUrl}?module=account&action=balance&address=${addr}&tag=latest&apikey=${apiKey}`;
+        const data = await fetchJson(url);
+        if (data.status === "1") {
+          totalBNB += Number(data.result) / 1e18;
+        }
+      }
+
+      const coingeckoUrl = "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd";
+      const cgData = await fetchJson(coingeckoUrl);
+      const bnbUsd = cgData?.binancecoin?.usd || 0;
+      const totalUSD = totalBNB * bnbUsd;
+
+      return { totalBNB, totalUSD };
+    }
+
+    async function fetchMonthlyStats() {
+      const now = Math.floor(Date.now() / 1000);
+      const oneMonthAgo = now - 30 * 24 * 60 * 60;
+
+      const url = `${bscScanUrl}?module=account&action=tokentx&contractaddress=${contract}&starttimestamp=${oneMonthAgo}&endtimestamp=${now}&page=1&offset=1000&sort=asc&apikey=${apiKey}`;
+      const data = await fetchJson(url);
+
+      if (data.status !== "1") return { burned: 0, volume: 0, txCount: 0 };
+
+      let burned = 0, volume = 0, txCount = data.result.length;
+
+      for (const tx of data.result) {
+        const val = Number(tx.value) / 1e9;
+        volume += val;
+        if (tx.to.toLowerCase() === burnAddress.toLowerCase()) burned += val;
+      }
+
+      return { burned, volume, txCount };
+    }
+
+    async function updateStats() {
+      try {
+        const [
+          { totalSupply, totalBurned },
+          { liquidityBNB, liquidityUSD },
+          { priceBNB, priceUSD },
+          { totalBNB: donationsBNB, totalUSD: donationsUSD },
+          { burned: monthlyBurned, volume: monthlyVolume, txCount: monthlyTxCount }
+        ] = await Promise.all([
+          fetchBurnedAndSupply(),
+          fetchLiquidity(),
+          fetchTokenPrice(),
+          fetchDonations(),
+          fetchMonthlyStats()
+        ]);
+
+        const circulatingSupply = totalSupply - totalBurned;
+        const marketCapUSD = circulatingSupply * priceUSD;
+
+        document.getElementById("totalBurned").textContent = totalBurned.toLocaleString(undefined, {maximumFractionDigits:2});
+        document.getElementById("liquidityBNB").textContent = liquidityBNB.toFixed(2) + " BNB";
+        document.getElementById("liquidityUSD").textContent = "$" + liquidityUSD.toLocaleString(undefined, {maximumFractionDigits:0});
+        document.getElementById("marketCap").textContent = "$" + marketCapUSD.toLocaleString(undefined, {maximumFractionDigits:0});
+        document.getElementById("tokenPrice").textContent = priceBNB.toFixed(6) + " BNB / $" + priceUSD.toFixed(4);
+        document.getElementById("donationsBNB").textContent = donationsBNB.toFixed(2) + " BNB";
+        document.getElementById("donationsUSD").textContent = "$" + donationsUSD.toLocaleString(undefined, {maximumFractionDigits:0});
+        document.getElementById("monthlyBurned").textContent = monthlyBurned.toLocaleString(undefined, {maximumFractionDigits:2});
+        document.getElementById("monthlyVolume").textContent = monthlyVolume.toLocaleString(undefined, {maximumFractionDigits:2});
+        document.getElementById("monthlyTxCount").textContent = monthlyTxCount.toLocaleString();
+
+      } catch (e) {
+        console.error("Error updating stats:", e);
+      }
+    }
+
+    updateStats();
+    setInterval(updateStats, 5 * 60 * 1000);
+  </script>
 </body>
 </html>
