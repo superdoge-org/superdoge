@@ -1,72 +1,97 @@
-const BSC_API = 'https://api.bscscan.com/api';
-const DEX_API = 'https://api.dexscreener.com/latest/dex/tokens';
-const API_KEY = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S'; // Replace with your real BscScan API key
+const apiKey = "QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S";
+const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
+const burnAddress = "0x000000000000000000000000000000000000dEaD";
+const bscScanUrl = `https://api.bscscan.com/api`;
 
-const CHARITY_WALLETS = [
-  "0x2A8500831745891D2aC01403Da08883be4D58b72",
-  "0x7Dd4eAE167bc55F9EA5df729936Dcc69af0B54B5",
-  "0xdDE25A762653baf7D53725010ab3901E6E527523"
-];
-const DEAD_WALLET = "0x000000000000000000000000000000000000dEaD";
-const TOKEN_ADDRESS = "0x622A1297057ea233287ce77bdBF2AB4E63609F23";
-
-async function fetchJSON(url) {
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+async function fetchTransfers() {
+  const url = `${bscScanUrl}?module=account&action=tokentx&contractaddress=${contract}&page=1&offset=10000&sort=asc&apikey=${apiKey}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.result;
 }
 
-async function getBNBBalance(address) {
-  const url = `${BSC_API}?module=account&action=balance&address=${address}&tag=latest&apikey=${API_KEY}`;
-  const { result } = await fetchJSON(url);
-  return parseFloat(result) / 1e18;
+function formatDateToMonthYear(timestamp) {
+  const date = new Date(timestamp * 1000);
+  return { year: date.getFullYear(), month: date.getMonth() + 1 }; // month 1–12
 }
 
-async function getTotalSupply() {
-  const url = `${BSC_API}?module=stats&action=tokensupply&contractaddress=${TOKEN_ADDRESS}&apikey=${API_KEY}`;
-  const { result } = await fetchJSON(url);
-  return parseFloat(result) / 1e18;
+function groupByMonth(transfers) {
+  const summary = {};
+
+  for (const tx of transfers) {
+    const { year, month } = formatDateToMonthYear(tx.timeStamp);
+    const key = `${year}-${month.toString().padStart(2, '0')}`;
+
+    if (!summary[key]) {
+      summary[key] = {
+        year, month, volume: 0, burned: 0, txCount: 0
+      };
+    }
+
+    const value = parseFloat(tx.value) / 1e9; // Convert from gwei (9 decimals)
+    summary[key].volume += value;
+    summary[key].txCount += 1;
+
+    if (tx.to.toLowerCase() === burnAddress.toLowerCase()) {
+      summary[key].burned += value;
+    }
+  }
+
+  return Object.values(summary).sort((a, b) =>
+    a.year === b.year ? a.month - b.month : a.year - b.year
+  );
 }
 
-async function getBurnedSupply() {
-  const url = `${BSC_API}?module=account&action=tokenbalance&contractaddress=${TOKEN_ADDRESS}&address=${DEAD_WALLET}&tag=latest&apikey=${API_KEY}`;
-  const { result } = await fetchJSON(url);
-  return parseFloat(result) / 1e18;
+function renderTable(data) {
+  const tbody = document.querySelector("#statsTable tbody");
+  for (const row of data) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${row.year}</td>
+      <td>${row.month.toString().padStart(2, '0')}</td>
+      <td>${row.volume.toFixed(2)}</td>
+      <td>-</td>
+      <td>${row.burned.toFixed(2)}</td>
+      <td>-</td>
+      <td>-</td>
+      <td>${row.txCount}</td>
+      <td>${(row.volume * 0.02).toFixed(2)}</td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  new DataTable("#statsTable");
 }
 
-async function getTokenPrice() {
-  const url = `${DEX_API}/${TOKEN_ADDRESS}`;
-  const { pairs } = await fetchJSON(url);
-  return pairs?.[0]?.priceUsd || "N/A";
+function renderChart(data) {
+  const ctx = document.getElementById("volumeChart").getContext("2d");
+  const labels = data.map(d => `${d.year}-${String(d.month).padStart(2, "0")}`);
+  const volumes = data.map(d => d.volume);
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [{
+        label: "Monthly Volume (SUPDOG)",
+        data: volumes,
+        backgroundColor: "rgba(255, 99, 132, 0.5)"
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
 }
 
-async function getHolderCount() {
-  const url = `${BSC_API}?module=token&action=tokenholdercount&contractaddress=${TOKEN_ADDRESS}&apikey=${API_KEY}`;
-  const { result, status } = await fetchJSON(url);
-  return status === "1" ? result : "N/A";
+async function main() {
+  const transfers = await fetchTransfers();
+  const grouped = groupByMonth(transfers);
+  renderTable(grouped);
+  renderChart(grouped);
 }
 
-async function getTransactionCount() {
-  const url = `${BSC_API}?module=account&action=txlist&address=${TOKEN_ADDRESS}&startblock=0&endblock=99999999&sort=asc&apikey=${API_KEY}`;
-  const { result, status } = await fetchJSON(url);
-  return status === "1" ? result.length : "N/A";
-}
-
-async function updateStats() {
-  const balances = await Promise.all(CHARITY_WALLETS.map(getBNBBalance));
-  const totalCharity = balances.reduce((sum, b) => sum + b, 0);
-
-  document.getElementById("charity1").textContent = balances[0].toFixed(4) + " BNB";
-  document.getElementById("charity2").textContent = balances[1].toFixed(4) + " BNB";
-  document.getElementById("charity3").textContent = balances[2].toFixed(4) + " BNB";
-  document.getElementById("totalCharityBNB").textContent = totalCharity.toFixed(4) + " BNB";
-
-  document.getElementById("totalSupply").textContent = (await getTotalSupply()).toFixed(6);
-  document.getElementById("burnedSupply").textContent = (await getBurnedSupply()).toFixed(6);
-  document.getElementById("usdPrice").textContent = "$" + (await getTokenPrice());
-  document.getElementById("holdersCount").textContent = await getHolderCount();
-  document.getElementById("txCount").textContent = await getTransactionCount();
-}
-
-updateStats();
-
+main();
