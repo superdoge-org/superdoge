@@ -1,181 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SuperDoge Token Stats</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SuperDoge (SUPDOG) – Official Site</title>
+  <link rel="stylesheet" href="assets/style.css" />
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background: #121212;
+      background: #0a0a0a;
       color: #f0f0f0;
-      text-align: center;
-      padding: 40px;
     }
-    .stat {
-      margin: 10px 0;
-      font-size: 1.2em;
+    header {
+      background: linear-gradient(to right, #ff6600, #ffcc00);
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      color: #000;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+      color: #222;
+    }
+    #stats-overview {
+      padding: 2rem;
+      background: #111;
+      color: #fff;
+    }
+    #stats-overview h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    #stats-overview ul {
+      list-style: none;
+      padding-left: 0;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #111;
+      color: #666;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <h1>SuperDoge (SUPDOG) Live Stats</h1>
-  <div class="stat" id="burned"></div>
-  <div class="stat" id="supply"></div>
-  <div class="stat" id="charity"></div>
-  <div class="stat" id="marketcap"></div>
-  <div class="stat" id="price"></div>
-  <div class="stat" id="holders"></div>
-  <div class="stat" id="transactions"></div>
 
-  <script>
-    const API_KEY = 'QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S';
-    const TOKEN_CONTRACT = '0x622A1297057ea233287ce77bdBF2AB4E63609F23';
-    const BURN_ADDRESS = '0x000000000000000000000000000000000000dEaD';
-    const CHARITY_WALLETS = [
-      '0x2A8500831745891D2aC01403Da08883be4D58b72',
-      '0x7Dd4eAE167bc55F9EA5df729936Dcc69af0B54B5',
-      '0xdDE25A762653baf7D53725010ab3901E6E527523'
-    ];
+  <header>
+    <h1>SuperDoge (SUPDOG)</h1>
+    <p>The Community-Driven Charity & Meme Token</p>
+  </header>
 
-    async function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
+  <section id="stats-overview">
+    <h2>🔥 SuperDoge Project Stats</h2>
+    <ul>
+      <li><strong>Total Supply:</strong> <span id="totalSupply">Loading...</span></li>
+      <li><strong>Burned Supply:</strong> <span id="burnedSupply">Loading...</span></li>
+      <li><strong>Liquidity (BNB):</strong> <span id="liquidity">Loading...</span></li>
+      <li><strong>Market Cap (USD):</strong> <span id="marketCap">Loading...</span></li>
+      <li><strong>30-Day Volume (SUPDOG):</strong> <span id="monthlyVolume">Loading...</span></li>
+      <li><strong>30-Day Burned:</strong> <span id="monthlyBurned">Loading...</span></li>
+      <li><strong>30-Day Liquidity Support Funded:</strong> <span id="monthlyLiquidity">Loading...</span></li>
+      <li><strong>Total BNB Donated to Charity:</strong> <span id="donationTotal">18.877</span></li>
+      <li><strong>Total USD Donated to Charity:</strong> <span id="donationUSD">Loading...</span></li>
+    </ul>
+  </section>
 
-    async function fetchBscScan(endpoint, params) {
-      const url = new URL('https://api.bscscan.com/api');
-      params.apikey = API_KEY;
-      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+  <footer>
+    &copy; 2025 SuperDoge.org — Made with ❤️ by the community
+  </footer>
 
-      const res = await fetch(url);
-      const json = await res.json();
-      console.log(`Fetched from ${url}`, json);
-      return json.result;
-    }
-
-    async function getBNBBalance(address) {
-      const result = await fetchBscScan({
-        module: 'account',
-        action: 'balance',
-        address,
-        tag: 'latest'
-      });
-      return Number(result) / 1e18;
-    }
-
-    async function getTokenBalance(address) {
-      const result = await fetchBscScan({
-        module: 'account',
-        action: 'tokenbalance',
-        contractaddress: TOKEN_CONTRACT,
-        address,
-        tag: 'latest'
-      });
-      return Number(result) / 1e18;
-    }
-
-    async function getTokenSupply() {
-      const result = await fetchBscScan({
-        module: 'stats',
-        action: 'tokensupply',
-        contractaddress: TOKEN_CONTRACT
-      });
-      return Number(result) / 1e18;
-    }
-
-    async function getBNBPrice() {
-      const result = await fetchBscScan({
-        module: 'stats',
-        action: 'bnbprice'
-      });
-      return Number(result.ethusd);
-    }
-
-    async function getTokenPriceUSD() {
-      const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${TOKEN_CONTRACT}`);
-      const json = await res.json();
-      return Number(json.pairs[0].priceUsd);
-    }
-
-    async function getHolderCount() {
-      const result = await fetchBscScan({
-        module: 'token',
-        action: 'getTokenHolderCount',
-        contractaddress: TOKEN_CONTRACT
-      });
-      return result;
-    }
-
-    async function getTransactionCount() {
-      const result = await fetchBscScan({
-        module: 'account',
-        action: 'txlist',
-        address: TOKEN_CONTRACT,
-        startblock: 0,
-        endblock: 99999999,
-        sort: 'desc'
-      });
-      return Array.isArray(result) ? result.length : 'N/A';
-    }
-
-    async function main() {
-      try {
-        document.getElementById('burned').textContent = "Fetching charity balances...";
-        const charityBNBs = [];
-        for (const wallet of CHARITY_WALLETS) {
-          const bnb = await getBNBBalance(wallet);
-          charityBNBs.push(bnb);
-          await delay(500);
-        }
-        const totalBNB = charityBNBs.reduce((a, b) => a + b, 0);
-        document.getElementById('charity').textContent = `Charity Wallets Total BNB: ${totalBNB.toFixed(4)} BNB`;
-
-        const burnedTokens = await getTokenBalance(BURN_ADDRESS);
-        await delay(500);
-        document.getElementById('burned').textContent = `Burned Tokens: ${burnedTokens.toFixed(4)} SUPDOG`;
-
-        const totalSupply = await getTokenSupply();
-        await delay(500);
-        const circulatingSupply = totalSupply - burnedTokens;
-        document.getElementById('supply').textContent = `Circulating Supply: ${circulatingSupply.toFixed(4)} SUPDOG`;
-
-        let bnbPrice = 0;
-        try {
-          bnbPrice = await getBNBPrice();
-        } catch (e) {
-          console.error("Error in getBNBPrice:", e);
-        }
-        await delay(500);
-
-        const tokenPrice = await getTokenPriceUSD();
-        await delay(500);
-        document.getElementById('price').textContent = `Token Price: $${tokenPrice.toFixed(6)}`;
-
-        const marketCap = circulatingSupply * tokenPrice;
-        document.getElementById('marketcap').textContent = `Market Cap: $${marketCap.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
-
-        let holders = 'N/A';
-        try {
-          holders = await getHolderCount();
-        } catch (e) {
-          console.error("Error fetching holders:", e);
-        }
-        await delay(500);
-        document.getElementById('holders').textContent = `Holders: ${holders}`;
-
-        let txCount = 'N/A';
-        try {
-          txCount = await getTransactionCount();
-        } catch (e) {
-          console.error("Error fetching tx count:", e);
-        }
-        document.getElementById('transactions').textContent = `Transactions: ${txCount}`;
-
-      } catch (err) {
-        console.error('Error loading token stats:', err);
-      }
-    }
-
-    main();
-  </script>
+  <script src="stats.js"></script>
 </body>
 </html>
