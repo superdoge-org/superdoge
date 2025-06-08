@@ -44,10 +44,6 @@
       background: #111;
       padding: 2rem 0;
     }
-    #burnedPercent {
-      font-size: 1.6rem;
-      margin-top: -10px;
-    }
   </style>
 </head>
 <body>
@@ -64,13 +60,12 @@
       <h2 class="section-title">Live Token Stats</h2>
       <div class="text-center mb-4">
         <h4 class="text-warning">🔥 Burned in Last 30 Days: <span id="burn30Days">Loading...</span></h4>
-        <h5 class="text-light">Token Volume in Last 30 Days: <span id="volume30Days">Loading...</span></h5>
+        <h5 class="text-light">📈 Token Volume in Last 30 Days: <span id="volume30Days">Loading...</span></h5>
       </div>
       <div class="row g-4 text-center">
         <div class="col-md-4">
           <h4>Total Burned</h4>
           <p id="burnedSupply" class="fs-4">Loading...</p>
-          <div id="burnedPercent"></div>
         </div>
         <div class="col-md-4">
           <h4>Total Supply</h4>
@@ -172,11 +167,9 @@
     async function main() {
       const currentSupply = await fetchTokenSupply();
       const burned = totalSupply - currentSupply;
-      const burnedPercent = ((burned / totalSupply) * 100).toFixed(1);
       const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
 
       document.getElementById("burnedSupply").textContent = `${burned.toLocaleString()}`;
-      document.getElementById("burnedPercent").textContent = `${burnedPercent} burned`;
       document.getElementById("totalSupplyDisplay").textContent = `${currentSupply.toLocaleString()}`;
       document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
       document.getElementById("burn30Days").textContent = burn30Days.toLocaleString();
