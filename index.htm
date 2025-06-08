@@ -41,69 +41,56 @@
       padding: 20px;
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
     }
-    .press-logos {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      padding: 1rem;
-      background-color: #d3d3d3;
-      border-radius: 12px;
+    .glow {
+      box-shadow: 0 0 20px 6px rgba(255, 215, 0, 0.6);
+      transition: box-shadow 0.6s ease-in-out;
     }
-    .press-logos img {
-      height: 60px;
-      vertical-align: middle;
-      background-color: #fff;
-      padding: 8px;
-      border-radius: 6px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .press-logos a:hover img {
-      transform: scale(1.15);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    footer {
-      background: #111;
-      padding: 2rem 0;
-    }
-    .highlight-yellow { color: #ffd700; }
-    .highlight-green { color: #90ee90; }
-    .highlight-orange { color: #ff7f50; }
-    .highlight-cyan { color: #30e3ca; }
   </style>
 </head>
 <body>
   <section class="container my-5">
     <h2 class="section-title">Live Token Stats</h2>
     <div class="row g-4">
-      <div class="col-md-6">
+      <!-- Total Supply -->
+      <div class="col-md-4">
         <div class="stat-box text-center">
           <h5>Total Supply</h5>
-          <div id="totalSupplyDisplay" class="fs-3 fw-bold highlight-yellow">-</div>
+          <div id="totalSupplyDisplay" class="fs-3 fw-bold">-</div>
         </div>
       </div>
-      <div class="col-md-6">
+      <!-- Total Burned -->
+      <div class="col-md-4">
         <div class="stat-box text-center">
           <h5>Total Burned</h5>
-          <div id="burnedSupply" class="fs-3 fw-bold highlight-orange">-</div>
+          <div id="burnedSupply" class="fs-3 fw-bold">-</div>
         </div>
       </div>
+      <!-- Charity Donation -->
+      <div class="col-md-4">
+        <div class="stat-box text-center">
+          <h5>Donated to Charity (Est. USD)</h5>
+          <div id="donationUSD" class="fs-3 fw-bold">-</div>
+        </div>
+      </div>
+      <!-- 30 Day Volume -->
       <div class="col-md-6">
         <div class="stat-box text-center">
           <h5>📈 30 Day Volume</h5>
-          <div id="volume30Days" class="fs-3 fw-bold highlight-green">0</div>
+          <div id="volume30Days" class="fs-3 fw-bold">0</div>
         </div>
       </div>
+      <!-- 30 Day Burned -->
       <div class="col-md-6">
-        <div class="stat-box text-center">
+        <div class="stat-box text-center" id="burnBox">
           <h5>🔥 30 Day Burned</h5>
-          <div id="burn30Days" class="fs-3 fw-bold highlight-orange">0</div>
+          <div id="burn30Days" class="fs-3 fw-bold">0</div>
         </div>
       </div>
-      <div class="col-12">
+      <!-- Market Cap Placeholder -->
+      <div class="col-md-12">
         <div class="stat-box text-center">
-          <h5>Donated to Charity (Est. USD)</h5>
-          <div id="donationUSD" class="fs-3 fw-bold highlight-cyan">-</div>
+          <h5>💰 Market Cap (Est.)</h5>
+          <div id="marketCap" class="fs-3 fw-bold">$--</div>
         </div>
       </div>
     </div>
@@ -172,17 +159,17 @@
       }, 30);
     }
 
-    function explosionEffect(callback) {
+    function explosionEffect(targetBox, callback) {
       const el = document.createElement('div');
-      el.style.position = 'fixed';
+      el.style.position = 'absolute';
       el.style.top = '50%';
       el.style.left = '50%';
       el.style.transform = 'translate(-50%, -50%)';
-      el.style.fontSize = '4rem';
+      el.style.fontSize = '3rem';
       el.textContent = '💥';
-      document.body.appendChild(el);
+      targetBox.appendChild(el);
       setTimeout(() => {
-        document.body.removeChild(el);
+        targetBox.removeChild(el);
         if (callback) callback();
       }, 800);
     }
@@ -192,18 +179,31 @@
       const burned = totalSupply - currentSupply;
       const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
 
+      // Static charity estimate for now
       document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
+
+      // Show initial pre-animation values
       document.getElementById("totalSupplyDisplay").textContent = (currentSupply + burn30Days).toLocaleString();
       document.getElementById("burnedSupply").textContent = (burned - burn30Days).toLocaleString();
 
-      animateCounter("volume30Days", 0, volume30Days, 1300 * 1.6, () => {
-        animateCounter("burn30Days", 0, burn30Days, 1600 * 1.6, () => {
-          explosionEffect(() => {
-            animateCounter("totalSupplyDisplay", currentSupply + burn30Days, currentSupply, 1600 * 1.6);
-            animateCounter("burnedSupply", burned - burn30Days, burned, 1600 * 1.6);
+      // Animate 30 Day Volume
+      animateCounter("volume30Days", 0, volume30Days, 1300 * 1.3, () => {
+        animateCounter("burn30Days", 0, burn30Days, 1300 * 1.6, () => {
+          const burnBox = document.getElementById("burnBox");
+          explosionEffect(burnBox, () => {
+            const totalSupplyEl = document.getElementById("totalSupplyDisplay").parentElement;
+            totalSupplyEl.classList.add("glow");
+            animateCounter("totalSupplyDisplay", currentSupply + burn30Days, currentSupply, 1600 * 1.6, () => {
+              totalSupplyEl.classList.remove("glow");
+              animateCounter("burnedSupply", burned - burn30Days, burned, 1600 * 1.6);
+            });
           });
         });
       });
+
+      // Optional placeholder market cap
+      const marketCap = 1000000 * 0.001; // 1B tokens * 0.001 (example price)
+      document.getElementById("marketCap").textContent = `$${marketCap.toLocaleString()}`;
     }
 
     main();
