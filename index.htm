@@ -40,16 +40,6 @@
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-      transition: box-shadow 0.5s ease;
-    }
-    .stat-box.burn-effect {
-      box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.5);
-      animation: pulseGlow 1s ease-in-out 1;
-    }
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
-      50% { box-shadow: 0 0 25px 15px rgba(255, 0, 0, 0.8); }
-      100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
     }
     .fire-emoji {
       display: inline-block;
@@ -119,9 +109,19 @@
           </div>
         </div>
       </div>
-      <div class="text-center">
-        <h4 class="text-light">📈 30 Days Volume: <span id="volume30Days">Loading...</span></h4>
-        <h4 class="text-warning">🔥 30 Day Burned: <span id="burn30Days">Loading...</span> <span class="fire-emoji">🚀</span></h4>
+      <div class="row g-4 text-center mb-4">
+        <div class="col-md-6">
+          <div class="stat-box">
+            <h4>📈 30 Days Volume</h4>
+            <p id="volume30Days" class="fs-4">Loading...</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="stat-box">
+            <h4>🔥 30 Day Burned</h4>
+            <p id="burn30Days" class="fs-4"><span class="fire-emoji">🚀</span> Loading...</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -226,23 +226,6 @@
       }, 30);
     }
 
-    function animateTotalSupplyDisplay(start, end, duration = 1500) {
-      const el = document.getElementById("totalSupplyDisplay");
-      const box = document.getElementById("supplyBox");
-      let current = start;
-      const step = (start - end) / (duration / 30);
-      const interval = setInterval(() => {
-        current -= step;
-        if (current <= end) {
-          current = end;
-          clearInterval(interval);
-        }
-        el.textContent = Math.round(current).toLocaleString();
-      }, 30);
-      box.classList.add("burn-effect");
-      setTimeout(() => box.classList.remove("burn-effect"), duration);
-    }
-
     async function main() {
       const currentSupply = await fetchTokenSupply();
       const burned = totalSupply - currentSupply;
@@ -250,16 +233,10 @@
 
       document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
 
-      animateCounter("volume30Days", 0, volume30Days, 1000, () => {
-        animateCounter("burn30Days", 0, burn30Days, 1000, () => {
-          animateTotalSupplyDisplay(currentSupply + burn30Days, currentSupply);
-          setTimeout(() => {
-            document.getElementById("burnedSupply").textContent = `${(burned).toLocaleString()}`;
-            document.getElementById("burnBox").classList.add("burn-effect");
-            setTimeout(() => document.getElementById("burnBox").classList.remove("burn-effect"), 1500);
-          }, 1500);
-        });
-      });
+      animateCounter("volume30Days", 0, volume30Days, 1000);
+      animateCounter("burn30Days", 0, burn30Days, 1000);
+      document.getElementById("totalSupplyDisplay").textContent = currentSupply.toLocaleString();
+      document.getElementById("burnedSupply").textContent = burned.toLocaleString();
     }
 
     main();
