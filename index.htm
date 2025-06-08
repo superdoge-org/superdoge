@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SuperDoge - The Crypto Superhero</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/styles.css">
@@ -47,7 +47,6 @@
     }
     .press-logos img {
       height: 50px;
-      vertical-align: middle;
       background-color: #fff;
       padding: 6px;
       border-radius: 6px;
@@ -61,10 +60,19 @@
       background: #111;
       padding: 2rem 0;
     }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
-  <section class="hero">
+  <section class="hero fade-up">
     <div class="container">
       <h1>SuperDoge</h1>
       <p class="lead">The First Ever Charity Crypto Superhero — Est. 2021</p>
@@ -72,7 +80,7 @@
     </div>
   </section>
 
-  <div class="container py-5">
+  <div class="container py-5 fade-up">
     <section id="stats" class="mb-5">
       <h2 class="section-title">Live Token Stats</h2>
       <div class="row g-4 text-center mb-4">
@@ -95,7 +103,7 @@
       </div>
     </section>
 
-    <section class="mb-5">
+    <section class="mb-5 fade-up">
       <h2 class="section-title">How to Buy</h2>
       <ol>
         <li>Download MetaMask or Trust Wallet.</li>
@@ -106,7 +114,7 @@
       </ol>
     </section>
 
-    <section class="mb-5">
+    <section class="mb-5 fade-up">
       <h2 class="section-title">About SuperDoge</h2>
       <p>SuperDoge launched in 2021 as a meme coin inspired by Dogecoin and Superman — with a mission to fund real charities.</p>
       <ul>
@@ -138,6 +146,24 @@
     const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
     const totalSupply = 1000000000;
 
+    function animateCount(id, endValue) {
+      const el = document.getElementById(id);
+      let start = 0;
+      const duration = 1500;
+      const stepTime = Math.max(Math.floor(duration / endValue), 20);
+      const increment = Math.ceil(endValue / (duration / stepTime));
+
+      const counter = setInterval(() => {
+        start += increment;
+        if (start >= endValue) {
+          el.textContent = endValue.toLocaleString();
+          clearInterval(counter);
+        } else {
+          el.textContent = start.toLocaleString();
+        }
+      }, stepTime);
+    }
+
     async function fetchTokenSupply() {
       const res = await fetch(`https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`);
       const data = await res.json();
@@ -157,7 +183,6 @@
         const url = `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${contract}&page=${page}&offset=${offset}&sort=desc&apikey=${apiKey}`;
         const res = await fetch(url);
         const data = await res.json();
-
         if (!data.result || data.result.length === 0) break;
 
         for (const tx of data.result) {
@@ -185,14 +210,29 @@
       const currentSupply = await fetchTokenSupply();
       const burned = totalSupply - currentSupply;
       const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
+      const donation = Math.round((836.34 + 18.88) * 650);
 
-      document.getElementById("burnedSupply").textContent = `${burned.toLocaleString()}`;
-      document.getElementById("totalSupplyDisplay").textContent = `${currentSupply.toLocaleString()}`;
-      document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
-      document.getElementById("burn30Days").textContent = burn30Days.toLocaleString();
-      document.getElementById("volume30Days").textContent = volume30Days.toLocaleString();
+      animateCount("burnedSupply", burned);
+      animateCount("totalSupplyDisplay", currentSupply);
+      animateCount("donationUSD", donation);
+      animateCount("burn30Days", burn30Days);
+      animateCount("volume30Days", volume30Days);
     }
 
+    function setupScrollAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    }
+
+    setupScrollAnimations();
     main();
   </script>
 </body>
