@@ -51,7 +51,7 @@
     <div class="container">
       <h1>SuperDoge (SUPDOG)</h1>
       <p class="lead">The First Ever Charity Crypto Superhero — Est. 2021</p>
-      <p>SuperDoge is a deflationary token that started with 1,000,000,000 tokens in 2021. The entire supply is in circulation. Every transaction includes a 6% tax: 2% is permanently burned, 2% is redistributed to holders, and 2% funds the Foundation — supporting liquidity, charity, and community growth.</p>
+      <p>SuperDoge is a deflationary token that started with 1,000,000,000 tokens in 2021. 100% of the supply is in circulation with no vesting period. Every transaction includes a 6% tax: 2% is permanently burned, 2% is redistributed to holders, and 2% funds the Foundation — supporting liquidity, charity, and community growth.</p>
     </div>
   </section>
 
@@ -62,11 +62,11 @@
         <div class="col-md-4">
           <h4>Total Burned (Last 30 Days)</h4>
           <p id="burnedSupply" class="fs-4">Loading...</p>
-          <small id="burnedPercent">%</small>
+          <small id="burnedPercent"></small>
         </div>
         <div class="col-md-4">
           <h4>Total Supply</h4>
-          <p class="fs-4">1,000,000,000 SUPDOG</p>
+          <p id="totalSupplyDisplay" class="fs-4">Loading...</p>
         </div>
         <div class="col-md-4">
           <h4>Market Cap</h4>
@@ -78,8 +78,7 @@
         </div>
         <div class="col-md-4">
           <h4>Donated to Date</h4>
-          <p id="donationBNB" class="fs-4">836.34 + 18.88 BNB</p>
-          <p id="donationUSD">Loading...</p>
+          <p id="donationUSD" class="fs-4">Loading...</p>
         </div>
         <div class="col-md-4">
           <h4>Monthly Volume</h4>
@@ -104,9 +103,9 @@
       <p>SuperDoge launched in 2021 as a meme coin inspired by Dogecoin and Superman — with a mission to fund real charities.</p>
       <ul>
         <li>💥 6% transaction tax: 2% burn, 2% holders, 2% to the SuperDoge Foundation</li>
-        <li>🔥 Over <strong>10M+ SUPDOG</strong> burned and counting</li>
+        <li>🔥 Over <strong>100M+ SUPDOG</strong> burned and counting</li>
         <li>🛠️ Foundation supports charity, listings, and development</li>
-        <li>🪙 1B fixed supply, 100% circulating</li>
+        <li>🪙 100% circulating, no vesting period</li>
         <li>🛡️ Certik-audited smart contract</li>
         <li>🌎 Over 7000 holders</li>
         <li>📰 Featured in major media:</li>
@@ -133,14 +132,14 @@
     async function fetchTokenSupply() {
       const res = await fetch(`https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`);
       const data = await res.json();
-      return parseFloat(data.result) / 1e9;
+      return Math.round(parseFloat(data.result) / 1e9);
     }
 
     async function fetchDexPrice() {
       try {
-        const res = await fetch("https://api.dexscreener.com/latest/dex/pairs/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23");
+        const res = await fetch("https://api.bscscan.com/api?module=token&action=tokeninfo&contractaddress=" + contract + "&apikey=" + apiKey);
         const data = await res.json();
-        return parseFloat(data.pair.priceUsd);
+        return Math.round(parseFloat(data.result[0].tokenPriceUSD));
       } catch {
         return 0.00025;
       }
@@ -150,15 +149,15 @@
       const tokenPrice = await fetchDexPrice();
       const currentSupply = await fetchTokenSupply();
       const burned = totalSupply - currentSupply;
-      const burnedPercent = ((burned / totalSupply) * 100).toFixed(2);
+      const burnedPercent = ((burned / totalSupply) * 100).toFixed(1);
       const marketCap = tokenPrice * currentSupply;
 
       document.getElementById("burnedSupply").textContent = `${burned.toLocaleString()} SUPDOG`;
       document.getElementById("burnedPercent").textContent = `${burnedPercent}% burned`;
-      document.getElementById("liquidity").textContent = `~215 BNB (~$${(215 * 650).toLocaleString()})`;
-      document.getElementById("marketCap").textContent = `$${marketCap.toLocaleString(undefined, {maximumFractionDigits: 2})}`;
-      document.getElementById("tokenPrice").textContent = `$${tokenPrice}`;
-      document.getElementById("donationUSD").textContent = `~$${((836.34 + 18.88) * 650).toLocaleString(undefined, {maximumFractionDigits: 2})}`;
+      document.getElementById("totalSupplyDisplay").textContent = `${currentSupply.toLocaleString()} SUPDOG`;
+      document.getElementById("marketCap").textContent = `$${Math.round(marketCap).toLocaleString()}`;
+      document.getElementById("tokenPrice").textContent = `$${tokenPrice.toLocaleString()}`;
+      document.getElementById("donationUSD").textContent = `~$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
     }
 
     main();
