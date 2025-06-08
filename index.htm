@@ -56,11 +56,15 @@
   </section>
 
   <div class="container py-5">
+    <section id="burnHighlight" class="text-center mb-4">
+      <h2 class="text-warning">🔥 Burned in Last 30 Days: <span id="burn30Days">Loading...</span> SUPDOG</h2>
+    </section>
+
     <section id="stats" class="mb-5">
       <h2 class="section-title">Live Token Stats</h2>
       <div class="row g-4 text-center">
         <div class="col-md-4">
-          <h4>Total Burned (Last 30 Days)</h4>
+          <h4>Total Burned</h4>
           <p id="burnedSupply" class="fs-4">Loading...</p>
           <small id="burnedPercent"></small>
         </div>
@@ -69,20 +73,8 @@
           <p id="totalSupplyDisplay" class="fs-4">Loading...</p>
         </div>
         <div class="col-md-4">
-          <h4>Market Cap</h4>
-          <p id="marketCap" class="fs-4">Loading...</p>
-        </div>
-        <div class="col-md-4">
-          <h4>SUPDOG Price</h4>
-          <p id="tokenPrice" class="fs-4">Loading...</p>
-        </div>
-        <div class="col-md-4">
           <h4>Donated to Date</h4>
           <p id="donationUSD" class="fs-4">Loading...</p>
-        </div>
-        <div class="col-md-4">
-          <h4>Monthly Volume</h4>
-          <p id="monthlyVolume" class="fs-4">Coming soon</p>
         </div>
       </div>
     </section>
@@ -108,6 +100,7 @@
         <li>🪙 100% circulating, no vesting period</li>
         <li>🛡️ Certik-audited smart contract</li>
         <li>🌎 Over 7000 holders</li>
+        <li>🔐 Over 215 BNB++ Locked under smart contract for 75 years</li>
         <li>📰 Featured in major media:</li>
       </ul>
       <div class="press-logos text-center my-4">
@@ -145,19 +138,23 @@
       }
     }
 
+    async function fetchBurn30Days() {
+      return 2410000; // hardcoded or can be replaced with a dynamic value later
+    }
+
     async function main() {
       const tokenPrice = await fetchDexPrice();
       const currentSupply = await fetchTokenSupply();
       const burned = totalSupply - currentSupply;
       const burnedPercent = ((burned / totalSupply) * 100).toFixed(1);
       const marketCap = tokenPrice * currentSupply;
+      const burn30Days = await fetchBurn30Days();
 
       document.getElementById("burnedSupply").textContent = `${burned.toLocaleString()} SUPDOG`;
       document.getElementById("burnedPercent").textContent = `${burnedPercent}% burned`;
       document.getElementById("totalSupplyDisplay").textContent = `${currentSupply.toLocaleString()} SUPDOG`;
-      document.getElementById("marketCap").textContent = `$${Math.round(marketCap).toLocaleString()}`;
-      document.getElementById("tokenPrice").textContent = `$${tokenPrice.toLocaleString()}`;
       document.getElementById("donationUSD").textContent = `~$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
+      document.getElementById("burn30Days").textContent = burn30Days.toLocaleString();
     }
 
     main();
