@@ -157,10 +157,12 @@
       const burned = totalSupply - currentSupply;
       const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
 
+      // Initial State
       document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
       document.getElementById("totalSupplyDisplay").textContent = (currentSupply + burn30Days).toLocaleString();
       document.getElementById("burnedSupply").textContent = (burned - burn30Days).toLocaleString();
 
+      // Animate 30-Day Stats First
       animateCounter("volume30Days", 0, volume30Days, 1300 * 1.3, () => {
         animateCounter("burn30Days", 0, burn30Days, 1300 * 1.6, () => {
           const totalSupplyEl = document.getElementById("totalSupplyDisplay").parentElement;
