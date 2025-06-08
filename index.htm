@@ -1,239 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SuperDoge - The Crypto Superhero</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
-    body {
-      background: linear-gradient(to bottom right, #0f0f0f, #1a1a1a);
-      color: #fff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .hero {
-      background: url('assets/superdoge-bg.jpg') center/cover no-repeat;
-      padding: 100px 0;
-      text-align: center;
-    }
-    .hero h1 {
-      font-size: 4rem;
-      color: #ffd700;
-      text-shadow: 2px 2px 8px #000;
-    }
-    .hero p {
-      max-width: 800px;
-      margin: 1rem auto 0;
-      font-size: 1.25rem;
-    }
-    .section-title {
-      border-bottom: 2px solid #ffd700;
-      display: inline-block;
-      margin-bottom: 1rem;
-      padding-bottom: .5rem;
-    }
-    .press-logos {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      padding: 1rem;
-      background-color: #e6e6e6;
-      border-radius: 12px;
-      transition: background-color 0.3s;
-    }
-    .press-logos img {
-      height: 50px;
-      background-color: #fff;
-      padding: 6px;
-      border-radius: 6px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .press-logos a:hover img {
-      transform: scale(1.15);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    footer {
-      background: #111;
-      padding: 2rem 0;
-    }
-    .fade-up {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade-up.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SuperDoge - The Crypto Superhero</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<style>
+  body {
+    background: linear-gradient(to bottom right, #0f0f0f, #1a1a1a);
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .hero {
+    background: url('assets/superdoge-bg.jpg') center/cover no-repeat;
+    padding: 100px 0;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 4rem;
+    color: #ffd700;
+    text-shadow: 2px 2px 8px #000;
+  }
+  .hero p {
+    max-width: 800px;
+    margin: 1rem auto 0;
+    font-size: 1.25rem;
+  }
+  .section-title {
+    border-bottom: 2px solid #ffd700;
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding-bottom: .5rem;
+  }
+  .press-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 1rem;
+    background-color: #e6e6e6;
+    border-radius: 12px;
+    transition: background-color 0.3s;
+  }
+  .press-logos img {
+    height: 50px;
+    background-color: #fff;
+    padding: 6px;
+    border-radius: 6px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .press-logos a:hover img {
+    transform: scale(1.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  footer {
+    background: #111;
+    padding: 2rem 0;
+  }
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .fade-up.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hit explosion effect bubble */
+  #hit-effect {
+    position: absolute;
+    background: radial-gradient(circle, #ffdd00 0%, transparent 70%);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1000;
+  }
+</style>
 </head>
 <body>
-  <section class="hero fade-up">
-    <div class="container">
-      <h1>SuperDoge</h1>
-      <p class="lead">The First Ever Charity Crypto Superhero — Est. 2021</p>
-      <p>SuperDoge is a deflationary token that started with 1,000,000,000 tokens in 2021. 100% of the supply is in circulation with no vesting period. Every transaction includes a 6% tax: 2% is permanently burned, 2% is redistributed to holders, and 2% funds the Foundation — supporting liquidity, charity, and community growth.</p>
+<section class="hero fade-up">
+  <div class="container">
+    <h1>SuperDoge</h1>
+    <p class="lead">The First Ever Charity Crypto Superhero — Est. 2021</p>
+    <p>SuperDoge is a deflationary token that started with 1,000,000,000 tokens in 2021. 100% of the supply is in circulation with no vesting period. Every transaction includes a 6% tax: 2% is permanently burned, 2% is redistributed to holders, and 2% funds the Foundation — supporting liquidity, charity, and community growth.</p>
+  </div>
+</section>
+
+<div class="container py-5 fade-up" style="position:relative;">
+  <section id="stats" class="mb-5">
+    <h2 class="section-title">Live Token Stats</h2>
+    <div class="row g-4 text-center mb-4">
+      <div class="col-md-4 position-relative">
+        <h4>Total Supply</h4>
+        <p id="totalSupplyDisplay" class="fs-4">Loading...</p>
+        <!-- Hit effect element -->
+        <div id="hit-effect"></div>
+      </div>
+      <div class="col-md-4">
+        <h4>Total Burned</h4>
+        <p id="burnedSupply" class="fs-4">Loading...</p>
+      </div>
+      <div class="col-md-4">
+        <h4>Donated to Charity</h4>
+        <p id="donationUSD" class="fs-4">$ Loading...</p>
+      </div>
+    </div>
+    <div class="text-center">
+      <h4 class="text-light mb-2">📈 Token Volume in Last 30 Days: <span id="volume30Days">Loading...</span></h4>
+      <h4 class="text-warning">🔥 Permanently Burned Token in Last 30 Days: <span id="burn30Days">Loading...</span></h4>
     </div>
   </section>
 
-  <div class="container py-5 fade-up">
-    <section id="stats" class="mb-5">
-      <h2 class="section-title">Live Token Stats</h2>
-      <div class="row g-4 text-center mb-4">
-        <div class="col-md-4">
-          <h4>Total Supply</h4>
-          <p id="totalSupplyDisplay" class="fs-4">Loading...</p>
-        </div>
-        <div class="col-md-4">
-          <h4>Total Burned</h4>
-          <p id="burnedSupply" class="fs-4">Loading...</p>
-        </div>
-        <div class="col-md-4">
-          <h4>Donated to Charity</h4>
-          <p id="donationUSD" class="fs-4">Loading...</p>
-        </div>
-      </div>
-      <div class="text-center">
-        <h4 class="text-warning">🔥 Burned in Last 30 Days: <span id="burn30Days">Loading...</span></h4>
-        <h4 class="text-light">📈 Token Volume in Last 30 Days: <span id="volume30Days">Loading...</span></h4>
-      </div>
-    </section>
+  <section class="mb-5 fade-up">
+    <h2 class="section-title">How to Buy</h2>
+    <ol>
+      <li>Download MetaMask or Trust Wallet.</li>
+      <li>Buy and send BNB to your wallet.</li>
+      <li>Go to <a href="https://pancakeswap.finance/swap?outputCurrency=0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank" rel="noopener noreferrer">PancakeSwap</a>.</li>
+      <li>Paste this contract: <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
+      <li>Set slippage to 6%, then swap BNB for SUPDOG.</li>
+    </ol>
+  </section>
 
-    <section class="mb-5 fade-up">
-      <h2 class="section-title">How to Buy</h2>
-      <ol>
-        <li>Download MetaMask or Trust Wallet.</li>
-        <li>Buy and send BNB to your wallet.</li>
-        <li>Go to <a href="https://pancakeswap.finance/swap?outputCurrency=0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">PancakeSwap</a>.</li>
-        <li>Paste this contract: <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
-        <li>Set slippage to 6%, then swap BNB for SUPDOG.</li>
-      </ol>
-    </section>
+  <section class="mb-5 fade-up">
+    <h2 class="section-title">About SuperDoge</h2>
+    <p>SuperDoge launched in 2021 as a meme coin inspired by Dogecoin and Superman — with a mission to fund real charities.</p>
+    <ul>
+      <li>💥 6% transaction tax: 2% burn, 2% holders, 2% to the SuperDoge Foundation</li>
+      <li>🔥 Over <strong>100M+ SUPDOG</strong> burned and counting</li>
+      <li>🛠️ Foundation supports charity, listings, and development</li>
+      <li>🪙 100% circulating, no vesting period</li>
+      <li>🛡️ Certik-audited smart contract</li>
+      <li>🌎 Over 7000 holders</li>
+      <li>🔐 Over 215 BNB+ Liquidity is Locked under smart contract for 75 years</li>
+      <li>📰 Featured in major media:</li>
+    </ul>
+    <div class="press-logos text-center my-4">
+      <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank" rel="noopener noreferrer"><img src="assets/cnbc.png" alt="CNBC"></a>
+      <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank" rel="noopener noreferrer"><img src="assets/financialpost.png" alt="Financial Post"></a>
+      <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank" rel="noopener noreferrer"><img src="assets/bloomberg.png" alt="Bloomberg"></a>
+    </div>
+    <p>💰 Donated 836.34 BNB + growing, tracked on-chain</p>
+  </section>
 
-    <section class="mb-5 fade-up">
-      <h2 class="section-title">About SuperDoge</h2>
-      <p>SuperDoge launched in 2021 as a meme coin inspired by Dogecoin and Superman — with a mission to fund real charities.</p>
-      <ul>
-        <li>💥 6% transaction tax: 2% burn, 2% holders, 2% to the SuperDoge Foundation</li>
-        <li>🔥 Over <strong>100M+ SUPDOG</strong> burned and counting</li>
-        <li>🛠️ Foundation supports charity, listings, and development</li>
-        <li>🪙 100% circulating, no vesting period</li>
-        <li>🛡️ Certik-audited smart contract</li>
-        <li>🌎 Over 7000 holders</li>
-        <li>🔐 Over 215 BNB+ Liquidity is Locked under smart contract for 75 years</li>
-        <li>📰 Featured in major media:</li>
-      </ul>
-      <div class="press-logos text-center my-4">
-        <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank"><img src="assets/cnbc.png" alt="CNBC"></a>
-        <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank"><img src="assets/financialpost.png" alt="Financial Post"></a>
-        <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank"><img src="assets/bloomberg.png" alt="Bloomberg"></a>
-      </div>
-      <p>💰 Donated 836.34 BNB + growing, tracked on-chain</p>
-    </section>
+  <footer class="text-center">
+    <p>&copy; 2025 SuperDoge.org — Rebuilding the Crypto Superhero</p>
+    <p><a href="stats.html" class="text-info">Advanced Stats Page</a></p>
+  </footer>
+</div>
 
-    <footer class="text-center">
-      <p>&copy; 2025 SuperDoge.org — Rebuilding the Crypto Superhero</p>
-      <p><a href="stats.html" class="text-info">Advanced Stats Page</a></p>
-    </footer>
-  </div>
+<script>
+  const apiKey = "QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S";
+  const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
+  const totalSupplyStart = 1000000000;
 
-  <script>
-    const apiKey = "QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S";
-    const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
-    const totalSupply = 1000000000;
+  // Animate numbers with only volume and burned in last 30 days
+  function animateCount(id, endValue, duration = 1500, callback) {
+    const el = document.getElementById(id);
+    let start = 0;
+    const stepTime = Math.max(Math.floor(duration / endValue), 20);
+    const increment = Math.ceil(endValue / (duration / stepTime));
 
-    function animateCount(id, endValue) {
-      const el = document.getElementById(id);
-      let start = 0;
-      const duration = 1500;
-      const stepTime = Math.max(Math.floor(duration / endValue), 20);
-      const increment = Math.ceil(endValue / (duration / stepTime));
+    const counter = setInterval(() => {
+      start += increment;
+      if (start >= endValue) {
+        el.textContent = endValue.toLocaleString();
+        clearInterval(counter);
+        if (callback) callback();
+      } else {
+        el.textContent = start.toLocaleString();
+      }
+    }, stepTime);
+  }
 
-      const counter = setInterval(() => {
-        start += increment;
-        if (start >= endValue) {
-          el.textContent = endValue.toLocaleString();
-          clearInterval(counter);
-        } else {
-          el.textContent = start.toLocaleString();
-        }
-      }, stepTime);
-    }
+  // Fetch total circulating supply (in billions)
+  async function fetchTokenSupply() {
+    const res = await fetch(`https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`);
+    const data = await res.json();
+    return Math.round(parseFloat(data.result) / 1e9);
+  }
 
-    async function fetchTokenSupply() {
-      const res = await fetch(`https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`);
+  // Fetch burned total supply (in billions)
+  async function fetchBurnedSupply() {
+    // We calculate as difference of totalSupplyStart - circulatingSupply
+    const circulating = await fetchTokenSupply();
+    return totalSupplyStart - circulating;
+  }
+
+  // Fetch 30 day burned and volume data (approximate)
+  async function fetchBurnAndVolume30Days() {
+    const now = Math.floor(Date.now() / 1000);
+    const thirtyDaysAgo = now - 30 * 24 * 60 * 60;
+    let totalBurned = 0;
+    let totalVolume = 0;
+    let page = 1;
+    const offset = 100;
+    let keepGoing = true;
+
+    while (keepGoing && page <= 10) {
+      const url = `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${contract}&page=${page}&offset=${offset}&sort=desc&apikey=${apiKey}`;
+      const res = await fetch(url);
       const data = await res.json();
-      return Math.round(parseFloat(data.result) / 1e9);
-    }
+      if (!data.result || data.result.length === 0) break;
 
-    async function fetchBurnAndVolume30Days() {
-      const now = Math.floor(Date.now() / 1000);
-      const thirtyDaysAgo = now - 30 * 24 * 60 * 60;
-      let totalBurned = 0;
-      let totalVolume = 0;
-      let page = 1;
-      const offset = 100;
-      let keepGoing = true;
-
-      while (keepGoing && page <= 10) {
-        const url = `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${contract}&page=${page}&offset=${offset}&sort=desc&apikey=${apiKey}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        if (!data.result || data.result.length === 0) break;
-
-        for (const tx of data.result) {
-          const time = parseInt(tx.timeStamp);
-          if (time < thirtyDaysAgo) {
-            keepGoing = false;
-            break;
-          }
-          const amount = parseFloat(tx.value) / 1e9;
-          totalVolume += amount;
-          totalBurned += amount * 0.02;
+      for (const tx of data.result) {
+        const time = parseInt(tx.timeStamp);
+        if (time < thirtyDaysAgo) {
+          keepGoing = false;
+          break;
         }
-
-        if (data.result.length < offset) break;
-        page++;
+        const amount = parseFloat(tx.value) / 1e9;
+        totalVolume += amount;
+        totalBurned += amount * 0.02;
       }
 
-      return {
-        burned: Math.round(totalBurned),
-        volume: Math.round(totalVolume)
-      };
+      if (data.result.length < offset) break;
+      page++;
     }
 
-    async function main() {
-      const currentSupply = await fetchTokenSupply();
-      const burned = totalSupply - currentSupply;
-      const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
-      const donation = Math.round((836.34 + 18.88) * 650);
+    return {
+      burned: Math.round(totalBurned),
+      volume: Math.round(totalVolume)
+    };
+  }
 
-      animateCount("burnedSupply", burned);
-      animateCount("totalSupplyDisplay", currentSupply);
-      animateCount("donationUSD", donation);
-      animateCount("burn30Days", burn30Days);
-      animateCount("volume30Days", volume30Days);
-    }
+  // Animate burned "hit" effect and update total supply accordingly
+  function playHitEffect(burnAmount, newTotalSupply) {
+    const hitEffect = document.getElementById("hit-effect");
+    const totalSupplyEl = document.getElementById("totalSupplyDisplay");
 
-    function setupScrollAnimations() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('show');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
+    // Position the hit effect near the total supply text
+    const rect = totalSupplyEl.getBoundingClientRect();
+    hitEffect.style.left = rect.left + rect.width / 2 + "px";
+    hitEffect.style.top = rect.top + rect.height / 2 + "px";
+    hitEffect.style.opacity = "1";
+    hitEffect.style.transform = "scale(1)";
 
-      document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-    }
+    // After a short delay fade out the hit effect
+    setTimeout(() => {
+      hitEffect.style.opacity = "0";
+      hitEffect.style.transform = "scale(0)";
+    }, 400);
 
-    setupScrollAnimations();
-    main();
-  </script>
+    // Animate the total supply count down after the hit
+    animateCount("totalSupplyDisplay", newTotalSupply, 1000);
+  }
+
+  async function main() {
+    const [circulatingSupply, burnedSupply] = await Promise.all([
+      fetchTokenSupply(),
+      fetchBurnedSupply()
+    ]);
+
+    // Show total burned and donated instantly (no animation)
+    document.getElementById("burnedSupply").textContent = burnedSupply.toLocaleString();
+
+    // Donated amount with $ sign (approximate $650 per BNB + 18.88 BNB charity wallet)
+    const donatedBNB = 836.34 + 18.88;
+    const donatedUSD = (donatedBNB * 650).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    document.getElementById("donationUSD").textContent = donatedUSD;
+
+    // Initially show total supply at start amount
+    document.getElementById("totalSupplyDisplay").textContent = totalSupplyStart.toLocaleString();
+
+    // Fetch 30-day volume and burned amounts
+    const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
+
+    // Animate Token Volume in Last 30 Days only
+    animateCount("volume30Days", volume30Days);
+
+    // Animate Burned Token in Last 30 Days with hit effect and update supply
+    animateCount("burn30Days", burn30Days, 1500, () => {
+      const newSupply = totalSupplyStart - burn30Days;
+      playHitEffect(burn30Days, newSupply);
+    });
+  }
+
+  // Scroll fade-in effect
+  function setupScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  }
+
+  setupScrollAnimations();
+  main();
+</script>
 </body>
 </html>
