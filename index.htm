@@ -64,6 +64,7 @@
       <h2 class="section-title">Live Token Stats</h2>
       <div class="text-center mb-4">
         <h4 class="text-warning">🔥 Burned in Last 30 Days: <span id="burn30Days">Loading...</span></h4>
+        <h5 class="text-light">Token Volume in Last 30 Days: <span id="volume30Days">Loading...</span></h5>
       </div>
       <div class="row g-4 text-center">
         <div class="col-md-4">
@@ -131,10 +132,11 @@
       return Math.round(parseFloat(data.result) / 1e9);
     }
 
-    async function fetchBurn30Days() {
+    async function fetchBurnAndVolume30Days() {
       const now = Math.floor(Date.now() / 1000);
       const thirtyDaysAgo = now - 30 * 24 * 60 * 60;
       let totalBurned = 0;
+      let totalVolume = 0;
       let page = 1;
       const offset = 100;
       let keepGoing = true;
@@ -153,6 +155,7 @@
             break;
           }
           const amount = parseFloat(tx.value) / 1e9;
+          totalVolume += amount;
           totalBurned += amount * 0.02;
         }
 
@@ -160,20 +163,24 @@
         page++;
       }
 
-      return Math.round(totalBurned);
+      return {
+        burned: Math.round(totalBurned),
+        volume: Math.round(totalVolume)
+      };
     }
 
     async function main() {
       const currentSupply = await fetchTokenSupply();
       const burned = totalSupply - currentSupply;
       const burnedPercent = ((burned / totalSupply) * 100).toFixed(1);
-      const burn30Days = await fetchBurn30Days();
+      const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
 
       document.getElementById("burnedSupply").textContent = `${burned.toLocaleString()}`;
-      document.getElementById("burnedPercent").textContent = `${burnedPercent}% burned`;
+      document.getElementById("burnedPercent").textContent = `${burnedPercent} burned`;
       document.getElementById("totalSupplyDisplay").textContent = `${currentSupply.toLocaleString()}`;
       document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
       document.getElementById("burn30Days").textContent = burn30Days.toLocaleString();
+      document.getElementById("volume30Days").textContent = volume30Days.toLocaleString();
     }
 
     main();
