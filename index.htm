@@ -78,7 +78,42 @@
   </style>
 </head>
 <body>
-  <!-- Content unchanged -->
+  <section class="container my-5">
+    <h2 class="section-title">Live Token Stats</h2>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="stat-box text-center">
+          <h5>Total Supply</h5>
+          <div id="totalSupplyDisplay" class="fs-3 fw-bold">-</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="stat-box text-center">
+          <h5>Total Burned</h5>
+          <div id="burnedSupply" class="fs-3 fw-bold">-</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="stat-box text-center">
+          <h5>30 Day Volume</h5>
+          <div id="volume30Days" class="fs-3 fw-bold">0</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="stat-box text-center">
+          <h5>30 Day Burned</h5>
+          <div id="burn30Days" class="fs-3 fw-bold">0</div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="stat-box text-center">
+          <h5>Charity & Community Dev Fund (Est. USD)</h5>
+          <div id="donationUSD" class="fs-3 fw-bold">-</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script>
     const apiKey = "QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S";
     const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
@@ -162,16 +197,17 @@
       const burned = totalSupply - currentSupply;
       const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
 
+      // Display initial total (includes 30-day burned tokens for starting visual)
       document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
-
       document.getElementById("totalSupplyDisplay").textContent = (currentSupply + burn30Days).toLocaleString();
-      document.getElementById("burnedSupply").textContent = (burned + burn30Days).toLocaleString();
+      document.getElementById("burnedSupply").textContent = (burned - burn30Days).toLocaleString();
 
-      animateCounter("volume30Days", 0, volume30Days, 1300, () => {
-        animateCounter("burn30Days", 0, burn30Days, 1600, () => {
+      // Animate 30-day volume, then burned, then trigger explosion effect, then final total updates
+      animateCounter("volume30Days", 0, volume30Days, 1300 * 1.3, () => {
+        animateCounter("burn30Days", 0, burn30Days, 1600 * 1.6, () => {
           explosionEffect(() => {
             animateCounter("totalSupplyDisplay", currentSupply + burn30Days, currentSupply, 1000);
-            animateCounter("burnedSupply", burned + burn30Days, burned, 1000);
+            animateCounter("burnedSupply", burned - burn30Days, burned, 1000);
           });
         });
       });
