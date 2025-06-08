@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SuperDoge - The Crypto Superhero</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
     body {
@@ -22,134 +23,57 @@
       font-size: 4rem;
       color: #ffd700;
       text-shadow: 2px 2px 8px #000;
-      margin-bottom: 0.2rem;
-    }
-    .hero p.lead {
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
     }
     .hero p {
       max-width: 800px;
-      margin: 0 auto 0;
-      font-size: 1.1rem;
-      line-height: 1.5;
+      margin: 1rem auto 0;
+      font-size: 1.25rem;
     }
     .section-title {
       border-bottom: 2px solid #ffd700;
       display: inline-block;
       margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-    }
-    .stats-row {
-      max-width: 700px;
-      margin: 0 auto 2rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+      padding-bottom: .5rem;
     }
     .stat-box {
-      flex: 1;
-      background: #222;
-      border-radius: 10px;
-      padding: 1rem 0;
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-      transition: transform 0.3s ease;
-      cursor: default;
-      user-select: none;
-      text-align: center;
+      background-color: #222;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+      transition: box-shadow 0.5s ease;
     }
-    .stat-box h4 {
-      margin-bottom: 0.6rem;
-      font-weight: 600;
-      color: #ffd700;
-      font-size: 1.1rem;
+    .stat-box.burn-effect {
+      box-shadow: 0 0 30px 10px rgba(255, 0, 0, 0.5);
+      animation: pulseGlow 1s ease-in-out 1;
     }
-    .stat-box p {
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: #fff;
-      margin: 0;
-      transition: color 0.3s ease;
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
+      50% { box-shadow: 0 0 25px 15px rgba(255, 0, 0, 0.8); }
+      100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.5); }
     }
-    .stat-box.hoverable:hover p {
-      color: #ffd700;
-      transform: scale(1.15);
+    .fire-emoji {
+      display: inline-block;
+      animation: missileTrail 0.6s ease-in-out;
     }
-    /* Smaller spacing for the bottom two stats */
-    #volume30DaysBox, #burn30DaysBox {
-      margin-bottom: 0;
+    @keyframes missileTrail {
+      0% { transform: translateY(-20px) scale(0.6); opacity: 0; }
+      50% { transform: translateY(0px) scale(1.2); opacity: 1; }
+      100% { transform: scale(1) rotate(15deg); }
     }
-    #bottomStats {
-      max-width: 700px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-    #bottomStats .stat-box {
-      background: #222;
-      border-radius: 10px;
-      padding: 1rem 0;
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
-      text-align: center;
-      cursor: default;
-      user-select: none;
-      flex: 1;
-    }
-    #bottomStats .stat-box h4 {
-      color: #fff;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-    #bottomStats .stat-box p {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #fff;
-      margin: 0;
-      transition: color 0.3s ease;
-    }
-    #bottomStats .stat-box.hoverable:hover p {
-      color: #ffd700;
-      transform: scale(1.15);
-    }
-    /* Hit effect */
-    .hit-effect {
-      position: fixed;
-      background: #ffd700;
-      border-radius: 50%;
-      opacity: 0.8;
-      pointer-events: none;
-      box-shadow: 0 0 15px 5px #ffd700;
-      z-index: 10000;
-      animation: hitExplosion 0.5s ease forwards;
-    }
-    @keyframes hitExplosion {
-      0% {
-        transform: scale(1);
-        opacity: 0.8;
-      }
-      100% {
-        transform: scale(3);
-        opacity: 0;
-      }
-    }
-    /* Press logos styling */
     .press-logos {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 20px;
       padding: 1rem;
-      background-color: #e6e6e6;
+      background-color: #d3d3d3;
       border-radius: 12px;
-      transition: background-color 0.3s;
-      margin-top: 1rem;
     }
     .press-logos img {
-      height: 50px;
+      height: 60px;
       vertical-align: middle;
       background-color: #fff;
-      padding: 6px;
+      padding: 8px;
       border-radius: 6px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -160,17 +84,6 @@
     footer {
       background: #111;
       padding: 2rem 0;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #aaa;
-      user-select: none;
-    }
-    footer a {
-      color: #4aa3ff;
-      text-decoration: none;
-    }
-    footer a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
@@ -179,39 +92,36 @@
     <div class="container">
       <h1>SuperDoge</h1>
       <p class="lead">The First Ever Charity Crypto Superhero — Est. 2021</p>
-      <p>
-        SuperDoge is a deflationary token that started with 1,000,000,000 tokens in 2021. 100% of the supply is in circulation with no vesting period. Every transaction includes a 6% tax: 2% is permanently burned, 2% is redistributed to holders, and 2% funds the Foundation — supporting liquidity, charity, and community growth.
-      </p>
+      <p>SuperDoge is a deflationary token that launched with 1,000,000,000 tokens in 2021. The supply decreases over time with every transaction. 100% of the tokens are in circulation with no vesting period. Every transaction includes a 6% tax: 2% is permanently burned, 2% is redistributed to holders, and 2% funds the Foundation — supporting liquidity, charity, and community growth.</p>
     </div>
   </section>
 
   <div class="container py-5">
     <section id="stats" class="mb-5">
       <h2 class="section-title">Live Token Stats</h2>
-      <div class="stats-row mb-4">
-        <div class="stat-box" id="totalSupplyBox">
-          <h4>Total Supply</h4>
-          <p id="totalSupplyDisplay" title="Total Supply">Loading...</p>
+      <div class="row g-4 text-center mb-4">
+        <div class="col-md-4">
+          <div id="supplyBox" class="stat-box">
+            <h4>Total Supply</h4>
+            <p id="totalSupplyDisplay" class="fs-4">Loading...</p>
+          </div>
         </div>
-        <div class="stat-box" id="burnedSupplyBox">
-          <h4>Total Burned</h4>
-          <p id="burnedSupply" title="Total Burned Tokens">Loading...</p>
+        <div class="col-md-4">
+          <div id="burnBox" class="stat-box">
+            <h4>Total Burned</h4>
+            <p id="burnedSupply" class="fs-4">Loading...</p>
+          </div>
         </div>
-        <div class="stat-box" id="donationBox">
-          <h4>Donated to Charity</h4>
-          <p id="donationUSD" title="Total Donations">$Loading...</p>
+        <div class="col-md-4">
+          <div class="stat-box">
+            <h4>Donated to Charity</h4>
+            <p id="donationUSD" class="fs-4">Loading...</p>
+          </div>
         </div>
       </div>
-
-      <div id="bottomStats" class="mb-4">
-        <div class="stat-box hoverable" id="volume30DaysBox">
-          <h4>📈 Token Volume in Last 30 Days</h4>
-          <p id="volume30Days">Loading...</p>
-        </div>
-        <div class="stat-box hoverable" id="burn30DaysBox">
-          <h4>🔥 Permanently Burned Token in Last 30 Days</h4>
-          <p id="burn30Days">Loading...</p>
-        </div>
+      <div class="text-center">
+        <h4 class="text-light">📈 30 Day Volume: <span id="volume30Days">Loading...</span></h4>
+        <h4 class="text-warning">🔥 30 Day Burned: <span id="burn30Days">Loading...</span> <span class="fire-emoji">🚀</span></h4>
       </div>
     </section>
 
@@ -220,7 +130,7 @@
       <ol>
         <li>Download MetaMask or Trust Wallet.</li>
         <li>Buy and send BNB to your wallet.</li>
-        <li>Go to <a href="https://pancakeswap.finance/swap?outputCurrency=0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank" rel="noopener">PancakeSwap</a>.</li>
+        <li>Go to <a href="https://pancakeswap.finance/swap?outputCurrency=0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">PancakeSwap</a>.</li>
         <li>Paste this contract: <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
         <li>Set slippage to 6%, then swap BNB for SUPDOG.</li>
       </ol>
@@ -228,9 +138,7 @@
 
     <section class="mb-5">
       <h2 class="section-title">About SuperDoge</h2>
-      <p>
-        SuperDoge launched in 2021 as a meme coin inspired by Dogecoin and Superman — with a mission to fund real charities.
-      </p>
+      <p>SuperDoge launched in 2021 as a meme coin inspired by Dogecoin and Superman — with a mission to fund real charities.</p>
       <ul>
         <li>💥 6% transaction tax: 2% burn, 2% holders, 2% to the SuperDoge Foundation</li>
         <li>🔥 Over <strong>100M+ SUPDOG</strong> burned and counting</li>
@@ -241,17 +149,15 @@
         <li>🔐 Over 215 BNB+ Liquidity is Locked under smart contract for 75 years</li>
         <li>📰 Featured in major media:</li>
       </ul>
-
       <div class="press-logos text-center my-4">
-        <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank" rel="noopener"><img src="assets/cnbc.png" alt="CNBC"></a>
-        <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank" rel="noopener"><img src="assets/financialpost.png" alt="Financial Post"></a>
-        <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank" rel="noopener"><img src="assets/bloomberg.png" alt="Bloomberg"></a>
+        <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank"><img src="assets/cnbc.png" alt="CNBC"></a>
+        <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank"><img src="assets/financialpost.png" alt="Financial Post"></a>
+        <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank"><img src="assets/bloomberg.png" alt="Bloomberg"></a>
       </div>
-
       <p>💰 Donated 836.34 BNB + growing, tracked on-chain</p>
     </section>
 
-    <footer>
+    <footer class="text-center">
       <p>&copy; 2025 SuperDoge.org — Rebuilding the Crypto Superhero</p>
       <p><a href="stats.html" class="text-info">Advanced Stats Page</a></p>
     </footer>
@@ -260,56 +166,15 @@
   <script>
     const apiKey = "QRQ3R8MI37HB9HXIJ22YQ9CC734R28SM1S";
     const contract = "0x622a1297057ea233287ce77bdbf2ab4e63609f23";
-    const initialSupply = 1000000000; // Starting supply at launch
+    const totalSupply = 1000000000;
 
-    // Helper: animate number increment
-    function animateNumber(el, start, end, duration = 2500) {
-      return new Promise((resolve) => {
-        let startTime = null;
-        function step(timestamp) {
-          if (!startTime) startTime = timestamp;
-          const progress = Math.min((timestamp - startTime) / duration, 1);
-          const current = Math.floor(progress * (end - start) + start);
-          el.textContent = current.toLocaleString();
-          if (progress < 1) {
-            requestAnimationFrame(step);
-          } else {
-            resolve();
-          }
-        }
-        requestAnimationFrame(step);
-      });
+    async function fetchTokenSupply() {
+      const res = await fetch(`https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`);
+      const data = await res.json();
+      return Math.round(parseFloat(data.result) / 1e9);
     }
 
-    // Animate hit effect circle at given position
-    function hitEffect(x, y) {
-      const hit = document.createElement('div');
-      hit.className = 'hit-effect';
-      hit.style.left = `${x}px`;
-      hit.style.top = `${y}px`;
-      hit.style.width = '40px';
-      hit.style.height = '40px';
-      document.body.appendChild(hit);
-      setTimeout(() => hit.remove(), 500);
-    }
-
-    async function fetchTotalSupply() {
-      try {
-        const res = await fetch(
-          `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${contract}&apikey=${apiKey}`
-        );
-        const data = await res.json();
-        if (data.status === "1" && data.result) {
-          // The token decimals are 9, so divide by 1e9 to get the token count
-          return parseInt(data.result) / 1e9;
-        }
-      } catch (e) {
-        console.error("Error fetching total supply", e);
-      }
-      return null;
-    }
-
-    async function fetchTransactions30Days() {
+    async function fetchBurnAndVolume30Days() {
       const now = Math.floor(Date.now() / 1000);
       const thirtyDaysAgo = now - 30 * 24 * 60 * 60;
       let totalBurned = 0;
@@ -319,82 +184,61 @@
       let keepGoing = true;
 
       while (keepGoing && page <= 10) {
-        try {
-          const url = `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${contract}&page=${page}&offset=${offset}&sort=desc&apikey=${apiKey}`;
-          const res = await fetch(url);
-          const data = await res.json();
+        const url = `https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${contract}&page=${page}&offset=${offset}&sort=desc&apikey=${apiKey}`;
+        const res = await fetch(url);
+        const data = await res.json();
 
-          if (!data.result || data.result.length === 0) break;
+        if (!data.result || data.result.length === 0) break;
 
-          for (const tx of data.result) {
-            const time = parseInt(tx.timeStamp);
-            if (time < thirtyDaysAgo) {
-              keepGoing = false;
-              break;
-            }
-            const amount = parseFloat(tx.value) / 1e9;
-            totalVolume += amount;
-            totalBurned += amount * 0.02; // 2% burned per transaction
+        for (const tx of data.result) {
+          const time = parseInt(tx.timeStamp);
+          if (time < thirtyDaysAgo) {
+            keepGoing = false;
+            break;
           }
-
-          if (data.result.length < offset) break;
-          page++;
-        } catch (e) {
-          console.error("Error fetching transactions", e);
-          break;
+          const amount = parseFloat(tx.value) / 1e9;
+          totalVolume += amount;
+          totalBurned += amount * 0.02;
         }
+
+        if (data.result.length < offset) break;
+        page++;
       }
 
-      return { totalBurned, totalVolume };
+      return {
+        burned: Math.round(totalBurned),
+        volume: Math.round(totalVolume)
+      };
+    }
+
+    async function animateTotalSupplyDisplay(start, end, duration = 1500) {
+      const el = document.getElementById("totalSupplyDisplay");
+      const box = document.getElementById("supplyBox");
+      let current = start;
+      const step = (start - end) / (duration / 30);
+      const interval = setInterval(() => {
+        current -= step;
+        if (current <= end) {
+          current = end;
+          clearInterval(interval);
+        }
+        el.textContent = Math.round(current).toLocaleString();
+      }, 30);
+      box.classList.add("burn-effect");
+      setTimeout(() => box.classList.remove("burn-effect"), duration);
     }
 
     async function main() {
-      const totalSupplyEl = document.getElementById("totalSupplyDisplay");
-      const burnedSupplyEl = document.getElementById("burnedSupply");
-      const donationEl = document.getElementById("donationUSD");
-      const volume30El = document.getElementById("volume30Days");
-      const burn30El = document.getElementById("burn30Days");
+      const currentSupply = await fetchTokenSupply();
+      const burned = totalSupply - currentSupply;
+      const { burned: burn30Days, volume: volume30Days } = await fetchBurnAndVolume30Days();
 
-      // Fetch current supply and tx stats
-      let currentSupply = await fetchTotalSupply();
-      const { totalBurned: burnedLast30, totalVolume: volumeLast30 } = await fetchTransactions30Days();
+      document.getElementById("burnedSupply").textContent = `${(burned + burn30Days).toLocaleString()}`;
+      document.getElementById("donationUSD").textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
+      document.getElementById("burn30Days").textContent = `${burn30Days.toLocaleString()}`;
+      document.getElementById("volume30Days").textContent = volume30Days.toLocaleString();
 
-      if (!currentSupply) currentSupply = initialSupply;
-
-      // Calculate total burned overall
-      let totalBurnedOverall = initialSupply - currentSupply;
-
-      // Animate the Token Volume 30 days
-      await animateNumber(volume30El, 0, Math.floor(volumeLast30), 3000);
-
-      // Animate the Burned in Last 30 Days
-      await animateNumber(burn30El, 0, Math.floor(burnedLast30), 3000);
-
-      // After burn30Days finishes counting, add hover effect
-      burn30El.parentElement.classList.add('hoverable');
-
-      // Animate hit effect from burn30Days to Total Supply
-      const burnRect = burn30El.getBoundingClientRect();
-      const supplyRect = totalSupplyEl.getBoundingClientRect();
-
-      // Show hit effect animation
-      hitEffect(burnRect.left + burnRect.width / 2, burnRect.top + burnRect.height / 2);
-
-      // Delay a bit so user can see the hit
-      await new Promise(res => setTimeout(res, 600));
-
-      // Animate Total Supply reduction by burnedLast30
-      const supplyStart = currentSupply;
-      const supplyEnd = currentSupply + burnedLast30; // currentSupply is reduced by burned amount, so add to show before reduction
-      // Display initially the total supply before reduction
-      totalSupplyEl.textContent = Math.floor(supplyEnd).toLocaleString();
-
-      // Animate the reduction to actual current supply
-      await animateNumber(totalSupplyEl, Math.floor(supplyEnd), Math.floor(supplyStart), 3000);
-
-      // Update total burned and donation after animation
-      burnedSupplyEl.textContent = Math.floor(totalBurnedOverall).toLocaleString();
-      donationEl.textContent = `$${Math.round((836.34 + 18.88) * 650).toLocaleString()}`;
+      await animateTotalSupplyDisplay(currentSupply + burn30Days, currentSupply);
     }
 
     main();
