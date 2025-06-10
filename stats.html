@@ -72,8 +72,8 @@
     }
 
     async function renderCharts() {
-      const burnedData = await fetchData('daily_burned.json');
       const volumeData = await fetchData('daily_volume.json');
+      const burnedData = volumeData.map(d => ({ date: d.date, burned: d.volume * 0.02 }));
 
       const burnCtx = document.getElementById('burnChart').getContext('2d');
       const volumeCtx = document.getElementById('volumeChart').getContext('2d');
