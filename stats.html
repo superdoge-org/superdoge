@@ -3,40 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUPDOG Stats Dashboard</title>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #111; color: #fff; }
-    h1 { text-align: center; }
-    canvas { margin-top: 20px; }
-    table { width: 100%; margin-top: 20px; }
-  </style>
-</head>
-<body>
-  <h1>SuperDoge (SUPDOG) Stats Dashboard</h1>
-
-  <canvas id="volumeChart" height="100"></canvas>
-
-  <table id="statsTable" class="display">
-    <thead>
-      <tr>
-        <th>Year</th>
-        <th>Month</th>
-        <th>Volume (SUPDOG)</th>
-        <th>Volume (USD)</th>
-        <th>SUPDOG Burned</th>
-        <th>Liquidity Δ</th>
-        <th>Holders Δ</th>
-        <th>Tx Count</th>
-        <th>2% Fund Allocated</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
+  <title>SuperDoge Token Stats</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-  <script src="stats.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white">
+  <div class="container mx-auto py-8">
+    <h1 class="text-4xl font-bold mb-6 text-center">SuperDoge Token Analytics</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Burn Chart -->
+      <div class="bg-gray-800 p-4 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-2">Daily Burned Tokens</h2>
+        <canvas id="burnChart"></canvas>
+      </div>
+
+      <!-- Volume Chart -->
+      <div class="bg-gray-800 p-4 rounded-2xl shadow-lg">
+        <h2 class="text-2xl font-semibold mb-2">Daily Transaction Volume</h2>
+        <canvas id="volumeChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchData(file) {
+      const res = await fetch(file);
+      return res.json();
+    }
+
+    async function renderCharts() {
+      const burnedData = await fetchData('daily_burned.json');
+      const volumeData = await fetchData('daily_volume.json');
+
+      const burnCtx = document.getElementById('burnChart').getContext('2d');
+      const volumeCtx = document.getElementById('volumeChart').getContext('2d');
+
+      new Chart(burnCtx, {
+        type: 'bar',
+        data: {
+          labels: burnedData.map(d => d.date),
+          datasets: [{
+            label: 'Burned (SUPDOG)',
+            data: burnedData.map(d => d.burned),
+            backgroundColor: '#f87171'
+          }]
+        },
+        options: {
+          scales: { x: { ticks: { color: '#fff' } }, y: { ticks: { color: '#fff' } } },
+          plugins: { legend: { labels: { color: '#fff' } } }
+        }
+      });
+
+      new Chart(volumeCtx, {
+        type: 'line',
+        data: {
+          labels: volumeData.map(d => d.date),
+          datasets: [{
+            label: 'Volume (SUPDOG)',
+            data: volumeData.map(d => d.volume),
+            backgroundColor: '#34d399',
+            borderColor: '#34d399',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          scales: { x: { ticks: { color: '#fff' } }, y: { ticks: { color: '#fff' } } },
+          plugins: { legend: { labels: { color: '#fff' } } }
+        }
+      });
+    }
+
+    renderCharts();
+  </script>
 </body>
 </html>
