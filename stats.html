@@ -11,6 +11,20 @@
   <div class="container mx-auto py-8">
     <h1 class="text-4xl font-bold mb-6 text-center">SuperDoge Token Analytics</h1>
 
+    <div class="bg-gray-800 p-4 rounded-2xl mb-8">
+      <h2 class="text-xl font-semibold mb-2">Wallets used for calculations:</h2>
+      <ul class="list-disc list-inside text-sm">
+        <li><strong>Burn Wallet:</strong> 0x000000000000000000000000000000000000dead</li>
+        <li><strong>Charity Wallets:</strong>
+          <ul class="list-disc list-inside ml-6">
+            <li>WellsBringHope: 0x2A8500831745891D2aC01403Da08883be4D58b72</li>
+            <li>ChildEnrichment: 0x7Dd4eAE167bc55F9EA5df729936Dcc69af0B54B5</li>
+            <li>Clarematrix: 0xdDE25A762653baf7D53725010ab3901E6E527523</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <!-- Burn Chart -->
       <div class="bg-gray-800 p-4 rounded-2xl shadow-lg">
@@ -23,6 +37,18 @@
         <h2 class="text-2xl font-semibold mb-2">Daily Transaction Volume</h2>
         <canvas id="volumeChart"></canvas>
       </div>
+
+      <!-- Last 30 Days Summary -->
+      <div class="bg-gray-800 p-4 rounded-2xl shadow-lg col-span-1 md:col-span-2">
+        <h2 class="text-2xl font-semibold mb-2">Last 30 Days</h2>
+        <p id="last30Stats"></p>
+      </div>
+
+      <!-- Last 90 Days Summary -->
+      <div class="bg-gray-800 p-4 rounded-2xl shadow-lg col-span-1 md:col-span-2">
+        <h2 class="text-2xl font-semibold mb-2">Last 90 Days</h2>
+        <p id="last90Stats"></p>
+      </div>
     </div>
   </div>
 
@@ -30,6 +56,19 @@
     async function fetchData(file) {
       const res = await fetch(file);
       return res.json();
+    }
+
+    function sumPeriod(data, key, days) {
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() - days);
+      return data.reduce((acc, d) => {
+        const date = new Date(d.date);
+        if (date >= cutoff) {
+          acc.total += d[key];
+          acc.days++;
+        }
+        return acc;
+      }, { total: 0, days: 0 });
     }
 
     async function renderCharts() {
@@ -73,6 +112,14 @@
           plugins: { legend: { labels: { color: '#fff' } } }
         }
       });
+
+      const last30 = sumPeriod(volumeData, 'volume', 30);
+      const last30Burn = sumPeriod(burnedData, 'burned', 30);
+      document.getElementById('last30Stats').innerText = `Total Volume: ${last30.total.toFixed(2)} SUPDOG in ${last30.days} days | Burned: ${last30Burn.total.toFixed(2)} SUPDOG`;
+
+      const last90 = sumPeriod(volumeData, 'volume', 90);
+      const last90Burn = sumPeriod(burnedData, 'burned', 90);
+      document.getElementById('last90Stats').innerText = `Total Volume: ${last90.total.toFixed(2)} SUPDOG in ${last90.days} days | Burned: ${last90Burn.total.toFixed(2)} SUPDOG`;
     }
 
     renderCharts();
