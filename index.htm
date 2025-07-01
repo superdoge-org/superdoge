@@ -23,16 +23,17 @@
       width: 24px;
       height: 24px;
     }
-    .slider-container {
-      display: flex;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
+    .carousel {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
     }
-    .slider-container img {
-      flex: 0 0 auto;
+    .carousel img {
+      display: none;
       width: 100%;
-      max-width: 100%;
-      scroll-snap-align: center;
+    }
+    .carousel img.active {
+      display: block;
     }
   </style>
 </head>
@@ -54,6 +55,7 @@
     <h2 class="text-4xl font-bold mb-4">Meet SuperDoge</h2>
     <p class="max-w-3xl mx-auto mb-6">Launched in 2021, SuperDoge is a deflationary meme token on the BNB chain and the first-ever charity crypto superhero — a parody of Dogecoin and Superman. As seen on CNBC, Bloomberg, Yahoo Finance and more, SuperDoge is not just a meme — it’s a mission.</p>
     <p class="font-bold">Ticker: SUPDOG</p>
+    <p class="mt-4 italic text-yellow-700">Rebuilding the Crypto Superhero</p>
   </section>
 
   <!-- Tokenomics Section -->
@@ -106,15 +108,23 @@
     </div>
   </section>
 
-  <!-- Press Feature Slider -->
+  <!-- Press Feature Carousel -->
   <section class="py-12 px-6 bg-gray-200 text-center">
     <h2 class="text-3xl font-bold mb-6">As Featured In</h2>
-    <div class="slider-container space-x-4">
-      <img src="assets/superdoge-news-article.jpg" alt="News 1">
+    <div class="carousel">
+      <img src="assets/superdoge-news-article.jpg" class="active" alt="News 1">
       <img src="assets/Superdoge-news-article2.jpg" alt="News 2">
       <img src="assets/news-article3.jpg" alt="News 3">
-      <img src="assets/article4.jpg" alt="News 4">
     </div>
+    <script>
+      let index = 0;
+      const slides = document.querySelectorAll('.carousel img');
+      setInterval(() => {
+        slides[index].classList.remove('active');
+        index = (index + 1) % slides.length;
+        slides[index].classList.add('active');
+      }, 4000);
+    </script>
   </section>
 
   <!-- How to Buy -->
@@ -138,7 +148,6 @@
       <a href="https://skynet.certik.com/projects/superdoge" class="underline">Certik Audit</a>
       <a href="mailto:SuperDoge2021@gmail.com" class="hidden-email" title="Email SuperDoge"></a>
     </div>
-    <p class="mt-4 italic">Rebuilding the Crypto Superhero</p>
   </footer>
 </body>
 </html>
