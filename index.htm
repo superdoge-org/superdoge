@@ -4,11 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SuperDoge - The First Crypto Superhero</title>
+  <link rel="icon" type="image/jpeg" href="assets/flavicon.jpg">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     body {
       font-family: 'Arial', sans-serif;
       background-color: #fefefe;
+    }
+    .zoom:hover {
+      transform: scale(1.15);
+      transition: transform 0.3s;
+      cursor: zoom-in;
     }
   </style>
 </head>
@@ -17,11 +23,12 @@
   <section class="bg-gradient-to-br from-blue-900 to-red-600 text-white py-20 px-6 text-center">
     <img src="images/superdoge_logo.png" alt="SuperDoge Logo" class="mx-auto mb-6 w-48">
     <h1 class="text-5xl font-bold mb-4">The First Crypto Superhero</h1>
-    <p class="text-xl mb-6">Parody. Charity. Deflation. Justice.</p>
+    <p class="text-xl mb-2">Parody. Charity. Deflation. Justice.</p>
+    <p class="text-xl italic mb-6">Rebuilding the Crypto Superhero</p>
     <div class="space-x-4">
       <a href="#buy" class="bg-yellow-400 text-black font-bold py-2 px-4 rounded-full">Buy SupDog</a>
       <a href="#stats" class="bg-white text-blue-700 font-bold py-2 px-4 rounded-full">Token Stats</a>
-      <a href="https://t.me/SuperDogeCommunity" target="_blank" class="bg-black text-white font-bold py-2 px-4 rounded-full">Join Telegram</a>
+      <button disabled class="bg-black text-white font-bold py-2 px-4 rounded-full opacity-50 cursor-not-allowed">Join Telegram (Coming Soon)</button>
     </div>
   </section>
 
@@ -70,17 +77,28 @@
     <h2 class="text-4xl font-bold mb-6">Real Donations. Real Impact.</h2>
     <p class="max-w-2xl mx-auto mb-6">SuperDoge has donated over <strong>836.34 BNB</strong> (>$250K USD) to verified charitable causes, including clean water, addiction recovery and child enrichment. Below is a thank-you letter from one of our partners.</p>
     <div class="flex justify-center items-center">
-      <img src="images/child_enrichment_2021-07-23_01-49-33.jpg" alt="Child Enrichment Letter" class="w-full max-w-md rounded shadow-md">
+      <a href="images/child_enrichment_2021-07-23_01-49-33.jpg" target="_blank">
+        <img src="images/child_enrichment_2021-07-23_01-49-33.jpg" alt="Child Enrichment Letter" class="zoom w-full max-w-md rounded shadow-md">
+      </a>
     </div>
     <div class="mt-8">
-      <p class="italic">[Audio AMA Coming Soon]</p>
+      <audio controls class="mx-auto">
+        <source src="assets/charity-ama.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
     </div>
   </section>
 
   <!-- Press Feature Banner -->
   <section class="py-12 px-6 bg-gray-200 text-center">
     <h2 class="text-3xl font-bold mb-6">As Featured In</h2>
-    <img src="images/article_FLCk4hDXEAI5HBt.jpg" alt="Featured Press" class="mx-auto w-full max-w-4xl rounded">
+    <div class="flex justify-center items-center">
+      <div class="w-full max-w-4xl">
+        <div class="relative overflow-hidden">
+          <img src="images/article_FLCk4hDXEAI5HBt.jpg" alt="Featured Press" class="mx-auto w-full rounded animate-pulse" style="animation: slide 20s infinite;">
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- How to Buy -->
@@ -102,7 +120,7 @@
     <div class="mt-4 space-x-4">
       <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" class="underline">BscScan</a>
       <a href="#" class="underline">Certik Audit</a>
-      <a href="https://twitter.com/SuperDogeToken" class="underline">Twitter</a>
+      <span>📧 <a href="mailto:SuperDoge2021@gmail.com" class="underline">SuperDoge2021@gmail.com</a></span>
     </div>
   </footer>
 </body>
