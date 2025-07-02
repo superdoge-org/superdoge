@@ -83,29 +83,18 @@
   <!-- How to Buy Section -->
   <section id="buy" class="py-16 px-6 bg-white text-center">
     <h2 class="text-4xl font-bold mb-8">How to Buy SupDog</h2>
-    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-      <div class="flex flex-col items-center">
-        <img src="assets/metamask-logo.png" alt="MetaMask" class="w-20 h-20 mb-4">
-        <h3 class="text-2xl font-semibold mb-2">Using MetaMask</h3>
-        <ol class="text-left list-decimal list-inside space-y-2">
-          <li>Install the MetaMask extension for Chrome or Firefox.</li>
-          <li>Buy BNB through MetaMask or transfer from an exchange.</li>
-          <li>Go to <a href="https://pancakeswap.finance" class="text-blue-600 underline">PancakeSwap</a> and connect your wallet.</li>
-          <li>Import the SupDog contract: <code class="text-sm">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
-          <li>Swap BNB for SupDog tokens.</li>
-        </ol>
+    <div class="max-w-3xl mx-auto">
+      <div class="flex justify-center gap-6 mb-6">
+        <img src="assets/metamask-logo.png" alt="MetaMask" class="w-16 h-16">
+        <img src="assets/trustwallet-logo.png" alt="Trust Wallet" class="w-16 h-16">
       </div>
-      <div class="flex flex-col items-center">
-        <img src="assets/trustwallet-logo.png" alt="Trust Wallet" class="w-20 h-20 mb-4">
-        <h3 class="text-2xl font-semibold mb-2">Using Trust Wallet</h3>
-        <ol class="text-left list-decimal list-inside space-y-2">
-          <li>Download the Trust Wallet app on your phone.</li>
-          <li>Buy BNB or transfer BNB to your wallet.</li>
-          <li>Open the DApps browser and go to PancakeSwap.</li>
-          <li>Paste the SupDog contract address.</li>
-          <li>Swap BNB for SupDog tokens. Set slippage to 6%.</li>
-        </ol>
-      </div>
+      <ol class="text-left list-decimal list-inside space-y-2 text-lg">
+        <li>Download MetaMask (browser) or Trust Wallet (mobile).</li>
+        <li>Buy or transfer BNB to your wallet.</li>
+        <li>Visit <a href="https://pancakeswap.finance" class="text-blue-600 underline">PancakeSwap</a> and connect your wallet.</li>
+        <li>Import SupDog token using contract: <code class="text-sm">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
+        <li>Swap BNB for SupDog (set slippage to 6%).</li>
+      </ol>
     </div>
   </section>
 
@@ -120,6 +109,13 @@
       <div class="bg-white p-6 rounded-lg shadow"><h4 class="text-lg font-semibold">Charity Donated</h4><p class="text-xl font-bold">836.34 BNB (~$250,000+)</p></div>
       <div class="bg-white p-6 rounded-lg shadow"><h4 class="text-lg font-semibold">90-Day Volume</h4><p class="text-xl font-bold" id="vol90d">Loading...</p></div>
     </div>
+  </section>
+
+  <!-- Charity Letter -->
+  <section class="py-16 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-4">Charity Thank You Letter</h2>
+    <p class="mb-4">SuperDoge was proud to support Child Enrichment. View the original letter of appreciation.</p>
+    <img src="assets/ChildEnrichment.jpg" alt="Charity Letter" class="mx-auto zoom rounded-lg shadow-md w-full max-w-xl">
   </section>
 
   <!-- Charity AMA Section -->
