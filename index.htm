@@ -1,3 +1,4 @@
+<!-- Full updated site including Charity AMA, rotating articles, and restored lower sections -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,6 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #fefefe;
     }
     .zoom:hover {
       transform: scale(1.15);
@@ -23,29 +23,14 @@
       width: 24px;
       height: 24px;
     }
-    .carousel {
-      position: relative;
-      max-width: 100%;
-      margin: 0 auto;
-    }
-    .carousel img {
-      display: none;
-      width: 100%;
+    .rotating-articles img {
       max-width: 800px;
+      width: 100%;
       margin: 0 auto;
+      display: none;
     }
-    .carousel img.active {
+    .rotating-articles img.active {
       display: block;
-    }
-    @media (min-width: 1024px) {
-      .superdoge-logo {
-        width: 28rem;
-      }
-    }
-    @media (max-width: 768px) {
-      .carousel img {
-        max-width: 100%;
-      }
     }
   </style>
 </head>
@@ -95,6 +80,35 @@
     <p class="mt-6 font-bold">Total Supply: 1,000,000,000 — 100% Circulating</p>
   </section>
 
+  <!-- How to Buy Section -->
+  <section id="buy" class="py-16 px-6 bg-white text-center">
+    <h2 class="text-4xl font-bold mb-8">How to Buy SupDog</h2>
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="flex flex-col items-center">
+        <img src="assets/metamask-logo.png" alt="MetaMask" class="w-20 h-20 mb-4">
+        <h3 class="text-2xl font-semibold mb-2">Using MetaMask</h3>
+        <ol class="text-left list-decimal list-inside space-y-2">
+          <li>Install the MetaMask extension for Chrome or Firefox.</li>
+          <li>Buy BNB through MetaMask or transfer from an exchange.</li>
+          <li>Go to <a href="https://pancakeswap.finance" class="text-blue-600 underline">PancakeSwap</a> and connect your wallet.</li>
+          <li>Import the SupDog contract: <code class="text-sm">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
+          <li>Swap BNB for SupDog tokens.</li>
+        </ol>
+      </div>
+      <div class="flex flex-col items-center">
+        <img src="assets/trustwallet-logo.png" alt="Trust Wallet" class="w-20 h-20 mb-4">
+        <h3 class="text-2xl font-semibold mb-2">Using Trust Wallet</h3>
+        <ol class="text-left list-decimal list-inside space-y-2">
+          <li>Download the Trust Wallet app on your phone.</li>
+          <li>Buy BNB or transfer BNB to your wallet.</li>
+          <li>Open the DApps browser and go to PancakeSwap.</li>
+          <li>Paste the SupDog contract address.</li>
+          <li>Swap BNB for SupDog tokens. Set slippage to 6%.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
   <!-- Stats Section -->
   <section id="stats" class="py-16 px-6 text-center">
     <h2 class="text-4xl font-bold mb-8">Live Token Stats</h2>
@@ -107,6 +121,41 @@
       <div class="bg-white p-6 rounded-lg shadow"><h4 class="text-lg font-semibold">90-Day Volume</h4><p class="text-xl font-bold" id="vol90d">Loading...</p></div>
     </div>
   </section>
+
+  <!-- Charity AMA Section -->
+  <section class="py-16 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-4">Charity AMA</h2>
+    <p class="mb-4">Listen to our AMA where we talk with one of the charities we've supported.</p>
+    <audio controls class="mx-auto">
+      <source src="assets/charity-ama.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </section>
+
+  <!-- Charity Transparency Note -->
+  <section class="text-center px-6 pb-12">
+    <p class="text-lg">Transparency is key — the charities have a high score on <a href="https://www.charitynavigator.org/" target="_blank" class="text-blue-600 underline">Charity Navigator</a> and can be publicly verified.</p>
+  </section>
+
+  <!-- News Article Rotation -->
+  <section class="py-12 px-6 text-center">
+    <h2 class="text-3xl font-bold mb-4">In the News</h2>
+    <div class="rotating-articles">
+      <img src="assets/superdoge-news-article.jpg" class="active" alt="News 1">
+      <img src="assets/Superdoge-news-article2.jpg" alt="News 2">
+      <img src="assets/news-article3.jpg" alt="News 3">
+    </div>
+  </section>
+
+  <script>
+    let index = 0;
+    const images = document.querySelectorAll('.rotating-articles img');
+    setInterval(() => {
+      images[index].classList.remove('active');
+      index = (index + 1) % images.length;
+      images[index].classList.add('active');
+    }, 5000);
+  </script>
 
   <!-- Footer -->
   <footer class="bg-blue-900 text-white py-6 text-center mt-10">
