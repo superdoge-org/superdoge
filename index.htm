@@ -25,22 +25,29 @@
     }
     .carousel {
       position: relative;
-      max-width: 600px;
+      max-width: 100%;
       margin: 0 auto;
     }
     .carousel img {
       display: none;
       width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
     }
     .carousel img.active {
       display: block;
+    }
+    @media (max-width: 768px) {
+      .carousel img {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body class="text-gray-800">
   <!-- Hero Section -->
   <section class="bg-gradient-to-br from-blue-900 to-red-600 text-white py-20 px-6 text-center">
-    <img src="images/superdoge_logo.png" alt="SuperDoge Logo" class="mx-auto mb-6 w-48">
+    <img src="images/superdoge_logo.png" alt="SuperDoge Logo" class="mx-auto mb-6 w-72 sm:w-60">
     <h1 class="text-5xl font-bold mb-4">The First Crypto Superhero</h1>
     <div class="space-x-4">
       <a href="#buy" class="bg-yellow-400 text-black font-bold py-2 px-4 rounded-full">Buy SupDog</a>
@@ -52,8 +59,10 @@
 
   <!-- About Section -->
   <section class="py-16 px-6 text-center">
-    <h2 class="text-4xl font-bold mb-4">Meet SuperDoge</h2>
-    <p class="max-w-3xl mx-auto mb-6">Launched in 2021, SuperDoge is a deflationary meme token on the BNB chain and the first-ever charity crypto superhero — a parody of Dogecoin and Superman. As seen on CNBC, Bloomberg, Yahoo Finance and more, SuperDoge is not just a meme — it’s a mission.</p>
+    <h2 class="text-4xl font-bold mb-4">About SuperDoge</h2>
+    <p class="max-w-3xl mx-auto mb-6">
+      Launched in 2021, SuperDoge is a deflationary meme coin on the BNB chain and the first-ever charity crypto superhero — a parody of Dogecoin and Superman. As seen on major media including CNBC, Bloomberg, Yahoo Finance, Financial Post and more, the liquidity is locked for 79 years with a Certik-audited smart contract. No token vesting period, 100% of the supply is circulating. SuperDoge is not just a meme-coin — it’s a mission to making the world a better place while having fun along the way. This is a job for SUPERDOGE!
+    </p>
     <p class="font-bold">Ticker: SUPDOG</p>
     <p class="mt-4 italic text-yellow-700">Rebuilding the Crypto Superhero</p>
   </section>
@@ -106,6 +115,7 @@
         Your browser does not support the audio element.
       </audio>
     </div>
+    <p class="mt-6 max-w-xl mx-auto">Transparency is key — the charities we support have a very high score on <a class="text-blue-700 underline" href="https://www.charitynavigator.org/" target="_blank">Charity Navigator</a> and can be publicly verified.</p>
   </section>
 
   <!-- Press Feature Carousel -->
