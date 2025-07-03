@@ -34,3 +34,4 @@ jobs:
           git add data/stats-data.json
           git commit -m "Auto-update: Daily SUPDOG stats" || echo "No changes"
           git push
+.
