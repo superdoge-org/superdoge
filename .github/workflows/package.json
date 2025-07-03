@@ -1,2 +1,12 @@
-- name: Install dependencies
-  run: npm install
+{
+  "name": "superdoge-stats",
+  "version": "1.0.0",
+  "description": "SuperDoge token stats updater",
+  "main": "scripts/update_stats.js",
+  "scripts": {
+    "start": "node scripts/update_stats.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0"
+  }
+}
