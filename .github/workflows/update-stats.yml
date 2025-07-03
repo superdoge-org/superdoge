@@ -3,7 +3,7 @@ name: Update Token Stats
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/10 * * * *'  # every 10 minutes, optional
+    - cron: '*/10 * * * *'  # every 10 minutes (optional, can remove if not needed)
 
 jobs:
   build:
@@ -38,10 +38,10 @@ jobs:
           git add data/stats-data.json
           git commit -m "Update stats data"
           git push
-        continue-on-error: true  # in case no changes, avoid failing
+        continue-on-error: true
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public  # adjust if your deploy folder is different
+          publish_dir: ./public  # change this if your site isn't in /public
