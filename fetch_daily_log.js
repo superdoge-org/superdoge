@@ -1,53 +1,50 @@
 const fs = require("fs");
-const path = require("path");
+const path = "./stats/total-supply.json";
+const logPath = "./stats/daily-log.json";
 
-const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
-const SUPPLY_PATH = path.join("stats", "total-supply.json");
+function loadTotalSupply() {
+  if (!fs.existsSync(path)) {
+    console.error("❌ total-supply.json not found.");
+    process.exit(1);
+  }
 
-function getTodayDateEST() {
-  const now = new Date();
-  const estOffsetMs = -5 * 60 * 60 * 1000; // EST = UTC-5
-  const est = new Date(now.getTime() + estOffsetMs);
-  return est.toISOString().split("T")[0];
+  const data = JSON.parse(fs.readFileSync(path, "utf8"));
+  return {
+    totalSupply: data.totalSupply,
+    date: new Date().toISOString().split("T")[0] // YYYY-MM-DD
+  };
 }
 
-function loadJSON(filepath) {
+function loadLog() {
+  if (!fs.existsSync(logPath)) return [];
+  const content = fs.readFileSync(logPath, "utf8");
+
   try {
-    return JSON.parse(fs.readFileSync(filepath, "utf8"));
-  } catch {
-    return null;
+    const parsed = JSON.parse(content);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.error("❌ daily-log.json is invalid JSON.");
+    process.exit(1);
   }
 }
 
-function saveJSON(filepath, data) {
-  fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
+function saveLog(log) {
+  fs.writeFileSync(logPath, JSON.stringify(log, null, 2));
+  console.log("✅ Updated daily-log.json");
 }
 
 function main() {
-  if (!fs.existsSync(SUPPLY_PATH)) {
-    console.error("❌ total-supply.json not found. Skipping.");
+  const { totalSupply, date } = loadTotalSupply();
+  const log = loadLog();
+
+  const alreadyLogged = log.some(entry => entry.date === date);
+  if (alreadyLogged) {
+    console.log(`ℹ️ Already logged entry for ${date}, skipping.`);
     return;
   }
 
-  const today = getTodayDateEST();
-  const supplyData = loadJSON(SUPPLY_PATH);
-  const dailyLog = loadJSON(DAILY_LOG_PATH) || {};
-
-  if (!supplyData?.totalSupply) {
-    console.error("❌ Invalid totalSupply. Skipping.");
-    return;
-  }
-
-  if (!dailyLog[today]) {
-    dailyLog[today] = {
-      totalSupply: supplyData.totalSupply,
-      timestamp: new Date().toISOString(),
-    };
-    saveJSON(DAILY_LOG_PATH, dailyLog);
-    console.log(`✅ Logged totalSupply for ${today}:`, supplyData.totalSupply);
-  } else {
-    console.log(`ℹ️ Already logged for ${today}. Skipping.`);
-  }
+  log.push({ date, totalSupply });
+  saveLog(log);
 }
 
 main();
