@@ -36,6 +36,7 @@ jobs:
           else
             git add assets/data.json
             git commit -m "Update stats: $(date -u +'%Y-%m-%d %H:%M:%S')"
+            git pull --rebase origin main
             git push
           fi
         env:
