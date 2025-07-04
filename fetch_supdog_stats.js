@@ -35,10 +35,15 @@ async function fetchBNBPrice() {
       },
       timeout: 5000
     });
+
+    if (!res.data || !res.data.binancecoin || !res.data.binancecoin.usd) {
+      throw new Error("CoinGecko returned invalid response");
+    }
+
     return res.data.binancecoin.usd;
   } catch (err) {
-    console.warn("⚠️ CoinGecko failed, using fallback value.");
-    return 600; // fallback BNB price in USD
+    console.warn("⚠️ CoinGecko failed (451 or invalid), using fallback BNB price: 600");
+    return 600;
   }
 }
 
@@ -56,7 +61,7 @@ function loadJSON(filePath) {
 
 function getESTDateString() {
   const now = new Date();
-  now.setUTCHours(now.getUTCHours() - 4); // EST (manual offset)
+  now.setUTCHours(now.getUTCHours() - 4); // EST manual offset
   return now.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
@@ -74,15 +79,15 @@ async function main() {
       bnbPrice
     };
 
-    // Write hourly data
+    // Write hourly stats
     saveJSON("assets/data.json", data);
     console.log("✅ Wrote assets/data.json");
 
-    // Append daily log if not already logged today
+    // Write daily log (only once per EST day)
     const dailyLog = loadJSON(DAILY_LOG_PATH);
     const today = getESTDateString();
-
     const alreadyLogged = dailyLog.find(entry => entry.date === today);
+
     if (!alreadyLogged) {
       dailyLog.push({
         date: today,
