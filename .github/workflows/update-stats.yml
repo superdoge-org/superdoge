@@ -13,6 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Show working directory
+        run: pwd
+
+      - name: List files
+        run: ls -al
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -20,9 +26,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: .
 
       - name: Fetch SUPDOG Metrics
         run: node fetch_metrics.js
+        working-directory: .
 
       - name: Commit & push updated data
         run: |
@@ -33,3 +41,4 @@ jobs:
           git push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: .
