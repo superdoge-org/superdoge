@@ -2,8 +2,8 @@ name: Update SUPDOG Stats
 
 on:
   schedule:
-    - cron: "0 * * * *"    # Runs every hour at minute 0
-  workflow_dispatch:       # Manual trigger in Actions tab
+    - cron: "0 * * * *"  # every hour
+  workflow_dispatch:
 
 jobs:
   update-stats:
@@ -18,7 +18,7 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      - name: Install axios
         run: npm install axios
 
       - name: Run fetch script
@@ -26,12 +26,13 @@ jobs:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
         run: node fetch_supdog_stats.js
 
-      - name: Commit and push updated data.json
+      - name: Commit and push data files
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git add assets/data.json
-          git commit -m "Update SUPDOG stats: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes to commit"
+          git pull --rebase
+          git add assets/data.json assets/daily-log.json
+          git commit -m "Update SUPDOG stats: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
