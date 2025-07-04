@@ -6,13 +6,9 @@ const path = require("path");
 const STATS_DIR = path.join(__dirname, "stats");
 const PRICE_FILE = path.join(STATS_DIR, "bnb-price.json");
 
-async function fetchFromBinance() {
-  const res = await axios.get("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
-  return parseFloat(res.data.price);
-}
-
 async function fetchFromCoinGecko() {
-  const res = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd");
+  const url = "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd";
+  const res = await axios.get(url);
   return parseFloat(res.data.binancecoin.usd);
 }
 
@@ -30,21 +26,17 @@ function readLastPrice() {
 
 async function main() {
   try {
-    const binancePrice = await fetchFromBinance();
     const coingeckoPrice = await fetchFromCoinGecko();
-    const avgPrice = (binancePrice + coingeckoPrice) / 2;
-
-    const diff = Math.abs(binancePrice - coingeckoPrice) / avgPrice;
-    let finalPrice = diff <= 0.02 ? avgPrice : binancePrice || coingeckoPrice;
+    let finalPrice = coingeckoPrice;
 
     if (!finalPrice || isNaN(finalPrice)) {
       finalPrice = readLastPrice();
-      if (!finalPrice) throw new Error("Failed to get valid BNB price.");
+      if (!finalPrice) throw new Error("No valid BNB price available.");
     }
 
     const output = {
-      price: parseFloat(finalPrice),
-      timestamp: new Date().toISOString()
+      price: finalPrice,
+      timestamp: new Date().toISOString(),
     };
 
     if (!fs.existsSync(STATS_DIR)) fs.mkdirSync(STATS_DIR);
