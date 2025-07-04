@@ -1,12 +1,12 @@
 {
   "name": "supdog-stats",
   "version": "1.0.0",
+  "description": "Fetch SuperDoge token stats",
   "main": "fetch_supdog_stats.js",
-  "type": "module",
-  "dependencies": {
-    "axios": "^1.6.8"
-  },
   "scripts": {
     "start": "node fetch_supdog_stats.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0"
   }
 }
