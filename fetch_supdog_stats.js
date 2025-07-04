@@ -27,7 +27,7 @@ function calculateBurned(totalSupply) {
 
 // === Fetch BNB Price with Fallback ===
 async function fetchBNBPrice() {
-  const fallbackPrice = 600;
+  const fallbackPrice = 600; // use fallback if CoinGecko blocks request
   try {
     const response = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
       params: {
@@ -85,11 +85,11 @@ async function main() {
       bnbPrice
     };
 
-    // === Write HOURLY ===
+    // === Write HOURLY data ===
     saveJSON("assets/data.json", data);
     console.log("✅ Wrote hourly: assets/data.json");
 
-    // === Write DAILY if not already logged ===
+    // === Write DAILY log if not already logged ===
     const today = getESTDateString();
     const dailyLog = loadJSON(DAILY_LOG_PATH);
     const alreadyLogged = dailyLog.find(entry => entry.date === today);
@@ -106,6 +106,7 @@ async function main() {
     } else {
       console.log("⏩ Already logged for today:", today);
     }
+
   } catch (err) {
     console.error("❌ ERROR:", err.message);
     process.exit(1);
