@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Fetch BNB Price
+        run: node fetch_bnb_price.js
+
       - name: Run fetch_supdog_stats.js
         run: node fetch_supdog_stats.js
         env:
