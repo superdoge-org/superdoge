@@ -1,6 +1,7 @@
 {
   "name": "supdog-stats",
   "version": "1.0.0",
+  "type": "module",
   "main": "fetch_supdog_stats.js",
   "scripts": {
     "start": "node fetch_supdog_stats.js"
