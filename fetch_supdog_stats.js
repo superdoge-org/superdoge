@@ -11,6 +11,7 @@ if (!fs.existsSync("assets")) {
   fs.mkdirSync("assets");
 }
 
+// === Fetch Current Total Supply from BscScan ===
 async function fetchTotalSupply() {
   const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${SUPDOG_ADDRESS}&apikey=${API_KEY}`;
   const res = await axios.get(url);
@@ -19,13 +20,16 @@ async function fetchTotalSupply() {
   return totalSupply;
 }
 
+// === Calculate Burned Tokens from Total Supply ===
 function calculateBurned(totalSupply) {
   return MAX_SUPPLY - totalSupply;
 }
 
+// === Fetch BNB Price with Fallback ===
 async function fetchBNBPrice() {
+  const fallbackPrice = 600;
   try {
-    const res = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
+    const response = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
       params: {
         ids: "binancecoin",
         vs_currencies: "usd"
@@ -36,21 +40,21 @@ async function fetchBNBPrice() {
       timeout: 5000
     });
 
-    if (!res.data || !res.data.binancecoin || !res.data.binancecoin.usd) {
-      throw new Error("CoinGecko returned invalid response");
-    }
-
-    return res.data.binancecoin.usd;
-  } catch (err) {
-    console.warn("⚠️ CoinGecko failed (451 or invalid), using fallback BNB price: 600");
-    return 600;
+    const price = response?.data?.binancecoin?.usd;
+    if (!price) throw new Error("Invalid CoinGecko response format");
+    return price;
+  } catch (error) {
+    console.warn("⚠️ CoinGecko failed (likely 451):", error.message);
+    return fallbackPrice;
   }
 }
 
+// === Write to JSON file ===
 function saveJSON(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 }
 
+// === Load from JSON file ===
 function loadJSON(filePath) {
   try {
     return JSON.parse(fs.readFileSync(filePath));
@@ -59,12 +63,14 @@ function loadJSON(filePath) {
   }
 }
 
+// === Get Current Date in EST (YYYY-MM-DD) ===
 function getESTDateString() {
   const now = new Date();
-  now.setUTCHours(now.getUTCHours() - 4); // EST manual offset
-  return now.toISOString().split("T")[0]; // YYYY-MM-DD
+  now.setUTCHours(now.getUTCHours() - 4); // manual EST offset
+  return now.toISOString().split("T")[0];
 }
 
+// === Main Script ===
 async function main() {
   try {
     const totalSupply = await fetchTotalSupply();
@@ -79,13 +85,13 @@ async function main() {
       bnbPrice
     };
 
-    // Write hourly stats
+    // === Write HOURLY ===
     saveJSON("assets/data.json", data);
-    console.log("✅ Wrote assets/data.json");
+    console.log("✅ Wrote hourly: assets/data.json");
 
-    // Write daily log (only once per EST day)
-    const dailyLog = loadJSON(DAILY_LOG_PATH);
+    // === Write DAILY if not already logged ===
     const today = getESTDateString();
+    const dailyLog = loadJSON(DAILY_LOG_PATH);
     const alreadyLogged = dailyLog.find(entry => entry.date === today);
 
     if (!alreadyLogged) {
@@ -96,9 +102,9 @@ async function main() {
         bnbPrice
       });
       saveJSON(DAILY_LOG_PATH, dailyLog);
-      console.log("✅ Wrote assets/daily-log.json");
+      console.log("✅ Wrote daily: assets/daily-log.json");
     } else {
-      console.log("⏩ Already logged for today.");
+      console.log("⏩ Already logged for today:", today);
     }
   } catch (err) {
     console.error("❌ ERROR:", err.message);
