@@ -1,60 +1,78 @@
 // fetch_token_price.js
-const Web3 = require("web3");
 const fs = require("fs");
 const path = require("path");
+const Web3 = require("web3");
 
+const web3 = new Web3("https://bsc-dataseed.binance.org/"); // Public RPC
+
+// === Pool Info ===
+const POOL_ADDRESS = "0x4b9c179b34f02da39a5940c363c20216e0e19c1c"; // SUPDOG/BNB (V2)
+const SUPDOG_ADDRESS = "0x622A1297057ea233287ce77bdBF2AB4E63609F23";
+const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+
+// === File Paths ===
 const STATS_DIR = path.join(__dirname, "stats");
-const PRICE_FILE = path.join(STATS_DIR, "token-price.json");
+const BNB_FILE = path.join(STATS_DIR, "bnb-price.json");
+const TOKEN_FILE = path.join(STATS_DIR, "token-price.json");
 
-const RPC = "https://bsc-dataseed.binance.org/";
-const web3 = new Web3(RPC);
-
-// PancakeSwap V1 LP (SUPDOG/WBNB)
-const PAIR = "0x6096bd38ec74579026e51dac897f3a16800177da";
-const SUPDOG = "0x622A1297057ea233287ce77bdBF2AB4E63609F23";
-const WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-
-const pairABI = [
+// === ABI for balanceOf
+const ERC20_ABI = [
   {
     constant: true,
-    inputs: [],
-    name: "getReserves",
-    outputs: [
-      { name: "_reserve0", type: "uint112" },
-      { name: "_reserve1", type: "uint112" },
-      { name: "_blockTimestampLast", type: "uint32" },
-    ],
+    inputs: [{ name: "_owner", type: "address" }],
+    name: "balanceOf",
+    outputs: [{ name: "balance", type: "uint256" }],
     type: "function",
   },
   {
     constant: true,
     inputs: [],
-    name: "token0",
-    outputs: [{ name: "", type: "address" }],
+    name: "decimals",
+    outputs: [{ name: "", type: "uint8" }],
     type: "function",
-  }
+  },
 ];
+
+async function getTokenBalance(tokenAddress, holder) {
+  const token = new web3.eth.Contract(ERC20_ABI, tokenAddress);
+  const [rawBalance, decimals] = await Promise.all([
+    token.methods.balanceOf(holder).call(),
+    token.methods.decimals().call(),
+  ]);
+  return Number(rawBalance) / 10 ** decimals;
+}
+
+function getBNBPrice() {
+  if (!fs.existsSync(BNB_FILE)) return null;
+  const data = JSON.parse(fs.readFileSync(BNB_FILE));
+  return data?.price || null;
+}
 
 async function main() {
   try {
-    const contract = new web3.eth.Contract(pairABI, PAIR);
-    const [reserve0, reserve1] = await contract.methods.getReserves().call();
-    const token0 = await contract.methods.token0().call();
+    const [bnbBalance, supdogBalance] = await Promise.all([
+      getTokenBalance(WBNB_ADDRESS, POOL_ADDRESS),
+      getTokenBalance(SUPDOG_ADDRESS, POOL_ADDRESS),
+    ]);
 
-    const supdogReserve = token0.toLowerCase() === SUPDOG.toLowerCase() ? reserve0 : reserve1;
-    const wbnbReserve   = token0.toLowerCase() === SUPDOG.toLowerCase() ? reserve1 : reserve0;
+    const bnbPrice = getBNBPrice();
+    if (!bnbPrice) throw new Error("No BNB price available.");
 
-    if (supdogReserve == 0 || wbnbReserve == 0) throw new Error("Empty reserves");
+    if (supdogBalance === 0) throw new Error("SUPDOG balance in pool is zero.");
 
-    const price = parseFloat(web3.utils.fromWei(wbnbReserve, 'ether')) / (supdogReserve / 1e18);
+    const supdogPerBNB = bnbBalance / supdogBalance;
+    const supdogUsd = supdogPerBNB * bnbPrice;
+
     const output = {
-      price: price,
-      timestamp: new Date().toISOString()
+      supdogPrice: supdogUsd,
+      source: "calculated from pool",
+      pool: POOL_ADDRESS,
+      timestamp: new Date().toISOString(),
     };
 
     if (!fs.existsSync(STATS_DIR)) fs.mkdirSync(STATS_DIR);
-    fs.writeFileSync(PRICE_FILE, JSON.stringify(output, null, 2));
-    console.log("✅ Token price saved:", output);
+    fs.writeFileSync(TOKEN_FILE, JSON.stringify(output, null, 2));
+    console.log("✅ Token price calculated and saved:", output);
   } catch (err) {
     console.error("❌ Error fetching token price:", err.message);
     process.exit(1);
