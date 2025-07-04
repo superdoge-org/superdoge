@@ -2,7 +2,7 @@ name: Update SUPDOG Stats
 
 on:
   schedule:
-    - cron: '0 * * * *'  # every hour
+    - cron: '0 * * * *'  # every hour at minute 0
   workflow_dispatch:
 
 jobs:
@@ -10,31 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          path: .
 
-      - name: Set up Node.js
+      - name: Set up Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install dependencies
         run: npm install
-        working-directory: .
 
-      - name: Fetch SUPDOG Metrics
+      - name: Run SUPDOG stats fetcher
         run: node fetch_metrics.js
-        working-directory: .
 
-      - name: Commit & push updated data
+      - name: Show changed files (debug)
+        run: git status
+
+      - name: Commit and push changes if any
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git add assets/data.json
-          git commit -m "Update stats: $(date -u +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
-          git push origin HEAD:${{ github.ref }}
+          if git diff --quiet; then
+            echo "No changes to commit."
+          else
+            git add assets/data.json
+            git commit -m "Update stats: $(date -u +'%Y-%m-%d %H:%M:%S')"
+            git push
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: .
