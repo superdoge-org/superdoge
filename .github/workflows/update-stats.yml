@@ -2,18 +2,27 @@ name: Update SUPDOG Stats
 
 on:
   schedule:
-    - cron: '0 * * * *' # every hour
+    - cron: '0 * * * *'   # every hour
   workflow_dispatch:
 
 jobs:
-  update:
+  fetch-and-log:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
+      - name: Check API key presence
+        run: |
+          if [ -z "$BSCSCAN_API_KEY" ]; then
+            echo "❌ BSCSCAN_API_KEY is NOT set!"
+            exit 1
+          else
+            echo "✅ BSCSCAN_API_KEY is set"
+          fi
+        env:
+          BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -23,22 +32,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run stats fetch script
+      - name: Run fetch script
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
-        run: npm start
-
-      - name: Commit & push changes if any
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git add assets/data.json
-
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update stats: $(date -u +'%Y-%m-%d %H:%M:%S')"
-            git push origin HEAD:main
-          fi
+        run: node fetch_supdog_stats.js
