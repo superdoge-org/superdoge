@@ -2,7 +2,7 @@ name: Update SUPDOG Stats
 
 on:
   schedule:
-    - cron: '0 * * * *'  # every hour UTC
+    - cron: '0 * * * *'  # every hour
   workflow_dispatch:
 
 jobs:
@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          path: .  # <- Important fix to prevent nested path
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
