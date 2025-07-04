@@ -12,7 +12,7 @@ const LP_ADDRESSES = [
   "0x300a27d21b10c3604f3297fbad7a5168c4c80001", // V3
 ];
 
-// Get EST date (00:00 reset)
+// Get EST date string
 function getESTDateString() {
   return new Date().toLocaleDateString("en-US", {
     timeZone: "America/New_York",
@@ -31,14 +31,11 @@ async function fetchBNBPrice() {
     axios.get("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd"),
     axios.get("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT"),
   ]);
-
   const cgPrice = cg.data.binancecoin.usd;
   const binancePrice = parseFloat(binance.data.price);
-
   if (Math.abs(cgPrice - binancePrice) / cgPrice > 0.02) {
-    throw new Error("BNB prices vary too much");
+    throw new Error("BNB price discrepancy");
   }
-
   return (cgPrice + binancePrice) / 2;
 }
 
@@ -51,34 +48,32 @@ async function fetchTokenBalance(token, lp) {
 async function fetchLiquidityAndPrice(bnbPrice) {
   let totalBNB = 0;
   let totalSUPDOG = 0;
-  let priceSUPDOG = null;
+  let tokenPrice = null;
 
   for (const lp of LP_ADDRESSES) {
     try {
-      const bnbBal = await fetchTokenBalance("0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c", lp); // WBNB
-      const supdogBal = await fetchTokenBalance(SUPDOG, lp);
-
-      if (bnbBal > 0 && supdogBal > 0) {
-        totalBNB += bnbBal;
-        totalSUPDOG += supdogBal;
-        priceSUPDOG = bnbBal > 0 ? bnbPrice / (supdogBal / 1e9) : null;
+      const bnb = await fetchTokenBalance("0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c", lp); // WBNB
+      const supdog = await fetchTokenBalance(SUPDOG, lp);
+      if (bnb > 0 && supdog > 0) {
+        totalBNB += bnb;
+        totalSUPDOG += supdog;
+        tokenPrice = bnbPrice / (supdog / 1e9);
       }
-    } catch (err) {
-      console.warn(`LP ${lp} failed:`, err.message);
+    } catch (e) {
+      console.warn(`Failed LP ${lp}`, e.message);
     }
   }
 
   return {
     liquidityBNB: totalBNB,
     liquidityUSD: totalBNB * bnbPrice,
-    tokenPrice: priceSUPDOG,
+    tokenPrice,
   };
 }
 
 function loadDailyLog() {
   try {
-    const raw = fs.readFileSync(DAILY_LOG_PATH, "utf-8");
-    return JSON.parse(raw);
+    return JSON.parse(fs.readFileSync(DAILY_LOG_PATH, "utf-8"));
   } catch {
     return [];
   }
@@ -90,26 +85,25 @@ function saveJSON(filePath, data) {
 
 async function main() {
   try {
+    const now = new Date();
+    const estDate = getESTDateString();
     const totalSupply = await fetchTotalSupply();
     const totalBurned = MAX_SUPPLY - totalSupply;
-
     const bnbPrice = await fetchBNBPrice();
     const { liquidityBNB, liquidityUSD, tokenPrice } = await fetchLiquidityAndPrice(bnbPrice);
     const marketCap = tokenPrice * totalSupply;
 
-    const now = new Date();
-    const estDate = getESTDateString();
+    // Daily log
     const dailyLog = loadDailyLog();
-
-    const latestEntry = dailyLog[dailyLog.length - 1];
+    const latest = dailyLog[dailyLog.length - 1];
     let burnedToday = 0;
     let estimatedVolume = 0;
 
-    if (latestEntry && latestEntry.date === estDate) {
-      burnedToday = latestEntry.totalSupply - totalSupply;
+    if (latest && latest.date === estDate) {
+      burnedToday = latest.totalSupply - totalSupply;
       estimatedVolume = burnedToday / 0.02;
       dailyLog[dailyLog.length - 1] = {
-        ...latestEntry,
+        ...latest,
         totalSupply,
         totalBurned,
         burnedToday,
@@ -122,7 +116,7 @@ async function main() {
         timestamp: now.toISOString(),
       };
     } else {
-      burnedToday = latestEntry ? latestEntry.totalSupply - totalSupply : 0;
+      burnedToday = latest ? latest.totalSupply - totalSupply : 0;
       estimatedVolume = burnedToday / 0.02;
       dailyLog.push({
         date: estDate,
@@ -139,6 +133,7 @@ async function main() {
       });
     }
 
+    // Write both hourly and daily
     const hourly = {
       timestamp: now.toISOString(),
       totalSupply,
@@ -156,9 +151,9 @@ async function main() {
     saveJSON(DATA_PATH, hourly);
     saveJSON(DAILY_LOG_PATH, dailyLog);
 
-    console.log("✅ All stats updated successfully.");
+    console.log("✅ Wrote data.json and daily-log.json");
   } catch (err) {
-    console.error("❌ Error:", err.message);
+    console.error("❌ ERROR:", err.message);
     process.exit(1);
   }
 }
