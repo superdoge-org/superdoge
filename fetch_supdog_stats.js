@@ -4,65 +4,56 @@ const fs = require("fs");
 const API_KEY = process.env.BSCSCAN_API_KEY;
 const SUPDOG_ADDRESS = "0x622A1297057ea233287ce77bdBF2AB4E63609F23";
 const MAX_SUPPLY = 1_000_000_000;
-const DAILY_LOG_PATH = "assets/daily-log.json";
-const fallbackBNBPrice = 600; // fallback if API fails
+const fallbackBNBPrice = 600;
 
-// Ensure 'assets' directory exists
+// Ensure directory exists
 if (!fs.existsSync("assets")) fs.mkdirSync("assets");
 
-// === Fetch Total Supply from BscScan ===
+// Get total supply from BscScan
 async function fetchTotalSupply() {
   const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${SUPDOG_ADDRESS}&apikey=${API_KEY}`;
   const res = await axios.get(url);
-  if (res.data.status !== "1") throw new Error("BscScan returned status != 1");
+  if (res.data.status !== "1") throw new Error("BscScan failed: " + res.data.message);
   return parseFloat(res.data.result) / 1e9;
 }
 
-// === Calculate Burned from Max Supply ===
-function calculateBurned(totalSupply) {
-  return MAX_SUPPLY - totalSupply;
+// Calculate burned supply
+function calculateBurned(supply) {
+  return MAX_SUPPLY - supply;
 }
 
-// === Fetch BNB Price from CoinGecko or fallback ===
+// ✅ Get BNB price from Binance
 async function fetchBNBPrice() {
-  const coingeckoURL = "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd";
   try {
-    const response = await axios.get(coingeckoURL, {
-      headers: { "User-Agent": "Mozilla/5.0" },
-      timeout: 5000
-    });
-
-    const price = response?.data?.binancecoin?.usd;
-    if (!price) throw new Error("Invalid CoinGecko format");
-    return price;
-  } catch (error) {
-    console.warn("⚠️ BNB price fetch failed, using fallback:", error.message);
+    const res = await axios.get("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
+    return parseFloat(res.data.price);
+  } catch (err) {
+    console.warn("⚠️ Binance failed, using fallback BNB price.");
     return fallbackBNBPrice;
   }
 }
 
-// === Load JSON (or return empty array) ===
-function loadJSON(filePath) {
-  try {
-    return JSON.parse(fs.readFileSync(filePath));
-  } catch {
-    return [];
-  }
-}
-
-// === Save JSON file ===
-function saveJSON(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-}
-
-// === Get current day in EST (YYYY-MM-DD) ===
+// Get EST date (YYYY-MM-DD)
 function getESTDateString() {
   const now = new Date();
   now.setUTCHours(now.getUTCHours() - 4);
   return now.toISOString().split("T")[0];
 }
 
-// === MAIN ===
+// Save JSON file
+function saveJSON(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+// Load JSON (or return empty)
+function loadJSON(file) {
+  try {
+    return JSON.parse(fs.readFileSync(file));
+  } catch {
+    return [];
+  }
+}
+
 async function main() {
   try {
     const totalSupply = await fetchTotalSupply();
@@ -77,24 +68,25 @@ async function main() {
       bnbPrice
     };
 
-    // Save hourly snapshot
+    // Save hourly data
     saveJSON("assets/data.json", data);
     console.log("✅ Saved: assets/data.json");
 
     // Save daily log if not already logged
     const today = getESTDateString();
-    const log = loadJSON(DAILY_LOG_PATH);
-    const alreadyExists = log.find(entry => entry.date === today);
-    if (!alreadyExists) {
+    const logPath = "assets/daily-log.json";
+    const log = loadJSON(logPath);
+    const alreadyLogged = log.find(entry => entry.date === today);
+    if (!alreadyLogged) {
       log.push({ date: today, totalSupply, totalBurned, bnbPrice });
-      saveJSON(DAILY_LOG_PATH, log);
+      saveJSON(logPath, log);
       console.log("✅ Logged: assets/daily-log.json");
     } else {
-      console.log("⏩ Already logged for:", today);
+      console.log("⏩ Already logged for today.");
     }
   } catch (err) {
-    console.error("❌ ERROR (script survived):", err.message);
-    // Do NOT exit with error code, allow success even if fallback used
+    console.error("❌ FINAL ERROR:", err.message);
+    process.exit(1); // Still exit if BscScan fails
   }
 }
 
