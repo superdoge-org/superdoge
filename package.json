@@ -1,8 +1,6 @@
 {
   "name": "supdog-stats",
   "version": "1.0.0",
-  "description": "Fetch SuperDoge token stats",
-  "main": "fetch_supdog_stats.js",
   "scripts": {
     "start": "node fetch_supdog_stats.js"
   },
