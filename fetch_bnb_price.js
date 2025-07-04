@@ -1,8 +1,9 @@
-import axios from "axios";
-import fs from "fs";
-import path from "path";
+// fetch_bnb_price.js
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 
-const STATS_DIR = path.resolve("./stats");
+const STATS_DIR = path.join(__dirname, "stats");
 const PRICE_FILE = path.join(STATS_DIR, "bnb-price.json");
 
 async function fetchFromBinance() {
@@ -19,7 +20,7 @@ function readLastPrice() {
   if (fs.existsSync(PRICE_FILE)) {
     try {
       const data = JSON.parse(fs.readFileSync(PRICE_FILE));
-      if (data && data.price) return data.price;
+      return data.price;
     } catch {
       return null;
     }
@@ -31,30 +32,22 @@ async function main() {
   try {
     const binancePrice = await fetchFromBinance();
     const coingeckoPrice = await fetchFromCoinGecko();
+    const avgPrice = (binancePrice + coingeckoPrice) / 2;
 
-    const diffPercent = Math.abs(binancePrice - coingeckoPrice) / ((binancePrice + coingeckoPrice) / 2);
-    let finalPrice;
-
-    if (diffPercent <= 0.02) {
-      finalPrice = (binancePrice + coingeckoPrice) / 2;
-    } else {
-      console.warn("Price difference too high:", binancePrice, coingeckoPrice);
-      finalPrice = binancePrice || coingeckoPrice;
-    }
+    const diff = Math.abs(binancePrice - coingeckoPrice) / avgPrice;
+    let finalPrice = diff <= 0.02 ? avgPrice : binancePrice || coingeckoPrice;
 
     if (!finalPrice || isNaN(finalPrice)) {
-      console.warn("Invalid price fetched, falling back to last saved price.");
       finalPrice = readLastPrice();
-      if (!finalPrice) throw new Error("No valid price available.");
+      if (!finalPrice) throw new Error("Failed to get valid BNB price.");
     }
 
-    if (!fs.existsSync(STATS_DIR)) fs.mkdirSync(STATS_DIR);
-
     const output = {
-      price: finalPrice,
-      timestamp: new Date().toISOString(),
+      price: parseFloat(finalPrice),
+      timestamp: new Date().toISOString()
     };
 
+    if (!fs.existsSync(STATS_DIR)) fs.mkdirSync(STATS_DIR);
     fs.writeFileSync(PRICE_FILE, JSON.stringify(output, null, 2));
     console.log("✅ BNB price saved:", output);
   } catch (err) {
