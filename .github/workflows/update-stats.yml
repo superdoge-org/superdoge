@@ -8,13 +8,12 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          path: .  # <- Important fix to prevent nested path
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
