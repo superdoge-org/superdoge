@@ -1,7 +1,6 @@
 import Web3 from 'web3';
 
-const RPC_URL = 'https://bsc-dataseed.binance.org/'; // Binance Smart Chain RPC URL
-
+const RPC_URL = 'https://bsc-dataseed.binance.org/';
 const web3 = new Web3(RPC_URL);
 
 const poolAddress = '0x6096bd38ec74579026e51dac897f3a16800177da';
