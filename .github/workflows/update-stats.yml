@@ -1,36 +1,34 @@
-name: "Update SUPDOG Stats"
+name: Update SUPDOG Stats
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Every hour
+    - cron: '0 * * * *'  # every hour at minute 0
   workflow_dispatch:
 
 jobs:
-  update:
+  update_stats:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: 18
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run stats script
-        run: |
-          node fetch_supdog_stats.js || echo "⚠️ Script failed, but continuing..."
+      - name: Run stats script (errors won't fail workflow)
+        run: node fetch_supdog_stats.js || echo "Script encountered error but continuing..."
 
-      - name: Commit and push changes
+      - name: Commit & push updated data.json and daily-log.json
         run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git pull --rebase
-          git add assets/data.json assets/daily-log.json || true
-          git commit -m "Update stats: $(date -u '+%Y-%m-%d %H:%M:%S')" || exit 0
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data.json assets/daily-log.json || echo "No changes to commit"
+          git commit -m "Update stats: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" || echo "No commit needed"
+          git push || echo "Push failed, possibly no new commits"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
