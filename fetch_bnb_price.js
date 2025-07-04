@@ -5,14 +5,14 @@ const path = require("path");
 const STATS_DIR = path.join(__dirname, "stats");
 const PRICE_FILE = path.join(STATS_DIR, "bnb-price.json");
 
-async function fetchFromBinance() {
-  const res = await axios.get("https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT");
-  return parseFloat(res.data.price);
-}
-
-async function fetchFromCoinGecko() {
+async function fetchFromSource1() {
   const res = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd");
   return parseFloat(res.data.binancecoin.usd);
+}
+
+async function fetchFromSource2() {
+  const res = await axios.get("https://min-api.cryptocompare.com/data/price?fsym=BNB&tsyms=USD");
+  return parseFloat(res.data.USD);
 }
 
 function readLastPrice() {
