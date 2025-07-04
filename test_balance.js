@@ -1,4 +1,4 @@
-const Web3 = require("web3");
+import Web3 from 'web3';
 
 // This is the "RPC URL" for Binance Smart Chain mainnet
 const RPC_URL = "https://bsc-dataseed.binance.org/";
