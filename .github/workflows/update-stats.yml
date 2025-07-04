@@ -34,3 +34,9 @@ jobs:
           git diff --cached --quiet || git commit -m "Update stats: $(date -u +"%Y-%m-%d %H:%M:%S")"
           git pull --rebase
           git push
+          
+    - name: Run Daily Log Script
+      run: node fetch_daily_log.js
+
+    - name: Run Volume Estimate Script
+      run: node fetch_volume_estimate.js
