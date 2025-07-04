@@ -8,7 +8,7 @@ const MAX_SUPPLY = 1_000_000_000;
 async function fetchTotalSupply() {
   const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${SUPDOG_ADDRESS}&apikey=${API_KEY}`;
   const res = await axios.get(url);
-  if(res.data.status !== "1") throw new Error(`API error: ${res.data.message || "Unknown"}`);
+  if (res.data.status !== "1") throw new Error(`API error: ${res.data.message}`);
   const supplyRaw = res.data.result;
   const totalSupply = parseFloat(supplyRaw) / 1e9;
   return totalSupply;
