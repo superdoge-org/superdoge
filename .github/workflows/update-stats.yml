@@ -1,13 +1,9 @@
-name: Update SUPDOG Stats
-
-on:
-  schedule:
-    - cron: '0 * * * *'  # every hour UTC
-  workflow_dispatch:
-
 jobs:
   update:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./superdoge
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
