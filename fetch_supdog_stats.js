@@ -4,17 +4,18 @@ const path = require("path");
 
 const API_KEY = process.env.BSCSCAN_API_KEY;
 const SUPDOG_ADDRESS = "0x622A1297057ea233287ce77bdBF2AB4E63609F23";
-const MAX_SUPPLY = 1_000_000_000; // Fixed initial supply
-const DONATED_BNB = 836.34;
+const MAX_SUPPLY = 1_000_000_000;
+const DATA_PATH = path.join("assets", "data.json");
+const DAILY_LOG_PATH = path.join("assets", "daily-log.json");
 
 async function fetchTotalSupply() {
   const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${SUPDOG_ADDRESS}&apikey=${API_KEY}`;
   const res = await axios.get(url);
   if (res.data.status !== "1") {
-    throw new Error("❌ BscScan API error: " + res.data.message);
+    throw new Error("Failed to fetch total supply: " + res.data.message);
   }
-  const supplyRaw = res.data.result;
-  const totalSupply = parseFloat(supplyRaw) / 1e9;
+  const rawSupply = res.data.result;
+  const totalSupply = parseFloat(rawSupply) / 1e9;
   return totalSupply;
 }
 
@@ -23,60 +24,47 @@ function calculateBurned(totalSupply) {
 }
 
 async function getBnbPrice() {
-  const sources = [
-    {
-      name: "Binance",
-      url: "https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT",
-      parser: (data) => parseFloat(data.price),
-    },
-    {
-      name: "CoinPaprika",
-      url: "https://api.coinpaprika.com/v1/tickers/bnb-binance-coin",
-      parser: (data) => data.quotes.USD.price,
-    },
-  ];
+  try {
+    const res = await axios.get("https://api.coinpaprika.com/v1/tickers/bnb-binance-coin");
+    const price = res.data.quotes.USD.price;
+    if (!price || price <= 0) throw new Error("Invalid price from CoinPaprika");
+    console.log(`✅ Got BNB price: $${price}`);
+    return price;
+  } catch (err) {
+    throw new Error("❌ CoinPaprika BNB fetch failed: " + err.message);
+  }
+}
 
-  for (const source of sources) {
+function saveHourlyData(data) {
+  if (!fs.existsSync("assets")) {
+    fs.mkdirSync("assets");
+  }
+  fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
+  console.log("✅ Saved hourly data to:", DATA_PATH);
+}
+
+function updateDailyLog(dateKey, totalSupply, totalBurned) {
+  let dailyLog = {};
+  if (fs.existsSync(DAILY_LOG_PATH)) {
+    const raw = fs.readFileSync(DAILY_LOG_PATH, "utf-8");
     try {
-      console.log(`🔍 Trying BNB price from ${source.name}...`);
-      const res = await axios.get(source.url);
-      const price = source.parser(res.data);
-      if (price && price > 0) {
-        console.log(`✅ Got BNB price from ${source.name}: $${price}`);
-        return price;
-      }
+      dailyLog = JSON.parse(raw);
     } catch (err) {
-      console.warn(`⚠️ ${source.name} failed: ${err.message}`);
+      console.warn("⚠️ daily-log.json corrupted, starting fresh.");
     }
   }
 
-  throw new Error("❌ All BNB price sources failed");
-}
-
-function getESTDateString() {
-  const now = new Date();
-  const estOffsetMs = -5 * 60 * 60 * 1000; // EST (no daylight savings)
-  const est = new Date(now.getTime() + estOffsetMs);
-  return est.toISOString().split("T")[0]; // YYYY-MM-DD
-}
-
-function writeJSON(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-  console.log(`💾 Saved ${filePath}`);
-}
-
-function appendDailyLog(logFilePath, dateKey, dailyData) {
-  let log = {};
-  if (fs.existsSync(logFilePath)) {
-    const raw = fs.readFileSync(logFilePath);
-    log = JSON.parse(raw);
-  }
-
-  if (!log[dateKey]) {
-    log[dateKey] = dailyData;
-    writeJSON(logFilePath, log);
+  // Failsafe: only update if value is lower (deflationary token)
+  const prev = dailyLog[dateKey] || {};
+  if (!prev.totalSupply || totalSupply <= prev.totalSupply) {
+    dailyLog[dateKey] = {
+      totalSupply,
+      totalBurned,
+    };
+    fs.writeFileSync(DAILY_LOG_PATH, JSON.stringify(dailyLog, null, 2));
+    console.log("✅ Updated daily log for:", dateKey);
   } else {
-    console.log(`📅 Log already exists for ${dateKey}, skipping daily append`);
+    console.warn("⚠️ Skipped daily update due to unexpected increase in supply.");
   }
 }
 
@@ -85,35 +73,22 @@ async function main() {
     const totalSupply = await fetchTotalSupply();
     const totalBurned = calculateBurned(totalSupply);
     const bnbPrice = await getBnbPrice();
-    const charityUSD = DONATED_BNB * bnbPrice;
+
+    const now = new Date();
+    const timestamp = now.toISOString();
+    const estDate = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }))
+      .toISOString()
+      .split("T")[0];
 
     const data = {
-      timestamp: new Date().toISOString(),
+      timestamp,
       totalSupply,
       totalBurned,
       bnbPrice,
-      charityBNB: DONATED_BNB,
-      charityUSD: parseFloat(charityUSD.toFixed(2)),
     };
 
-    // Ensure assets folder exists
-    const assetsDir = path.join(__dirname, "assets");
-    if (!fs.existsSync(assetsDir)) {
-      fs.mkdirSync(assetsDir);
-    }
-
-    writeJSON(path.join(assetsDir, "data.json"), data);
-
-    // Append daily log
-    const dateKey = getESTDateString();
-    appendDailyLog(path.join(assetsDir, "daily-log.json"), dateKey, {
-      totalSupply,
-      totalBurned,
-      bnbPrice,
-      charityUSD: parseFloat(charityUSD.toFixed(2)),
-    });
-
-    console.log("✅ All data fetched and stored successfully.");
+    saveHourlyData(data);
+    updateDailyLog(estDate, totalSupply, totalBurned);
   } catch (err) {
     console.error("❌ ERROR:", err.message);
     process.exit(1);
