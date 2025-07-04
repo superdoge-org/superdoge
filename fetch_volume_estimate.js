@@ -4,14 +4,28 @@ const path = require("path");
 const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
 const OUTPUT_FILE = path.join("stats", "volume-estimate.json");
 
+// Load daily log safely
 function loadJSON(filepath) {
   if (!fs.existsSync(filepath)) {
     console.error(`❌ ${filepath} not found.`);
     process.exit(1);
   }
-  return JSON.parse(fs.readFileSync(filepath, "utf8"));
+
+  const content = fs.readFileSync(filepath, "utf8");
+
+  try {
+    const data = JSON.parse(content);
+    if (!Array.isArray(data)) {
+      throw new Error("daily-log.json is not an array");
+    }
+    return data;
+  } catch (e) {
+    console.error("❌ ERROR parsing daily-log.json:", e.message);
+    process.exit(1);
+  }
 }
 
+// Save result
 function saveJSON(filepath, data) {
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
   console.log(`✅ Saved ${filepath}`);
@@ -20,22 +34,26 @@ function saveJSON(filepath, data) {
 function main() {
   const log = loadJSON(DAILY_LOG_PATH);
 
-  if (!Array.isArray(log) || log.length < 2) {
-    console.error("❌ daily-log.json must contain at least 2 entries.");
-    process.exit(1);
+  if (log.length < 2) {
+    console.log("⏳ Not enough data to calculate volume. Need at least 2 days.");
+    saveJSON(OUTPUT_FILE, {
+      date: new Date().toISOString().split("T")[0],
+      burnedAmount: 0,
+      estimatedVolume: 0
+    });
+    return;
   }
 
-  // Sort entries by date
   const sorted = log.sort((a, b) => a.date.localeCompare(b.date));
   const yesterday = sorted[sorted.length - 2];
   const today = sorted[sorted.length - 1];
 
   const burned = Math.max(0, yesterday.totalSupply - today.totalSupply);
-  const volume = burned / 0.02;
+  const volume = parseFloat((burned / 0.02).toFixed(6));
 
   const output = {
     date: today.date,
-    burnedAmount: burned,
+    burnedAmount: parseFloat(burned.toFixed(6)),
     estimatedVolume: volume
   };
 
