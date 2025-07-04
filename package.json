@@ -1,11 +1,11 @@
 {
-  "name": "supdog-tracker",
+  "name": "supdog-stats",
   "version": "1.0.0",
-  "main": "fetch_metrics.js",
+  "main": "fetch_supdog_stats.js",
   "scripts": {
-    "start": "node fetch_metrics.js"
+    "start": "node fetch_supdog_stats.js"
   },
   "dependencies": {
-    "axios": "^1.6.8"
+    "axios": "^1.5.0"
   }
 }
