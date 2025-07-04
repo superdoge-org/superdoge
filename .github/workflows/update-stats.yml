@@ -2,37 +2,36 @@ name: Update SUPDOG Stats
 
 on:
   schedule:
-    - cron: '0 * * * *'   # every hour
-  workflow_dispatch:
+    - cron: "0 * * * *"    # Runs every hour at minute 0
+  workflow_dispatch:       # Manual trigger in Actions tab
 
 jobs:
-  fetch-and-log:
+  update-stats:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Check API key presence
-        run: |
-          if [ -z "$BSCSCAN_API_KEY" ]; then
-            echo "❌ BSCSCAN_API_KEY is NOT set!"
-            exit 1
-          else
-            echo "✅ BSCSCAN_API_KEY is set"
-          fi
-        env:
-          BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
-        run: npm install
+        run: npm install axios
 
       - name: Run fetch script
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
         run: node fetch_supdog_stats.js
+
+      - name: Commit and push updated data.json
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add assets/data.json
+          git commit -m "Update SUPDOG stats: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
