@@ -10,17 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code to custom path
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          path: repo
-
-      - name: Show working directory
-        run: pwd
-
-      - name: List files
-        run: ls -al
-        working-directory: ./repo
+          path: .
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -29,11 +22,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./repo
+        working-directory: .
 
       - name: Fetch SUPDOG Metrics
         run: node fetch_metrics.js
-        working-directory: ./repo
+        working-directory: .
 
       - name: Commit & push updated data
         run: |
@@ -44,4 +37,4 @@ jobs:
           git push
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        working-directory: ./repo
+        working-directory: .
