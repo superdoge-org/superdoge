@@ -4,7 +4,6 @@ const path = require("path");
 const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
 const OUTPUT_PATH = path.join("stats", "volume-estimate.json");
 
-// Read daily log
 function readDailyLog() {
   if (!fs.existsSync(DAILY_LOG_PATH)) {
     throw new Error("❌ daily-log.json not found.");
@@ -20,7 +19,6 @@ function readDailyLog() {
   return parsed;
 }
 
-// Calculate volume from daily burned amounts
 function estimateVolumes(dailyLog) {
   const results = [];
 
@@ -33,7 +31,6 @@ function estimateVolumes(dailyLog) {
     const yesterday = dailyLog[i - 1];
     const today = dailyLog[i];
 
-    // Defensive checks:
     if (
       !yesterday || !today ||
       typeof yesterday.totalSupply !== "number" ||
@@ -43,14 +40,16 @@ function estimateVolumes(dailyLog) {
       continue;
     }
 
-    // Total supply cannot increase; if it does, ignore that day
-    if (today.totalSupply > yesterday.totalSupply) {
-      console.warn(`⚠️ totalSupply increased on ${today.date}, skipping.`);
-      continue;
+    // Burned = yesterday - today
+    let burned = yesterday.totalSupply - today.totalSupply;
+
+    // If supply increased (shouldn't happen), log 0 and warn
+    if (burned < 0) {
+      console.warn(`⚠️ Supply increased on ${today.date}, logging 0.`);
+      burned = 0;
     }
 
-    const burned = yesterday.totalSupply - today.totalSupply;
-    const volume = burned * 50; // 2% burn means volume = burned * 50
+    const volume = burned * 50;
 
     results.push({
       date: today.date,
