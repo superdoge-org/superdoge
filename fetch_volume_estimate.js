@@ -1,80 +1,52 @@
 const fs = require("fs");
 const path = require("path");
 
-const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
-const OUTPUT_PATH = path.join("stats", "volume-estimate.json");
+const DAILY_LOG = path.join("stats", "daily-log.json");
+const OUTPUT_FILE = path.join("stats", "volume-estimate.json");
 
-function readDailyLog() {
-  if (!fs.existsSync(DAILY_LOG_PATH)) {
-    throw new Error("❌ daily-log.json not found.");
-  }
-
-  const data = fs.readFileSync(DAILY_LOG_PATH, "utf-8");
-  const parsed = JSON.parse(data);
-
-  if (!Array.isArray(parsed)) {
-    throw new Error("❌ daily-log.json content is not an array.");
-  }
-
-  return parsed;
+function loadJSON(filepath) {
+  if (!fs.existsSync(filepath)) return null;
+  return JSON.parse(fs.readFileSync(filepath, "utf8"));
 }
 
-function estimateVolumes(dailyLog) {
-  const results = [];
-
-  if (dailyLog.length < 2) {
-    console.log("⚠️ Not enough daily log entries to calculate volume.");
-    return results;
-  }
-
-  for (let i = 1; i < dailyLog.length; i++) {
-    const yesterday = dailyLog[i - 1];
-    const today = dailyLog[i];
-
-    if (
-      !yesterday || !today ||
-      typeof yesterday.totalSupply !== "number" ||
-      typeof today.totalSupply !== "number"
-    ) {
-      console.warn(`⚠️ Skipping invalid entries at index ${i - 1} and ${i}`);
-      continue;
-    }
-
-    // Burned = yesterday - today
-    let burned = yesterday.totalSupply - today.totalSupply;
-
-    // If supply increased (shouldn't happen), log 0 and warn
-    if (burned < 0) {
-      console.warn(`⚠️ Supply increased on ${today.date}, logging 0.`);
-      burned = 0;
-    }
-
-    const volume = burned * 50;
-
-    results.push({
-      date: today.date,
-      burned: parseFloat(burned.toFixed(6)),
-      estimatedVolume: parseFloat(volume.toFixed(2)),
-    });
-  }
-
-  return results;
+function saveJSON(filepath, data) {
+  fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
+  console.log("✅ Saved:", filepath);
 }
 
-function saveEstimates(estimates) {
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(estimates, null, 2));
-  console.log("✅ Saved volume estimates:", OUTPUT_PATH);
-}
-
-function main() {
-  try {
-    const dailyLog = readDailyLog();
-    const estimates = estimateVolumes(dailyLog);
-    saveEstimates(estimates);
-  } catch (err) {
-    console.error("❌ ERROR:", err.message);
+async function main() {
+  const log = loadJSON(DAILY_LOG);
+  if (!Array.isArray(log)) {
+    console.error("❌ daily-log.json content is not an array.");
     process.exit(1);
   }
+
+  if (log.length < 2) {
+    console.warn("ℹ️ Not enough data to calculate volume yet.");
+    return;
+  }
+
+  // Sort by date to be safe
+  const sorted = log.sort((a, b) => a.date.localeCompare(b.date));
+  const yesterday = sorted[sorted.length - 2];
+  const today = sorted[sorted.length - 1];
+
+  if (!yesterday || !today) {
+    console.error("❌ Not enough daily data to compare.");
+    return;
+  }
+
+  const burned = yesterday.totalSupply - today.totalSupply;
+
+  const volume = burned > 0 ? burned / 0.02 : 0;
+
+  const result = {
+    date: today.date,
+    estimatedVolume: volume,
+    burnedAmount: burned
+  };
+
+  saveJSON(OUTPUT_FILE, result);
 }
 
 main();
