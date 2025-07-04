@@ -5,12 +5,14 @@ const path = require("path");
 const STATS_DIR = path.join(__dirname, "stats");
 const PRICE_FILE = path.join(STATS_DIR, "bnb-price.json");
 
-async function fetchFromSource1() {
+// Fetch BNB price from CoinGecko
+async function fetchFromCoinGecko() {
   const res = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd");
   return parseFloat(res.data.binancecoin.usd);
 }
 
-async function fetchFromSource2() {
+// Fetch BNB price from CryptoCompare
+async function fetchFromCryptoCompare() {
   const res = await axios.get("https://min-api.cryptocompare.com/data/price?fsym=BNB&tsyms=USD");
   return parseFloat(res.data.USD);
 }
@@ -29,36 +31,36 @@ function readLastPrice() {
 
 async function main() {
   try {
-    const binancePrice = await fetchFromBinance();
-    const coingeckoPrice = await fetchFromCoinGecko();
+    const price1 = await fetchFromCoinGecko();
+    const price2 = await fetchFromCryptoCompare();
 
     // Check if prices are within 2% difference
-    const diffPercent = Math.abs(binancePrice - coingeckoPrice) / ((binancePrice + coingeckoPrice) / 2);
+    const diffPercent = Math.abs(price1 - price2) / ((price1 + price2) / 2);
     let finalPrice;
 
     if (diffPercent <= 0.02) {
-      finalPrice = (binancePrice + coingeckoPrice) / 2;
+      finalPrice = (price1 + price2) / 2;
     } else {
-      console.warn("Price difference too high:", binancePrice, coingeckoPrice);
-      // fallback to Binance if available, else coingecko
-      finalPrice = binancePrice || coingeckoPrice;
+      console.warn("Price difference too high:", price1, price2);
+      // fallback to CoinGecko if available, else CryptoCompare
+      finalPrice = price1 || price2;
     }
 
-    // If finalPrice is undefined or invalid, fallback to last saved price
     if (!finalPrice || isNaN(finalPrice)) {
       console.warn("Invalid price fetched, falling back to last saved price.");
       finalPrice = readLastPrice();
       if (!finalPrice) throw new Error("No valid price available.");
     }
 
-    // Save price with timestamp
     if (!fs.existsSync(STATS_DIR)) {
       fs.mkdirSync(STATS_DIR);
     }
+
     const output = {
       price: finalPrice,
       timestamp: new Date().toISOString(),
     };
+
     fs.writeFileSync(PRICE_FILE, JSON.stringify(output, null, 2));
     console.log("✅ BNB price saved:", output);
   } catch (err) {
