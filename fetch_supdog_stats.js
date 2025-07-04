@@ -1,6 +1,5 @@
 const axios = require("axios");
 const fs = require("fs");
-const path = require("path");
 
 const API_KEY = process.env.BSCSCAN_API_KEY;
 const SUPDOG_ADDRESS = "0x622A1297057ea233287ce77bdBF2AB4E63609F23";
@@ -25,10 +24,22 @@ function calculateBurned(totalSupply) {
 }
 
 async function fetchBNBPrice() {
-  const res = await axios.get(
-    "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd"
-  );
-  return res.data.binancecoin.usd;
+  try {
+    const res = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
+      params: {
+        ids: "binancecoin",
+        vs_currencies: "usd"
+      },
+      headers: {
+        "User-Agent": "Mozilla/5.0"
+      },
+      timeout: 5000
+    });
+    return res.data.binancecoin.usd;
+  } catch (err) {
+    console.warn("⚠️ CoinGecko failed, using fallback value.");
+    return 600; // fallback BNB price in USD
+  }
 }
 
 function saveJSON(filePath, data) {
@@ -45,7 +56,7 @@ function loadJSON(filePath) {
 
 function getESTDateString() {
   const now = new Date();
-  now.setUTCHours(now.getUTCHours() - 4); // EST offset
+  now.setUTCHours(now.getUTCHours() - 4); // EST (manual offset)
   return now.toISOString().split("T")[0]; // YYYY-MM-DD
 }
 
@@ -63,14 +74,15 @@ async function main() {
       bnbPrice
     };
 
+    // Write hourly data
     saveJSON("assets/data.json", data);
-    console.log("✅ Wrote data.json");
+    console.log("✅ Wrote assets/data.json");
 
-    // --- Handle daily log tracking ---
+    // Append daily log if not already logged today
     const dailyLog = loadJSON(DAILY_LOG_PATH);
     const today = getESTDateString();
 
-    const alreadyLogged = dailyLog.find((entry) => entry.date === today);
+    const alreadyLogged = dailyLog.find(entry => entry.date === today);
     if (!alreadyLogged) {
       dailyLog.push({
         date: today,
@@ -79,9 +91,9 @@ async function main() {
         bnbPrice
       });
       saveJSON(DAILY_LOG_PATH, dailyLog);
-      console.log("✅ Wrote daily-log.json");
+      console.log("✅ Wrote assets/daily-log.json");
     } else {
-      console.log("⏩ Already logged today’s entry.");
+      console.log("⏩ Already logged for today.");
     }
   } catch (err) {
     console.error("❌ ERROR:", err.message);
