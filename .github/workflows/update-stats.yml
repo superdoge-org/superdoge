@@ -34,7 +34,7 @@ jobs:
           git config user.email "action@github.com"
           git add assets/data.json
           git commit -m "Update stats: $(date -u +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
-          git push
+          git push origin HEAD:${{ github.ref }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: .
