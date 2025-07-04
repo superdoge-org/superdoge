@@ -29,6 +29,10 @@ jobs:
       - name: Run fetch_daily_log.js
         run: node fetch_daily_log.js
 
+      - name: Run fetch_volume_estimate.js
+        run: node fetch_volume_estimate.js
+
+
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Action"
