@@ -2,93 +2,69 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 
-const API_KEY = process.env.BSCSCAN_API_KEY;
 const SUPDOG_ADDRESS = "0x622A1297057ea233287ce77bdBF2AB4E63609F23";
 const MAX_SUPPLY = 1_000_000_000;
-const DATA_PATH = path.join("assets", "data.json");
-const DAILY_LOG_PATH = path.join("assets", "daily-log.json");
+const API_KEY = process.env.BSCSCAN_API_KEY;
+const STATS_DIR = path.join(__dirname, "stats");
+
+function getEstMidnightTimestamp() {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const est = new Date(utc - 4 * 60 * 60000);
+  est.setUTCHours(0, 0, 0, 0);
+  return est.toISOString().split("T")[0];
+}
 
 async function fetchTotalSupply() {
   const url = `https://api.bscscan.com/api?module=stats&action=tokensupply&contractaddress=${SUPDOG_ADDRESS}&apikey=${API_KEY}`;
   const res = await axios.get(url);
-  if (res.data.status !== "1") {
-    throw new Error("Failed to fetch total supply: " + res.data.message);
-  }
-  const rawSupply = res.data.result;
-  const totalSupply = parseFloat(rawSupply) / 1e9;
-  return totalSupply;
+  if (res.data.status !== "1") throw new Error("BscScan supply fetch failed");
+  return parseFloat(res.data.result) / 1e9;
 }
 
 function calculateBurned(totalSupply) {
   return MAX_SUPPLY - totalSupply;
 }
 
-async function getBnbPrice() {
-  try {
-    const res = await axios.get("https://api.coinpaprika.com/v1/tickers/bnb-binance-coin");
-    const price = res.data.quotes.USD.price;
-    if (!price || price <= 0) throw new Error("Invalid price from CoinPaprika");
-    console.log(`✅ Got BNB price: $${price}`);
-    return price;
-  } catch (err) {
-    throw new Error("❌ CoinPaprika BNB fetch failed: " + err.message);
-  }
+function loadDailyLog() {
+  const file = path.join(STATS_DIR, "daily-log.json");
+  if (!fs.existsSync(file)) return {};
+  return JSON.parse(fs.readFileSync(file, "utf8"));
+}
+
+function saveDailyLog(log) {
+  const file = path.join(STATS_DIR, "daily-log.json");
+  fs.writeFileSync(file, JSON.stringify(log, null, 2));
 }
 
 function saveHourlyData(data) {
-  if (!fs.existsSync("assets")) {
-    fs.mkdirSync("assets");
-  }
-  fs.writeFileSync(DATA_PATH, JSON.stringify(data, null, 2));
-  console.log("✅ Saved hourly data to:", DATA_PATH);
-}
-
-function updateDailyLog(dateKey, totalSupply, totalBurned) {
-  let dailyLog = {};
-  if (fs.existsSync(DAILY_LOG_PATH)) {
-    const raw = fs.readFileSync(DAILY_LOG_PATH, "utf-8");
-    try {
-      dailyLog = JSON.parse(raw);
-    } catch (err) {
-      console.warn("⚠️ daily-log.json corrupted, starting fresh.");
-    }
-  }
-
-  // Failsafe: only update if value is lower (deflationary token)
-  const prev = dailyLog[dateKey] || {};
-  if (!prev.totalSupply || totalSupply <= prev.totalSupply) {
-    dailyLog[dateKey] = {
-      totalSupply,
-      totalBurned,
-    };
-    fs.writeFileSync(DAILY_LOG_PATH, JSON.stringify(dailyLog, null, 2));
-    console.log("✅ Updated daily log for:", dateKey);
-  } else {
-    console.warn("⚠️ Skipped daily update due to unexpected increase in supply.");
-  }
+  const file = path.join(STATS_DIR, "data.json");
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
 async function main() {
   try {
+    if (!fs.existsSync(STATS_DIR)) fs.mkdirSync(STATS_DIR);
+
     const totalSupply = await fetchTotalSupply();
     const totalBurned = calculateBurned(totalSupply);
-    const bnbPrice = await getBnbPrice();
+    const timestamp = new Date().toISOString();
 
-    const now = new Date();
-    const timestamp = now.toISOString();
-    const estDate = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }))
-      .toISOString()
-      .split("T")[0];
+    const data = { timestamp, totalSupply, totalBurned };
 
-    const data = {
-      timestamp,
-      totalSupply,
-      totalBurned,
-      bnbPrice,
-    };
-
+    // Save hourly data
     saveHourlyData(data);
-    updateDailyLog(estDate, totalSupply, totalBurned);
+
+    // Save daily data at midnight EST
+    const dayKey = getEstMidnightTimestamp();
+    const log = loadDailyLog();
+
+    if (!log[dayKey]) {
+      log[dayKey] = { totalSupply, totalBurned, timestamp };
+      saveDailyLog(log);
+    }
+
+    console.log("✅ Stats updated:", data);
   } catch (err) {
     console.error("❌ ERROR:", err.message);
     process.exit(1);
