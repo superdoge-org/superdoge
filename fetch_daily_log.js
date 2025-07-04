@@ -1,52 +1,52 @@
-// fetch_daily_log.js
 const fs = require("fs");
 const path = require("path");
 
-const TOTAL_SUPPLY_PATH = "stats/total-supply.json";
-const DAILY_LOG_PATH = "stats/daily-log.json";
+const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
+const SUPPLY_PATH = path.join("stats", "total-supply.json");
 
-function getESTDateString() {
+function getTodayDateEST() {
   const now = new Date();
-  const estOffset = -5 * 60; // EST = UTC-5
-  const est = new Date(now.getTime() + estOffset * 60000);
-  return est.toISOString().split("T")[0]; // yyyy-mm-dd
+  const estOffsetMs = -5 * 60 * 60 * 1000; // EST = UTC-5
+  const est = new Date(now.getTime() + estOffsetMs);
+  return est.toISOString().split("T")[0];
 }
 
-function loadJSON(filePath) {
-  if (!fs.existsSync(filePath)) return null;
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+function loadJSON(filepath) {
+  try {
+    return JSON.parse(fs.readFileSync(filepath, "utf8"));
+  } catch {
+    return null;
+  }
 }
 
-function saveJSON(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+function saveJSON(filepath, data) {
+  fs.writeFileSync(filepath, JSON.stringify(data, null, 2));
 }
 
 function main() {
-  if (!fs.existsSync(TOTAL_SUPPLY_PATH)) {
-    console.error("❌ total-supply.json not found.");
-    process.exit(1);
+  if (!fs.existsSync(SUPPLY_PATH)) {
+    console.error("❌ total-supply.json not found. Skipping.");
+    return;
   }
 
-  const totalSupplyData = loadJSON(TOTAL_SUPPLY_PATH);
-  if (!totalSupplyData || !totalSupplyData.totalSupply) {
-    console.error("❌ Invalid total-supply.json data.");
-    process.exit(1);
+  const today = getTodayDateEST();
+  const supplyData = loadJSON(SUPPLY_PATH);
+  const dailyLog = loadJSON(DAILY_LOG_PATH) || {};
+
+  if (!supplyData?.totalSupply) {
+    console.error("❌ Invalid totalSupply. Skipping.");
+    return;
   }
 
-  const today = getESTDateString();
-  let log = loadJSON(DAILY_LOG_PATH) || [];
-
-  // Check if today's entry exists
-  const alreadyLogged = log.some(entry => entry.date === today);
-  if (!alreadyLogged) {
-    log.push({
-      date: today,
-      totalSupply: totalSupplyData.totalSupply
-    });
-    saveJSON(DAILY_LOG_PATH, log);
-    console.log("✅ Logged daily totalSupply for", today);
+  if (!dailyLog[today]) {
+    dailyLog[today] = {
+      totalSupply: supplyData.totalSupply,
+      timestamp: new Date().toISOString(),
+    };
+    saveJSON(DAILY_LOG_PATH, dailyLog);
+    console.log(`✅ Logged totalSupply for ${today}:`, supplyData.totalSupply);
   } else {
-    console.log("ℹ️ Entry already exists for", today);
+    console.log(`ℹ️ Already logged for ${today}. Skipping.`);
   }
 }
 
