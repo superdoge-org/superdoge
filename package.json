@@ -2,10 +2,11 @@
   "name": "supdog-stats",
   "version": "1.0.0",
   "main": "fetch_supdog_stats.js",
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.6.8"
+  },
   "scripts": {
     "start": "node fetch_supdog_stats.js"
-  },
-  "dependencies": {
-    "axios": "^1.5.0"
   }
 }
