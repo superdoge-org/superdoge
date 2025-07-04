@@ -1,44 +1,81 @@
-// fetch_volume_estimate.js
 const fs = require("fs");
+const path = require("path");
 
-const DAILY_LOG_PATH = "stats/daily-log.json";
-const VOLUME_ESTIMATE_PATH = "stats/volume-estimate.json";
+const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
+const OUTPUT_PATH = path.join("stats", "volume-estimate.json");
 
-function loadJSON(filePath) {
-  if (!fs.existsSync(filePath)) return null;
-  return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+// Read daily log
+function readDailyLog() {
+  if (!fs.existsSync(DAILY_LOG_PATH)) {
+    throw new Error("❌ daily-log.json not found.");
+  }
+
+  const data = fs.readFileSync(DAILY_LOG_PATH, "utf-8");
+  const parsed = JSON.parse(data);
+
+  if (!Array.isArray(parsed)) {
+    throw new Error("❌ daily-log.json content is not an array.");
+  }
+
+  return parsed;
 }
 
-function saveJSON(filePath, data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+// Calculate volume from daily burned amounts
+function estimateVolumes(dailyLog) {
+  const results = [];
+
+  if (dailyLog.length < 2) {
+    console.log("⚠️ Not enough daily log entries to calculate volume.");
+    return results;
+  }
+
+  for (let i = 1; i < dailyLog.length; i++) {
+    const yesterday = dailyLog[i - 1];
+    const today = dailyLog[i];
+
+    // Defensive checks:
+    if (
+      !yesterday || !today ||
+      typeof yesterday.totalSupply !== "number" ||
+      typeof today.totalSupply !== "number"
+    ) {
+      console.warn(`⚠️ Skipping invalid entries at index ${i - 1} and ${i}`);
+      continue;
+    }
+
+    // Total supply cannot increase; if it does, ignore that day
+    if (today.totalSupply > yesterday.totalSupply) {
+      console.warn(`⚠️ totalSupply increased on ${today.date}, skipping.`);
+      continue;
+    }
+
+    const burned = yesterday.totalSupply - today.totalSupply;
+    const volume = burned * 50; // 2% burn means volume = burned * 50
+
+    results.push({
+      date: today.date,
+      burned: parseFloat(burned.toFixed(6)),
+      estimatedVolume: parseFloat(volume.toFixed(2)),
+    });
+  }
+
+  return results;
+}
+
+function saveEstimates(estimates) {
+  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(estimates, null, 2));
+  console.log("✅ Saved volume estimates:", OUTPUT_PATH);
 }
 
 function main() {
-  const log = loadJSON(DAILY_LOG_PATH);
-  if (!log || log.length < 2) {
-    console.error("❌ Need at least 2 daily entries to estimate volume.");
+  try {
+    const dailyLog = readDailyLog();
+    const estimates = estimateVolumes(dailyLog);
+    saveEstimates(estimates);
+  } catch (err) {
+    console.error("❌ ERROR:", err.message);
     process.exit(1);
   }
-
-  const yesterday = log[log.length - 2];
-  const today = log[log.length - 1];
-
-  if (today.totalSupply > yesterday.totalSupply) {
-    console.error("❌ totalSupply increased. Invalid burn.");
-    process.exit(1);
-  }
-
-  const burned = yesterday.totalSupply - today.totalSupply;
-  const estimatedVolume = burned * 50;
-
-  const result = {
-    date: today.date,
-    burned,
-    estimatedVolume
-  };
-
-  saveJSON(VOLUME_ESTIMATE_PATH, result);
-  console.log("✅ Estimated volume:", result);
 }
 
 main();
