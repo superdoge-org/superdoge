@@ -10,44 +10,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: 📦 Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20"
 
-      - name: Install dependencies
+      - name: 📥 Install dependencies
         run: npm install
 
-      - name: Fetch BNB Price
+      - name: 💰 Fetch BNB Price
         run: node fetch_bnb_price.js
 
-      - name: Fetch Token Price
+      - name: 💲 Fetch Token Price
         run: node fetch_token_price.js
-        
-      - name: Run fetch_supdog_stats.js
+
+      - name: 📊 Fetch SUPDOG Stats (Supply & Burn)
         run: node fetch_supdog_stats.js
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
-      - name: Run fetch_daily_log.js
+      - name: 🗓️ Fetch Daily Log
         run: node fetch_daily_log.js
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
-      - name: Run fetch_volume_estimate.js
+      - name: 🔁 Estimate Volume
         run: node fetch_volume_estimate.js
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
-      - name: Run fetch_liquidity.js
+      - name: 💧 Fetch Liquidity
         run: node fetch_liquidity.js
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
-      - name: Commit and push changes
+      - name: ✅ Commit and Push Changes
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
