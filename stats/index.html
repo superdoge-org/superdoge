@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SuperDoge Stats Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background: #f9f9f9;
+      color: #222;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    section {
+      background: white;
+      border-radius: 6px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 10px #ccc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    th, td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #ddd;
+      text-align: right;
+    }
+    th {
+      background: #2c3e50;
+      color: white;
+      text-align: left;
+    }
+    .value-large {
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <h1>SuperDoge Token Stats Dashboard</h1>
+
+  <section id="latest-values">
+    <h2>Latest Values</h2>
+    <table>
+      <tbody>
+        <tr><th>Market Cap</th><td id="market-cap">Loading...</td></tr>
+        <tr><th>BNB Price (USD)</th><td id="bnb-price">Loading...</td></tr>
+        <tr><th>Token Price (USD)</th><td id="token-price">Loading...</td></tr>
+        <tr><th>Charity Fund (BNB/USD)</th><td id="charity-usd">Loading...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="daily-burns">
+    <h2>Daily Burns (Last 30 Days)</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Burned Amount (SUPDOG)</th></tr>
+      </thead>
+      <tbody id="burns-table-body">
+        <tr><td colspan="2">Loading...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="daily-volume">
+    <h2>Daily Transaction Volume (Last 30 Days)</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Estimated Volume (SUPDOG)</th></tr>
+      </thead>
+      <tbody id="volume-table-body">
+        <tr><td colspan="2">Loading...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="liquidity-values">
+    <h2>Daily Liquidity Values (Last 30 Days)</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Liquidity (BNB)</th><th>Liquidity (USD)</th></tr>
+      </thead>
+      <tbody id="liquidity-table-body">
+        <tr><td colspan="3">Loading...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="last-30-days-tally">
+    <h2>Last 30 Days Summary</h2>
+    <table>
+      <tbody>
+        <tr><th>Total Burned</th><td id="tally-burned">Loading...</td></tr>
+        <tr><th>Total Volume</th><td id="tally-volume">Loading...</td></tr>
+        <tr><th>Average Daily Liquidity (USD)</th><td id="tally-liquidity">Loading...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+<script>
+  async function loadJSON(path) {
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
+    return res.json();
+  }
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  function formatNumber(num, decimals=2) {
+    return num.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  async function main() {
+    try {
+      // Load latest single-value files
+      const [marketCapData, bnbPriceData, tokenPriceData, charityData] = await Promise.all([
+        loadJSON('/stats/market-cap.json'),
+        loadJSON('/stats/bnb-price.json'),
+        loadJSON('/stats/token-price.json'),
+        loadJSON('/stats/charity-usd.json'),
+      ]);
+
+      document.getElementById('market-cap').textContent = `$${formatNumber(marketCapData.price || marketCapData.marketCap || 0, 2)}`;
+      document.getElementById('bnb-price').textContent = `$${formatNumber(bnbPriceData.price || 0, 2)}`;
+      // token-price.json uses supdogPrice key per your previous mention
+      document.getElementById('token-price').textContent = `$${formatNumber(tokenPriceData.supdogPrice || tokenPriceData.price || 0, 6)}`;
+      document.getElementById('charity-usd').textContent = `$${formatNumber(charityData.price || 0, 2)}`;
+
+      // Load last 30 days daily logs
+      const dailyLog = await loadJSON('/stats/daily-log.json');
+      const volumeLog = await loadJSON('/stats/volume-estimate.json');
+      const liquidityLog = await loadJSON('/stats/liquidity-log.json');
+
+      // Clear loading rows
+      const burnsBody = document.getElementById('burns-table-body');
+      const volumeBody = document.getElementById('volume-table-body');
+      const liquidityBody = document.getElementById('liquidity-table-body');
+      burnsBody.innerHTML = '';
+      volumeBody.innerHTML = '';
+      liquidityBody.innerHTML = '';
+
+      // Defensive: If these are objects, convert to arrays
+      const dailyLogArray = Array.isArray(dailyLog) ? dailyLog : Object.entries(dailyLog).map(([date, obj]) => ({ date, ...obj }));
+      const volumeLogArray = Array.isArray(volumeLog) ? volumeLog : Object.entries(volumeLog).map(([date, obj]) => ({ date, ...obj }));
+      const liquidityLogArray = Array.isArray(liquidityLog) ? liquidityLog : [];
+
+      // Sort by date descending, take last 30 days
+      dailyLogArray.sort((a,b) => new Date(b.date) - new Date(a.date));
+      volumeLogArray.sort((a,b) => new Date(b.date) - new Date(a.date));
+      liquidityLogArray.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+      const last30Burns = dailyLogArray.slice(0,30);
+      const last30Volumes = volumeLogArray.slice(0,30);
+      const last30Liquidity = liquidityLogArray.slice(0,30);
+
+      // Fill Burns table
+      last30Burns.forEach(entry => {
+        burnsBody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td>${formatDate(entry.date)}</td>
+            <td>${formatNumber(entry.burnedAmount || 0, 2)}</td>
+          </tr>
+        `);
+      });
+
+      // Fill Volume table
+      last30Volumes.forEach(entry => {
+        volumeBody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td>${formatDate(entry.date)}</td>
+            <td>${formatNumber(entry.estimatedVolume || 0, 2)}</td>
+          </tr>
+        `);
+      });
+
+      // Fill Liquidity table
+      last30Liquidity.forEach(entry => {
+        liquidityBody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td>${formatDate(entry.date)}</td>
+            <td>${formatNumber(entry.totalBNB || 0, 4)}</td>
+            <td>${formatNumber(entry.totalUSD || 0, 2)}</td>
+          </tr>
+        `);
+      });
+
+      // Calculate last 30 days totals and averages
+      const totalBurned = last30Burns.reduce((acc, cur) => acc + (cur.burnedAmount || 0), 0);
+      const totalVolume = last30Volumes.reduce((acc, cur) => acc + (cur.estimatedVolume || 0), 0);
+      const avgLiquidity = last30Liquidity.length > 0 ? (last30Liquidity.reduce((acc, cur) => acc + (cur.totalUSD || 0), 0) / last30Liquidity.length) : 0;
+
+      document.getElementById('tally-burned').textContent = formatNumber(totalBurned, 2);
+      document.getElementById('tally-volume').textContent = formatNumber(totalVolume, 2);
+      document.getElementById('tally-liquidity').textContent = `$${formatNumber(avgLiquidity, 2)}`;
+
+    } catch (err) {
+      console.error("Error loading stats:", err);
+      document.body.innerHTML = "<h2>Error loading stats data.</h2>";
+    }
+  }
+
+  main();
+</script>
+</body>
+</html>
