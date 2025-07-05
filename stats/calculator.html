@@ -13,7 +13,7 @@
       background: #f9f9f9;
       color: #333;
     }
-    input {
+    input, select {
       padding: 0.5rem;
       margin: 0.5rem 0;
       width: 100%;
@@ -29,9 +29,16 @@
   </style>
 </head>
 <body>
-  <h1>SUPDOG Holder Calculator</h1>
-  <p>Enter your SUPDOG holdings to estimate your value across multiple metrics:</p>
-  <input type="number" id="holdings" placeholder="Enter amount of SUPDOG you own (e.g. 500,000)" />
+  <h1>SUPDOG Value Calculator</h1>
+  <p>Estimate value from <strong>buying</strong> or <strong>selling</strong> SUPDOG, based on live liquidity data.</p>
+
+  <label for="mode">Calculation Mode:</label>
+  <select id="mode">
+    <option value="sell">Sell (realize value from SUPDOG)</option>
+    <option value="buy">Buy (acquire SUPDOG with BNB)</option>
+  </select>
+
+  <input type="number" id="holdings" placeholder="Enter amount of SUPDOG (or BNB to buy)" />
 
   <div class="result" id="output">
     <p>Loading data...</p>
@@ -61,51 +68,70 @@
     const calculate = async () => {
       const data = await fetchData();
       const input = document.getElementById('holdings');
+      const mode = document.getElementById('mode').value;
       const out = document.getElementById('output');
 
-      const holdings = parseFloat(input.value);
-      if (!holdings || holdings <= 0) {
-        out.innerHTML = '<p>Please enter a valid amount of SUPDOG.</p>';
+      const raw = parseFloat(input.value);
+      if (!raw || raw <= 0) {
+        out.innerHTML = '<p>Please enter a valid amount.</p>';
         return;
       }
 
-      const { totalSupply, tokenPrice, totalBNB, totalUSD } = data;
+      const { totalSupply, tokenPrice, totalBNB, totalUSD, bnbPrice } = data;
 
-      const percentSupply = holdings / totalSupply;
-      const valueUSD = holdings * tokenPrice;
-      const valueMarketCapShare = percentSupply * (totalSupply * tokenPrice);
-      const valueLiquidityBNB = percentSupply * totalBNB;
-      const valueLiquidityUSD = percentSupply * totalUSD;
-      const estimatedRealizedBNB = valueLiquidityBNB * 0.85; // assume 15% slippage
+      if (mode === 'sell') {
+        const holdings = raw;
+        const percentSupply = holdings / totalSupply;
+        const valueUSD = holdings * tokenPrice;
+        const valueMarketCapShare = percentSupply * (totalSupply * tokenPrice);
+        const valueLiquidityBNB = percentSupply * totalBNB;
+        const valueLiquidityUSD = percentSupply * totalUSD;
 
-      out.innerHTML = `
-        <h2>📊 Results</h2>
-        <p><strong>Current Token Price:</strong> $${format(tokenPrice)}</p>
-        <p><strong>Your SUPDOG Holdings:</strong> ${formatInt(holdings)} tokens</p>
-        <p><strong>Your Share of Total Supply:</strong> ${(percentSupply * 100).toFixed(4)}%</p>
+        const afterTaxBNB = valueLiquidityBNB * 0.94; // 6% tax
+        const estimatedRealizedBNB = afterTaxBNB * 0.85; // 15% slippage
 
-        <h3>💵 Spot Value</h3>
-        <p>≈ <strong>$${format(valueUSD)}</strong> (at current price)</p>
+        out.innerHTML = `
+          <h2>📊 Sell Estimate</h2>
+          <p><strong>Current Token Price:</strong> $${format(tokenPrice)}</p>
+          <p><strong>Your SUPDOG Holdings:</strong> ${formatInt(holdings)} tokens</p>
+          <p><strong>Your Share of Total Supply:</strong> ${(percentSupply * 100).toFixed(4)}%</p>
 
-        <h3>📈 Market Cap Proportional Share</h3>
-        <p>≈ <strong>$${format(valueMarketCapShare)}</strong></p>
+          <h3>💵 Spot Value</h3>
+          <p>≈ <strong>$${format(valueUSD)}</strong> (before tax/slippage)</p>
 
-        <h3>💧 Liquidity Proportional Share</h3>
-        <p>≈ <strong>${format(valueLiquidityBNB)} BNB</strong> / <strong>$${format(valueLiquidityUSD)}</strong></p>
+          <h3>💧 Proportional Liquidity</h3>
+          <p>≈ <strong>${format(valueLiquidityBNB)} BNB</strong> / $${format(valueLiquidityUSD)}</p>
 
-        <h3>⚠️ Realized Sale Estimate (w/ Slippage)</h3>
-        <p>≈ <strong>${format(estimatedRealizedBNB)} BNB</strong> after slippage</p>
+          <h3>⚠️ After Tax & Slippage</h3>
+          <p>≈ <strong>${format(estimatedRealizedBNB)} BNB</strong> (6% tax + 15% slippage)</p>
 
-        <p style="font-size: 0.9rem; color: #666;">
-          This assumes access to total liquidity with <strong>6% transaction tax</strong>:
-          2% burn, 2% redistribution, 2% to liquidity/charity/foundation.
-          Actual results may vary depending on market conditions.
-        </p>
-      `;
+          <p style="font-size: 0.9rem; color: #666;">
+            6% transaction tax applied: 2% burn, 2% redistribution, 2% foundation.
+            Estimated slippage assumes token is sold into liquidity pool.
+          </p>
+        `;
+      } else {
+        const bnbInput = raw;
+        const netBNB = bnbInput * 0.94; // buying also taxed 6%
+        const supdogReceived = (netBNB / bnbPrice) / (1 / tokenPrice);
+
+        out.innerHTML = `
+          <h2>🛒 Buy Estimate</h2>
+          <p><strong>BNB Input:</strong> ${bnbInput} BNB</p>
+          <p><strong>Net BNB after 6% tax:</strong> ${format(netBNB)} BNB</p>
+          <p><strong>SUPDOG Received:</strong> ≈ <strong>${formatInt(supdogReceived)}</strong> tokens</p>
+
+          <p style="font-size: 0.9rem; color: #666;">
+            SUPDOG is taxed on purchase: 2% burn, 2% redistribution, 2% foundation.
+            Value assumes price and liquidity remain constant.
+          </p>
+        `;
+      }
     };
 
     document.getElementById('holdings').addEventListener('input', calculate);
-    calculate(); // Run once on load
+    document.getElementById('mode').addEventListener('change', calculate);
+    calculate(); // initial run
   </script>
 </body>
 </html>
