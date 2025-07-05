@@ -103,12 +103,13 @@
           fetch('/stats/volume-estimate.json').then(r => r.json())
         ]);
 
-        const totalSupply = Number(totalSupplyRaw.totalSupply) / DECIMALS;
+        // totalSupply is already decimal, no need to divide by 1e18
+        const totalSupply = Number(totalSupplyRaw.totalSupply);
         const totalBurned = 1_000_000_000 - totalSupply;
 
         const price = Number(tokenPriceRaw.price);
         const bnb = Number(bnbPriceRaw.price);
-        const volume = Number(volumeEstimateRaw.volume) / DECIMALS;
+        const volume = Number(volumeEstimateRaw.volume) / DECIMALS; // volume still big number, scale down
         const liquidityUSD = Number(liquidityRaw.usd);
         const liquidityBNB = Number(liquidityRaw.bnb);
         const marketCap = totalSupply * price;
@@ -124,6 +125,7 @@
           { label: 'Liquidity (BNB)', value: liquidityBNB.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' BNB' }
         ];
 
+        statGrid.innerHTML = '';
         stats.forEach(stat => {
           const box = document.createElement('div');
           box.className = 'stat-box';
