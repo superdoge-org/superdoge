@@ -65,7 +65,7 @@
   <h1>SuperDoge Token Stats Dashboard</h1>
 
   <div class="stat-grid" id="stat-grid">
-    <!-- Stats will be inserted here -->
+    <!-- Stats will load here -->
   </div>
 
   <h2>Daily Burn & Volume History</h2>
@@ -84,40 +84,39 @@
 
   <script>
     async function loadStats() {
-      const paths = {
-        totalSupply: '/stats/total-supply.json',
-        totalBurned: '/stats/total-burned.json',
-        tokenPrice: '/stats/token-price.json',
-        bnbPrice: '/stats/bnb-price.json',
-        liquidity: '/stats/liquidity.json',
-        volumeEstimate: '/stats/volume-estimate.json'
-      };
-
       const statGrid = document.getElementById('stat-grid');
 
       try {
-        const [totalSupply, totalBurned, tokenPrice, bnbPrice, liquidity, volumeEstimate] = await Promise.all([
-          fetch(paths.totalSupply).then(r => r.json()),
-          fetch(paths.totalBurned).then(r => r.json()),
-          fetch(paths.tokenPrice).then(r => r.json()),
-          fetch(paths.bnbPrice).then(r => r.json()),
-          fetch(paths.liquidity).then(r => r.json()),
-          fetch(paths.volumeEstimate).then(r => r.json())
+        const [
+          data,
+          tokenPrice,
+          bnbPrice,
+          liquidity,
+          volumeEstimate
+        ] = await Promise.all([
+          fetch('/stats/data.json').then(r => r.json()),
+          fetch('/stats/token-price.json').then(r => r.json()),
+          fetch('/stats/bnb-price.json').then(r => r.json()),
+          fetch('/stats/liquidity.json').then(r => r.json()),
+          fetch('/stats/volume-estimate.json').then(r => r.json())
         ]);
 
-        const marketCap = Number(tokenPrice.price) * (Number(totalSupply.totalSupply) / 1e9); // Assuming 9 decimals
-        const totalBurnedDisplay = Number(totalBurned.burned) / 1e9;
-        const totalSupplyDisplay = Number(totalSupply.totalSupply) / 1e9;
+        const totalSupply = Number(data.totalSupply) / 1e9;
+        const totalBurned = Number(data.totalBurned) / 1e9;
+        const price = Number(tokenPrice.price);
+        const bnb = Number(bnbPrice.price);
+        const volume = Number(volumeEstimate.volume) / 1e9;
         const liquidityUSD = Number(liquidity.usd);
         const liquidityBNB = Number(liquidity.bnb);
+        const marketCap = totalSupply * price;
 
         const stats = [
-          { label: 'Total Supply', value: totalSupplyDisplay.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
-          { label: 'Total Burned', value: totalBurnedDisplay.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
-          { label: 'Estimated Volume (Last 30d)', value: Number(volumeEstimate.volume) / 1e9 + ' SUPDOG' },
-          { label: 'Token Price', value: '$' + Number(tokenPrice.price).toFixed(8) },
+          { label: 'Total Supply', value: totalSupply.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
+          { label: 'Total Burned', value: totalBurned.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
+          { label: 'Estimated Volume (Last 30d)', value: volume.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
+          { label: 'Token Price', value: '$' + price.toFixed(8) },
           { label: 'Market Cap', value: '$' + marketCap.toLocaleString(undefined, { maximumFractionDigits: 0 }) },
-          { label: 'BNB Price', value: '$' + Number(bnbPrice.price).toFixed(2) },
+          { label: 'BNB Price', value: '$' + bnb.toFixed(2) },
           { label: 'Liquidity (USD)', value: '$' + liquidityUSD.toLocaleString(undefined, { maximumFractionDigits: 0 }) },
           { label: 'Liquidity (BNB)', value: liquidityBNB.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' BNB' }
         ];
@@ -130,8 +129,8 @@
         });
 
       } catch (err) {
-        console.error('Error loading main stats:', err);
-        statGrid.innerHTML = '<p style="color:red;">Error loading stats data.</p>';
+        console.error('Error loading stats:', err);
+        statGrid.innerHTML = '<p style="color:red;">Failed to load main stats.</p>';
       }
     }
 
@@ -144,6 +143,8 @@
         for (let i = 1; i < logs.length; i++) {
           const prev = logs[i - 1];
           const curr = logs[i];
+
+          if (!curr.burned || !prev.burned) continue;
 
           const burnDelta = BigInt(curr.burned) - BigInt(prev.burned);
           const volumeDelta = burnDelta * 50n;
@@ -160,9 +161,9 @@
           tableBody.appendChild(row);
         }
       } catch (err) {
-        console.error('Error loading daily burn/volume:', err);
+        console.error('Error loading daily log:', err);
         const tbody = document.querySelector('#burn-volume-table tbody');
-        tbody.innerHTML = '<tr><td colspan="3" style="color:red;">Failed to load daily data</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" style="color:red;">Failed to load daily data.</td></tr>';
       }
     }
 
