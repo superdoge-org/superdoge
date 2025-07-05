@@ -31,7 +31,7 @@
 <body>
   <h1>SUPDOG Holder Calculator</h1>
   <p>Enter your SUPDOG holdings to estimate your value across multiple metrics:</p>
-  <input type="number" id="holdings" placeholder="Enter amount of SUPDOG you own (e.g. 33000000)" />
+  <input type="number" id="holdings" placeholder="Enter amount of SUPDOG you own (e.g. 500,000)" />
 
   <div class="result" id="output">
     <p>Loading data...</p>
@@ -56,6 +56,7 @@
     };
 
     const format = x => Number(x).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+    const formatInt = x => Number(x).toLocaleString();
 
     const calculate = async () => {
       const data = await fetchData();
@@ -75,11 +76,12 @@
       const valueMarketCapShare = percentSupply * (totalSupply * tokenPrice);
       const valueLiquidityBNB = percentSupply * totalBNB;
       const valueLiquidityUSD = percentSupply * totalUSD;
-      const estimatedRealizedBNB = valueLiquidityBNB * 0.85; // assume 15% slippage worst-case
+      const estimatedRealizedBNB = valueLiquidityBNB * 0.85; // assume 15% slippage
 
       out.innerHTML = `
         <h2>📊 Results</h2>
         <p><strong>Current Token Price:</strong> $${format(tokenPrice)}</p>
+        <p><strong>Your SUPDOG Holdings:</strong> ${formatInt(holdings)} tokens</p>
         <p><strong>Your Share of Total Supply:</strong> ${(percentSupply * 100).toFixed(4)}%</p>
 
         <h3>💵 Spot Value</h3>
@@ -94,7 +96,11 @@
         <h3>⚠️ Realized Sale Estimate (w/ Slippage)</h3>
         <p>≈ <strong>${format(estimatedRealizedBNB)} BNB</strong> after slippage</p>
 
-        <p style="font-size: 0.9rem; color: #666;">Assumes access to total liquidity; real outcome may vary based on slippage and liquidity depth.</p>
+        <p style="font-size: 0.9rem; color: #666;">
+          This assumes access to total liquidity with <strong>6% transaction tax</strong>:
+          2% burn, 2% redistribution, 2% to liquidity/charity/foundation.
+          Actual results may vary depending on market conditions.
+        </p>
       `;
     };
 
