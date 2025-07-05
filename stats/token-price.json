@@ -1,6 +1,7 @@
 {
-  "supdogPrice": 0.00027882746721735,
-  "source": "calculated from pool",
-  "pool": "0x4b9c179b34f02da39a5940c363c20216e0e19c1c",
-  "timestamp": "2025-07-05T11:26:25.169Z"
+  "price": 294204.44526593783,
+  "pool": "0x6096bd38ec74579026e51dac897f3a16800177da",
+  "bnbLiquidity": 215.16671020165464,
+  "updated": "2025-07-05T12:52:44.063Z",
+  "source": "auto-selected best pool"
 }
