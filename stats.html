@@ -90,26 +90,27 @@
 
       try {
         const [
-          data,
-          tokenPrice,
-          bnbPrice,
-          liquidity,
-          volumeEstimate
+          totalSupplyRaw,
+          tokenPriceRaw,
+          bnbPriceRaw,
+          liquidityRaw,
+          volumeEstimateRaw
         ] = await Promise.all([
-          fetch('/stats/data.json').then(r => r.json()),
+          fetch('/stats/total-supply.json').then(r => r.json()),
           fetch('/stats/token-price.json').then(r => r.json()),
           fetch('/stats/bnb-price.json').then(r => r.json()),
           fetch('/stats/liquidity.json').then(r => r.json()),
           fetch('/stats/volume-estimate.json').then(r => r.json())
         ]);
 
-        const totalSupply = Number(data.totalSupply) / DECIMALS;
-        const totalBurned = Number(data.totalBurned) / DECIMALS;
-        const price = Number(tokenPrice.price);
-        const bnb = Number(bnbPrice.price);
-        const volume = Number(volumeEstimate.volume) / DECIMALS;
-        const liquidityUSD = Number(liquidity.usd);
-        const liquidityBNB = Number(liquidity.bnb);
+        const totalSupply = Number(totalSupplyRaw.totalSupply) / DECIMALS;
+        const totalBurned = 1_000_000_000 - totalSupply;
+
+        const price = Number(tokenPriceRaw.price);
+        const bnb = Number(bnbPriceRaw.price);
+        const volume = Number(volumeEstimateRaw.volume) / DECIMALS;
+        const liquidityUSD = Number(liquidityRaw.usd);
+        const liquidityBNB = Number(liquidityRaw.bnb);
         const marketCap = totalSupply * price;
 
         const stats = [
