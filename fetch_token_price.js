@@ -11,7 +11,7 @@ const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase();
 const POOLS = [
   "0x4b9c179b34f02da39a5940c363c20216e0e19c1c", // V2
   "0x6096bd38ec74579026e51dac897f3a16800177da", // V1 (best)
-  "0x47163504F420912f8e193bC6c45b5d7Ae3eA3788"  // V3/misc
+  "0x300a27d21b10c3604f3297fbad7a5168c4c80001"  // V3/misc
 ];
 
 // === File Paths ===
