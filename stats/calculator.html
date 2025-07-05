@@ -61,8 +61,9 @@
 
   <p class="disclaimer">
     Values are estimated based on real-time data from PancakeSwap liquidity pools.<br />
-    Market cap is based on current price × circulating supply. Liquidity is combined across pools.<br />
-    Tax includes: 2% burn, 2% redistribution, 2% foundation. Slippage is not shown but may vary.
+    Market cap = current price × circulating supply. Liquidity = sum of all active pools.<br />
+    Tax includes: 2% burn, 2% redistribution, 2% foundation. Price impact is estimated assuming constant product formula.<br />
+    <strong>Disclaimer:</strong> This is a tool for estimation only. Real trades may vary due to volatility, gas fees, and slippage.
   </p>
 
   <script>
@@ -100,6 +101,8 @@
       }
 
       const { totalSupply, tokenPrice, totalBNB, totalUSD, bnbPrice } = data;
+      const marketCap = totalSupply * tokenPrice;
+      const liquidityRatio = totalUSD / marketCap;
 
       if (mode === 'sell') {
         const holdings = raw;
@@ -118,25 +121,46 @@
           <p><strong>Your Share of Total Supply:</strong> ${(percentSupply * 100).toFixed(4)}%</p>
 
           <h3>💵 Spot Value</h3>
-          <p>≈ <strong>$${format(valueUSD)}</strong></p>
+          <p>≈ <strong>$${format(valueUSD)}</strong> (market price basis)</p>
 
           <h3>💧 Proportional Liquidity</h3>
           <p>≈ <strong>${format(valueLiquidityBNB)} BNB</strong> / $${format(valueLiquidityUSD)}</p>
 
           <h3>After Tax (${applyTax ? '6%' : '0%'})</h3>
-          <p>≈ <strong>${format(estimatedBNB)} BNB</strong></p>
+          <p>≈ <strong>${format(estimatedBNB)} BNB</strong> (net after transaction)</p>
+
+          <h3>🧠 Liquidity Context</h3>
+          <p>Market Cap: $${format(marketCap)}</p>
+          <p>Total Liquidity: $${format(totalUSD)} (${format(totalBNB)} BNB)</p>
+          <p>Liquidity as % of Market Cap: ${format(liquidityRatio * 100)}%</p>
+          <p>Your share of market cap: $${format(percentSupply * marketCap)}</p>
+          <p><em>Price impact estimates assume linear liquidity curve and constant product (k=x*y)</em></p>
         `;
       } else {
         const bnbInput = raw;
         const taxFactor = applyTax ? 0.94 : 1;
         const netBNB = bnbInput * taxFactor;
-        const supdogReceived = (netBNB / bnbPrice) / (1 / tokenPrice);
+        const supdogReceived = (netBNB * bnbPrice) / tokenPrice;
+
+        const buyPercentSupply = supdogReceived / totalSupply;
+        const projectedMarketCap = (totalSupply + supdogReceived) * tokenPrice;
 
         out.innerHTML = `
           <h2>🛒 Buy Estimate</h2>
           <p><strong>BNB Input:</strong> ${bnbInput} BNB</p>
           <p><strong>Net BNB after ${applyTax ? '6%' : '0%'} tax:</strong> ${format(netBNB)} BNB</p>
           <p><strong>SUPDOG Received:</strong> ≈ <strong>${formatInt(supdogReceived)}</strong> tokens</p>
+          <p><strong>Current Token Price:</strong> $${format(tokenPrice)}</p>
+          <p><strong>USD Equivalent:</strong> ≈ $${format(netBNB * bnbPrice)}</p>
+
+          <h3>🧠 Liquidity Context</h3>
+          <p>Total Supply: ${formatInt(totalSupply)}</p>
+          <p>Total Market Cap: $${format(marketCap)}</p>
+          <p>Total Liquidity: $${format(totalUSD)} (${format(totalBNB)} BNB)</p>
+          <p>Liquidity as % of Market Cap: ${format(liquidityRatio * 100)}%</p>
+          <p>Your SUPDOG share (post-buy): ${(buyPercentSupply * 100).toFixed(4)}%</p>
+          <p>Projected Market Cap after buy: $${format(projectedMarketCap)}</p>
+          <p><em>Estimates assume no price impact or slippage</em></p>
         `;
       }
     };
