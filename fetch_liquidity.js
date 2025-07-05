@@ -9,9 +9,9 @@ const PRICE_TOKEN_PATH = path.join(STATS_DIR, "token-price.json");
 const OUTPUT_FILE = path.join(STATS_DIR, "liquidity.json");
 
 const RPC_URL = "https://bsc-dataseed.binance.org/";
-const web3 = new Web3(new Web3.providers.HttpProvider(RPC_URL));
+const web3 = new Web3(RPC_URL);
 
-// LP Pool Addresses (V1, V2, V3)
+// LP Pool Addresses
 const POOLS = [
   "0x6096bd38ec74579026e51dac897f3a16800177da", // V1
   "0x4b9c179b34f02da39a5940c363c20216e0e19c1c", // V2
@@ -21,7 +21,7 @@ const POOLS = [
 // WBNB contract address
 const WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 
-// Minimal ABI to read ERC20 balances
+// Minimal ABI for ERC20 balanceOf
 const ABI = [
   {
     constant: true,
@@ -48,8 +48,8 @@ function readPrice(filePath, label) {
     const data = JSON.parse(fs.readFileSync(filePath));
     console.log(`📄 ${label} price file content:`, data);
 
-    // Accept both `price` or `supdogprice`
-    const price = data.price ?? data.supdogprice;
+    // Safely read from multiple common key names
+    const price = data.price ?? data.supdogprice ?? data.supdogPrice;
     return parseFloat(price);
   } catch (err) {
     console.error(`❌ Failed to parse ${label} price JSON:`, err.message);
@@ -69,25 +69,18 @@ async function main() {
     let totalBNB = 0;
 
     for (const pool of POOLS) {
-      try {
-        const bnb = await getWBNBBalance(pool);
-        totalBNB += bnb * 2; // double for both sides of LP
-        console.log(`✅ Pool ${pool} contains ~${bnb.toFixed(4)} WBNB`);
-      } catch (err) {
-        console.warn(`⚠️ Failed to get balance from pool ${pool}:`, err.message);
-      }
+      const bnb = await getWBNBBalance(pool);
+      totalBNB += bnb * 2; // LP value includes both sides
     }
-
-    const totalUSD = totalBNB * bnbPrice;
 
     const result = {
       timestamp: new Date().toISOString(),
       totalBNB: parseFloat(totalBNB.toFixed(4)),
-      totalUSD: parseFloat(totalUSD.toFixed(2)),
+      totalUSD: parseFloat((totalBNB * bnbPrice).toFixed(2)),
     };
 
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(result, null, 2));
-    console.log("✅ Liquidity data saved:", result);
+    console.log("✅ Liquidity saved:", result);
   } catch (err) {
     console.error("❌ Error fetching liquidity or reading prices:", err.message);
     process.exit(1);
