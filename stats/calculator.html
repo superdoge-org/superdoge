@@ -13,11 +13,11 @@
       background: #f9f9f9;
       color: #333;
     }
-    input, select {
+    input, select, button {
       padding: 0.5rem;
       margin: 0.5rem 0;
       width: 100%;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
     .result {
       background: #fff;
@@ -30,11 +30,23 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      margin: 0.3rem 0;
     }
     .disclaimer {
       margin-top: 2rem;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #666;
+    }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .button-group button {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -42,27 +54,20 @@
   <h1>SUPDOG Value Calculator</h1>
   <p>Estimate value from <strong>buying</strong> or <strong>selling</strong> SUPDOG, based on live liquidity, supply, and price data.</p>
 
-  <label for="mode">Calculation Mode:</label>
-  <select id="mode">
-    <option value="sell">Sell (realize value from SUPDOG)</option>
-    <option value="buy">Buy (acquire SUPDOG with BNB)</option>
-  </select>
+  <div class="button-group">
+    <button id="sellBtn">Sell</button>
+    <button id="buyBtn">Buy</button>
+  </div>
 
-  <input type="number" id="holdings" placeholder="Enter amount of SUPDOG (or BNB to buy)" />
+  <input type="text" id="holdings" placeholder="Enter amount of SUPDOG to sell    e.g. 500,000" />
 
   <div class="row">
     <input type="checkbox" id="applyTax" checked />
-    <label for="applyTax">Apply 6% transaction tax</label>
+    <label for="applyTax" style="font-size: 0.9rem">Apply 6% transaction tax</label>
   </div>
-
   <div class="row">
     <input type="checkbox" id="applyImpact" checked />
-    <label for="applyImpact">Model slippage / price impact</label>
-  </div>
-
-  <div class="row">
-    <input type="checkbox" id="applyGas" />
-    <label for="applyGas">Estimate gas fee (~0.0012 BNB)</label>
+    <label for="applyImpact" style="font-size: 0.9rem">Model slippage / price impact</label>
   </div>
 
   <div class="result" id="output">
@@ -74,7 +79,7 @@
     Market cap = current price × circulating supply. Liquidity = sum of all active pools.<br />
     Tax includes: 2% burn, 2% redistribution, 2% foundation.<br />
     <strong>Slippage impact modeled</strong> assuming a constant product AMM curve (k=x*y), affecting token price during trade.<br />
-    <strong>Gas fee assumed as 0.0012 BNB</strong> (based on average PancakeSwap trade gas cost).<br />
+    <strong>Gas fee</strong> (~0.0012 BNB) is not deducted but should be considered when transacting.<br />
     <strong>Disclaimer:</strong> This is a tool for estimation only. Real trades may vary due to volatility, gas fees, and slippage.
   </p>
 
@@ -99,6 +104,13 @@
     const format = x => Number(x).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
     const formatInt = x => Number(x).toLocaleString();
 
+    const formatInput = (el) => {
+      let val = el.value.replace(/,/g, '');
+      if (!isNaN(val) && val !== '') {
+        el.value = Number(val).toLocaleString();
+      }
+    };
+
     const calculatePriceImpact = (amountBNB, totalBNB, totalSUPDOG) => {
       const k = totalBNB * totalSUPDOG;
       const newBNB = totalBNB + amountBNB;
@@ -110,13 +122,12 @@
     const calculate = async () => {
       const data = await fetchData();
       const input = document.getElementById('holdings');
-      const mode = document.getElementById('mode').value;
+      const mode = document.body.dataset.mode || 'sell';
       const applyTax = document.getElementById('applyTax').checked;
       const applyImpact = document.getElementById('applyImpact').checked;
-      const applyGas = document.getElementById('applyGas').checked;
       const out = document.getElementById('output');
 
-      const raw = parseFloat(input.value);
+      const raw = parseFloat(input.value.replace(/,/g, ''));
       if (!raw || raw <= 0) {
         out.innerHTML = '<p>Please enter a valid amount.</p>';
         return;
@@ -140,11 +151,6 @@
         if (applyImpact) {
           const outAmt = calculatePriceImpact(estimatedBNB, totalBNB, totalSupply);
           slippageBNB = `<p><strong>Est. slippage:</strong> ${format(valueLiquidityBNB - estimatedBNB)} BNB (due to pool depth)</p>`;
-        }
-
-        if (applyGas) {
-          estimatedBNB -= 0.0012;
-          slippageBNB += `<p><strong>Gas Fee Deducted:</strong> ~0.0012 BNB</p>`;
         }
 
         out.innerHTML = `
@@ -174,8 +180,6 @@
         const taxFactor = applyTax ? 0.94 : 1;
         let netBNB = bnbInput * taxFactor;
 
-        if (applyGas) netBNB -= 0.0012;
-
         let supdogReceived = (netBNB * bnbPrice) / tokenPrice;
         let slippageNote = '';
 
@@ -191,7 +195,7 @@
         out.innerHTML = `
           <h2>🛒 Buy Estimate</h2>
           <p><strong>BNB Input:</strong> ${bnbInput} BNB</p>
-          <p><strong>Net BNB after ${applyTax ? '6%' : '0%'} tax${applyGas ? ' and gas' : ''}:</strong> ${format(netBNB)} BNB</p>
+          <p><strong>Net BNB after ${applyTax ? '6%' : '0%'} tax:</strong> ${format(netBNB)} BNB</p>
           <p><strong>SUPDOG Received:</strong> ≈ <strong>${formatInt(supdogReceived)}</strong> tokens</p>
           <p><strong>Current Token Price:</strong> $${format(tokenPrice)}</p>
           <p><strong>USD Equivalent:</strong> ≈ $${format(netBNB * bnbPrice)}</p>
@@ -208,11 +212,25 @@
       }
     };
 
-    document.getElementById('holdings').addEventListener('input', calculate);
-    document.getElementById('mode').addEventListener('change', calculate);
+    document.getElementById('sellBtn').addEventListener('click', () => {
+      document.body.dataset.mode = 'sell';
+      document.getElementById('holdings').placeholder = 'Enter amount of SUPDOG to sell    e.g. 500,000';
+      calculate();
+    });
+
+    document.getElementById('buyBtn').addEventListener('click', () => {
+      document.body.dataset.mode = 'buy';
+      document.getElementById('holdings').placeholder = 'Enter amount of BNB to spend    e.g. 1';
+      calculate();
+    });
+
+    document.getElementById('holdings').addEventListener('input', e => {
+      formatInput(e.target);
+      calculate();
+    });
+
     document.getElementById('applyTax').addEventListener('change', calculate);
     document.getElementById('applyImpact').addEventListener('change', calculate);
-    document.getElementById('applyGas').addEventListener('change', calculate);
     calculate();
   </script>
 </body>
