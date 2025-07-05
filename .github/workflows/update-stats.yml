@@ -3,7 +3,7 @@ name: Update SUPDOG Stats
 on:
   schedule:
     - cron: "0 * * * *"  # Every hour
-  workflow_dispatch:     # Manual trigger from GitHub UI
+  workflow_dispatch:     # Manual trigger
 
 jobs:
   update:
@@ -47,10 +47,14 @@ jobs:
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
+      - name: 🪣 Log Daily Liquidity
+        run: node fetch_liquidity_log.js
+
       - name: ✅ Commit and Push Changes
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
+          git pull --rebase
           git add stats/*.json
           git commit -m "Update stats: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" || exit 0
           git push
