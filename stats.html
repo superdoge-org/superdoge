@@ -3,177 +3,178 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SuperDoge Token Stats</title>
+  <title>SuperDoge Stats Dashboard</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f7f7f7;
-      color: #222;
-      max-width: 1000px;
+      max-width: 900px;
       margin: 2rem auto;
-      padding: 1rem;
+      padding: 0 1rem;
+      background-color: #f9f9f9;
     }
     h1, h2 {
       text-align: center;
       color: #333;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.6rem;
+      text-align: center;
+    }
+    th {
+      background: #eee;
+    }
     .stat-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-top: 2rem;
     }
-    .stat-box {
+    .stat-card {
       background: white;
       padding: 1rem;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .stat-label {
+    .stat-title {
       font-weight: bold;
-      font-size: 0.95rem;
-      margin-bottom: 0.25rem;
+      color: #444;
     }
     .stat-value {
-      font-size: 1.2rem;
-      color: #0077cc;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #eee;
-      text-align: right;
-    }
-    th {
-      background-color: #0077cc;
-      color: white;
-      text-align: center;
-    }
-    td:first-child {
-      text-align: left;
+      font-size: 1.3rem;
+      margin-top: 0.3rem;
     }
   </style>
 </head>
 <body>
-  <h1>SuperDoge Token Stats Dashboard</h1>
+  <h1>🐶 SuperDoge Token Stats</h1>
 
-  <div class="stat-grid" id="stat-grid">
-    <!-- Stats will load here -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Supply</div>
+      <div class="stat-value" id="totalSupply">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Total Burned</div>
+      <div class="stat-value" id="totalBurned">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Token Price (USD)</div>
+      <div class="stat-value" id="tokenPrice">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Market Cap (USD)</div>
+      <div class="stat-value" id="marketCap">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">BNB Price (USD)</div>
+      <div class="stat-value" id="bnbPrice">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Liquidity (USD)</div>
+      <div class="stat-value" id="liquidityUSD">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Liquidity (BNB)</div>
+      <div class="stat-value" id="liquidityBNB">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Est. Volume (Last 30d)</div>
+      <div class="stat-value" id="volume30d">Loading...</div>
+    </div>
   </div>
 
-  <h2>Daily Burn & Volume History</h2>
-  <table id="burn-volume-table">
+  <h2>📈 Daily Burn & Volume History</h2>
+  <table>
     <thead>
       <tr>
         <th>Date</th>
-        <th>Burned (SUPDOG)</th>
-        <th>Volume Estimate (SUPDOG)</th>
+        <th>Total Supply</th>
+        <th>Burned</th>
+        <th>Estimated Volume</th>
       </tr>
     </thead>
-    <tbody>
-      <!-- Filled by JS -->
+    <tbody id="dailyTable">
+      <tr><td colspan="4">Loading...</td></tr>
     </tbody>
   </table>
 
   <script>
-    const DECIMALS = 1e18;
+    const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
 
     async function loadStats() {
-      const statGrid = document.getElementById('stat-grid');
-
       try {
         const [
-          totalSupplyRaw,
-          tokenPriceRaw,
-          bnbPriceRaw,
-          liquidityRaw,
-          volumeEstimateRaw
+          totalData,
+          tokenData,
+          bnbData,
+          liquidity,
+          volumeData,
+          dailyLog
         ] = await Promise.all([
-          fetch('/stats/total-supply.json').then(r => r.json()),
-          fetch('/stats/token-price.json').then(r => r.json()),
-          fetch('/stats/bnb-price.json').then(r => r.json()),
-          fetch('/stats/liquidity.json').then(r => r.json()),
-          fetch('/stats/volume-estimate.json').then(r => r.json())
+          fetch("/stats/total-supply.json").then(r => r.json()),
+          fetch("/stats/token-price.json").then(r => r.json()),
+          fetch("/stats/bnb-price.json").then(r => r.json()),
+          fetch("/stats/liquidity.json").then(r => r.json()),
+          fetch("/stats/volume-estimate.json").then(r => r.json()),
+          fetch("/stats/daily-log.json").then(r => r.json())
         ]);
 
-        // totalSupply is already decimal, no need to divide by 1e18
-        const totalSupply = Number(totalSupplyRaw.totalSupply);
+        // Total Supply & Burned
+        const totalSupply = Number(totalData.totalSupply);
         const totalBurned = 1_000_000_000 - totalSupply;
+        document.getElementById("totalSupply").textContent = formatter(totalSupply) + " SUPDOG";
+        document.getElementById("totalBurned").textContent = formatter(totalBurned) + " SUPDOG";
 
-        const price = Number(tokenPriceRaw.price);
-        const bnb = Number(bnbPriceRaw.price);
-        const volume = Number(volumeEstimateRaw.volume) / DECIMALS; // volume still big number, scale down
-        const liquidityUSD = Number(liquidityRaw.usd);
-        const liquidityBNB = Number(liquidityRaw.bnb);
-        const marketCap = totalSupply * price;
+        // Token Price & Market Cap
+        const tokenPrice = Number(tokenData.price);
+        const marketCap = totalSupply * tokenPrice;
+        document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
+        document.getElementById("marketCap").textContent = "$" + formatter(marketCap);
 
-        const stats = [
-          { label: 'Total Supply', value: totalSupply.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
-          { label: 'Total Burned', value: totalBurned.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
-          { label: 'Estimated Volume (Last 30d)', value: volume.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' SUPDOG' },
-          { label: 'Token Price', value: '$' + price.toFixed(8) },
-          { label: 'Market Cap', value: '$' + marketCap.toLocaleString(undefined, { maximumFractionDigits: 0 }) },
-          { label: 'BNB Price', value: '$' + bnb.toFixed(2) },
-          { label: 'Liquidity (USD)', value: '$' + liquidityUSD.toLocaleString(undefined, { maximumFractionDigits: 0 }) },
-          { label: 'Liquidity (BNB)', value: liquidityBNB.toLocaleString(undefined, { maximumFractionDigits: 2 }) + ' BNB' }
-        ];
+        // BNB Price
+        document.getElementById("bnbPrice").textContent = "$" + formatter(bnbData.price);
 
-        statGrid.innerHTML = '';
-        stats.forEach(stat => {
-          const box = document.createElement('div');
-          box.className = 'stat-box';
-          box.innerHTML = `<div class="stat-label">${stat.label}</div><div class="stat-value">${stat.value}</div>`;
-          statGrid.appendChild(box);
-        });
+        // Liquidity
+        document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
+        document.getElementById("liquidityBNB").textContent = formatter(liquidity.totalBNB) + " BNB";
 
-      } catch (err) {
-        console.error('Error loading stats:', err);
-        statGrid.innerHTML = '<p style="color:red;">Failed to load main stats.</p>';
-      }
-    }
+        // Volume Estimate
+        const volume = Number(volumeData.estimatedVolume || 0);
+        document.getElementById("volume30d").textContent = "$" + formatter(volume);
 
-    async function loadDailyBurnAndVolume() {
-      try {
-        const res = await fetch('/stats/daily-log.json');
-        const logs = await res.json();
+        // Daily burn/volume table
+        const table = document.getElementById("dailyTable");
+        table.innerHTML = "";
 
-        const tableBody = document.querySelector('#burn-volume-table tbody');
-        for (let i = 1; i < logs.length; i++) {
-          const prev = logs[i - 1];
-          const curr = logs[i];
+        for (let i = 1; i < dailyLog.length; i++) {
+          const prev = dailyLog[i - 1];
+          const curr = dailyLog[i];
+          const burned = prev.totalSupply - curr.totalSupply;
+          const estVolume = burned * 50;
 
-          if (!curr.burned || !prev.burned) continue;
-
-          const burnDelta = BigInt(curr.burned) - BigInt(prev.burned);
-          const volumeDelta = burnDelta * 50n;
-
-          const burn = Number(burnDelta) / DECIMALS;
-          const volume = Number(volumeDelta) / DECIMALS;
-
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${curr.date}</td>
-            <td>${burn.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-            <td>${volume.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-          `;
-          tableBody.appendChild(row);
+          const row = `
+            <tr>
+              <td>${curr.date}</td>
+              <td>${formatter(curr.totalSupply)}</td>
+              <td>${formatter(burned)}</td>
+              <td>${formatter(estVolume)}</td>
+            </tr>`;
+          table.innerHTML += row;
         }
       } catch (err) {
-        console.error('Error loading daily log:', err);
-        const tbody = document.querySelector('#burn-volume-table tbody');
-        tbody.innerHTML = '<tr><td colspan="3" style="color:red;">Failed to load daily data.</td></tr>';
+        console.error("❌ Error loading stats data:", err);
+        document.getElementById("dailyTable").innerHTML = `<tr><td colspan="4">Error loading data.</td></tr>`;
       }
     }
 
     loadStats();
-    loadDailyBurnAndVolume();
   </script>
 </body>
 </html>
