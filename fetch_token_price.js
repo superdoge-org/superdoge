@@ -1,4 +1,3 @@
-// fetch_token_price.js
 const fs = require("fs");
 const path = require("path");
 const Web3 = require("web3");
@@ -7,11 +6,12 @@ const web3 = new Web3("https://bsc-dataseed.binance.org/"); // Public RPC
 
 const SUPDOG_ADDRESS = "0x622A1297057ea233287ce77bdBF2AB4E63609F23".toLowerCase();
 const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c".toLowerCase();
+const SUPDOG_DECIMALS = 9;
+const BNB_DECIMALS = 18;
 
 const POOLS = [
   "0x4b9c179b34f02da39a5940c363c20216e0e19c1c", // PancakeSwap V2
-  "0x6096bd38ec74579026e51dac897f3a16800177da", // PancakeSwap V1 (fallback)
-  "0x300a27d21b10c3604f3297fbad7a5168c4c80001"  // Alt pool
+  "0x6096bd38ec74579026e51dac897f3a16800177da"  // PancakeSwap V1 (fallback + preferred)
 ];
 
 const FALLBACK_POOL = "0x6096bd38ec74579026e51dac897f3a16800177da";
@@ -82,8 +82,8 @@ async function getPoolData(poolAddress) {
 
       return {
         pool: poolAddress,
-        supdog: Number(supdogReserve) / 1e18,
-        bnb: Number(bnbReserve) / 1e18
+        supdog: Number(supdogReserve) / 10 ** SUPDOG_DECIMALS,
+        bnb: Number(bnbReserve) / 10 ** BNB_DECIMALS
       };
     } else {
       return null;
@@ -121,6 +121,15 @@ async function main() {
 
     const priceInBNB = best.bnb / best.supdog;
     const supdogUsd = priceInBNB * bnbPrice;
+
+    // ✅ Debug Logging
+    console.log("➡️ Debug Info:");
+    console.log("  Pool:", best.pool);
+    console.log("  SUPDOG Reserve:", best.supdog.toFixed(4));
+    console.log("  BNB Reserve:", best.bnb.toFixed(4));
+    console.log("  BNB Price (USD):", bnbPrice);
+    console.log("  SUPDOG Price in BNB:", priceInBNB);
+    console.log("  SUPDOG Price in USD:", supdogUsd);
 
     const output = {
       price: supdogUsd,
