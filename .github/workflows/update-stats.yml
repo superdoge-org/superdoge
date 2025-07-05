@@ -2,8 +2,9 @@ name: Update SUPDOG Stats
 
 on:
   schedule:
-    - cron: "0 * * * *"  # Every hour
-  workflow_dispatch:     # Manual trigger
+    - cron: "0 * * * *"    # Every hour
+    - cron: "0 4 * * *"    # Daily at 4:00 UTC (midnight EST)
+  workflow_dispatch:        # Manual trigger
 
 jobs:
   update:
@@ -47,7 +48,8 @@ jobs:
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
-      - name: 🪣 Log Daily Liquidity
+      - name: 🪣 Log Daily Liquidity (only at 4:00 UTC)
+        if: github.event.schedule == '0 4 * * *'
         run: node fetch_liquidity_log.js
 
       - name: ✅ Commit and Push Changes
