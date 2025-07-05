@@ -26,11 +26,21 @@
       box-shadow: 0 0 6px rgba(0,0,0,0.1);
     }
     h2 { margin-top: 2rem; }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .disclaimer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
   </style>
 </head>
 <body>
   <h1>SUPDOG Value Calculator</h1>
-  <p>Estimate value from <strong>buying</strong> or <strong>selling</strong> SUPDOG, based on live liquidity data.</p>
+  <p>Estimate value from <strong>buying</strong> or <strong>selling</strong> SUPDOG, based on live liquidity, supply, and price data.</p>
 
   <label for="mode">Calculation Mode:</label>
   <select id="mode">
@@ -40,9 +50,20 @@
 
   <input type="number" id="holdings" placeholder="Enter amount of SUPDOG (or BNB to buy)" />
 
+  <div class="row">
+    <input type="checkbox" id="applyTax" checked />
+    <label for="applyTax">Apply 6% transaction tax</label>
+  </div>
+
   <div class="result" id="output">
     <p>Loading data...</p>
   </div>
+
+  <p class="disclaimer">
+    Values are estimated based on real-time data from PancakeSwap liquidity pools.<br />
+    Market cap is based on current price × circulating supply. Liquidity is combined across pools.<br />
+    Tax includes: 2% burn, 2% redistribution, 2% foundation. Slippage is not shown but may vary.
+  </p>
 
   <script>
     const fetchData = async () => {
@@ -69,6 +90,7 @@
       const data = await fetchData();
       const input = document.getElementById('holdings');
       const mode = document.getElementById('mode').value;
+      const applyTax = document.getElementById('applyTax').checked;
       const out = document.getElementById('output');
 
       const raw = parseFloat(input.value);
@@ -83,12 +105,11 @@
         const holdings = raw;
         const percentSupply = holdings / totalSupply;
         const valueUSD = holdings * tokenPrice;
-        const valueMarketCapShare = percentSupply * (totalSupply * tokenPrice);
         const valueLiquidityBNB = percentSupply * totalBNB;
         const valueLiquidityUSD = percentSupply * totalUSD;
 
-        const afterTaxBNB = valueLiquidityBNB * 0.94; // 6% tax
-        const estimatedRealizedBNB = afterTaxBNB * 0.85; // 15% slippage
+        const taxFactor = applyTax ? 0.94 : 1;
+        const estimatedBNB = valueLiquidityBNB * taxFactor;
 
         out.innerHTML = `
           <h2>📊 Sell Estimate</h2>
@@ -97,41 +118,33 @@
           <p><strong>Your Share of Total Supply:</strong> ${(percentSupply * 100).toFixed(4)}%</p>
 
           <h3>💵 Spot Value</h3>
-          <p>≈ <strong>$${format(valueUSD)}</strong> (before tax/slippage)</p>
+          <p>≈ <strong>$${format(valueUSD)}</strong></p>
 
           <h3>💧 Proportional Liquidity</h3>
           <p>≈ <strong>${format(valueLiquidityBNB)} BNB</strong> / $${format(valueLiquidityUSD)}</p>
 
-          <h3>⚠️ After Tax & Slippage</h3>
-          <p>≈ <strong>${format(estimatedRealizedBNB)} BNB</strong> (6% tax + 15% slippage)</p>
-
-          <p style="font-size: 0.9rem; color: #666;">
-            6% transaction tax applied: 2% burn, 2% redistribution, 2% foundation.
-            Estimated slippage assumes token is sold into liquidity pool.
-          </p>
+          <h3>After Tax (${applyTax ? '6%' : '0%'})</h3>
+          <p>≈ <strong>${format(estimatedBNB)} BNB</strong></p>
         `;
       } else {
         const bnbInput = raw;
-        const netBNB = bnbInput * 0.94; // buying also taxed 6%
+        const taxFactor = applyTax ? 0.94 : 1;
+        const netBNB = bnbInput * taxFactor;
         const supdogReceived = (netBNB / bnbPrice) / (1 / tokenPrice);
 
         out.innerHTML = `
           <h2>🛒 Buy Estimate</h2>
           <p><strong>BNB Input:</strong> ${bnbInput} BNB</p>
-          <p><strong>Net BNB after 6% tax:</strong> ${format(netBNB)} BNB</p>
+          <p><strong>Net BNB after ${applyTax ? '6%' : '0%'} tax:</strong> ${format(netBNB)} BNB</p>
           <p><strong>SUPDOG Received:</strong> ≈ <strong>${formatInt(supdogReceived)}</strong> tokens</p>
-
-          <p style="font-size: 0.9rem; color: #666;">
-            SUPDOG is taxed on purchase: 2% burn, 2% redistribution, 2% foundation.
-            Value assumes price and liquidity remain constant.
-          </p>
         `;
       }
     };
 
     document.getElementById('holdings').addEventListener('input', calculate);
     document.getElementById('mode').addEventListener('change', calculate);
-    calculate(); // initial run
+    document.getElementById('applyTax').addEventListener('change', calculate);
+    calculate();
   </script>
 </body>
 </html>
