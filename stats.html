@@ -83,6 +83,8 @@
   </table>
 
   <script>
+    const DECIMALS = 1e18;
+
     async function loadStats() {
       const statGrid = document.getElementById('stat-grid');
 
@@ -101,11 +103,11 @@
           fetch('/stats/volume-estimate.json').then(r => r.json())
         ]);
 
-        const totalSupply = Number(data.totalSupply) / 1e9;
-        const totalBurned = Number(data.totalBurned) / 1e9;
+        const totalSupply = Number(data.totalSupply) / DECIMALS;
+        const totalBurned = Number(data.totalBurned) / DECIMALS;
         const price = Number(tokenPrice.price);
         const bnb = Number(bnbPrice.price);
-        const volume = Number(volumeEstimate.volume) / 1e9;
+        const volume = Number(volumeEstimate.volume) / DECIMALS;
         const liquidityUSD = Number(liquidity.usd);
         const liquidityBNB = Number(liquidity.bnb);
         const marketCap = totalSupply * price;
@@ -149,8 +151,8 @@
           const burnDelta = BigInt(curr.burned) - BigInt(prev.burned);
           const volumeDelta = burnDelta * 50n;
 
-          const burn = Number(burnDelta) / 1e9;
-          const volume = Number(volumeDelta) / 1e9;
+          const burn = Number(burnDelta) / DECIMALS;
+          const volume = Number(volumeDelta) / DECIMALS;
 
           const row = document.createElement('tr');
           row.innerHTML = `
