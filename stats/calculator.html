@@ -55,6 +55,16 @@
     <label for="applyTax">Apply 6% transaction tax</label>
   </div>
 
+  <div class="row">
+    <input type="checkbox" id="applyImpact" checked />
+    <label for="applyImpact">Model slippage / price impact</label>
+  </div>
+
+  <div class="row">
+    <input type="checkbox" id="applyGas" />
+    <label for="applyGas">Estimate gas fee (~0.0012 BNB)</label>
+  </div>
+
   <div class="result" id="output">
     <p>Loading data...</p>
   </div>
@@ -62,7 +72,9 @@
   <p class="disclaimer">
     Values are estimated based on real-time data from PancakeSwap liquidity pools.<br />
     Market cap = current price × circulating supply. Liquidity = sum of all active pools.<br />
-    Tax includes: 2% burn, 2% redistribution, 2% foundation. Price impact is estimated assuming constant product formula.<br />
+    Tax includes: 2% burn, 2% redistribution, 2% foundation.<br />
+    <strong>Slippage impact modeled</strong> assuming a constant product AMM curve (k=x*y), affecting token price during trade.<br />
+    <strong>Gas fee assumed as 0.0012 BNB</strong> (based on average PancakeSwap trade gas cost).<br />
     <strong>Disclaimer:</strong> This is a tool for estimation only. Real trades may vary due to volatility, gas fees, and slippage.
   </p>
 
@@ -87,11 +99,21 @@
     const format = x => Number(x).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 });
     const formatInt = x => Number(x).toLocaleString();
 
+    const calculatePriceImpact = (amountBNB, totalBNB, totalSUPDOG) => {
+      const k = totalBNB * totalSUPDOG;
+      const newBNB = totalBNB + amountBNB;
+      const newSUPDOG = k / newBNB;
+      const bought = totalSUPDOG - newSUPDOG;
+      return bought;
+    };
+
     const calculate = async () => {
       const data = await fetchData();
       const input = document.getElementById('holdings');
       const mode = document.getElementById('mode').value;
       const applyTax = document.getElementById('applyTax').checked;
+      const applyImpact = document.getElementById('applyImpact').checked;
+      const applyGas = document.getElementById('applyGas').checked;
       const out = document.getElementById('output');
 
       const raw = parseFloat(input.value);
@@ -112,7 +134,18 @@
         const valueLiquidityUSD = percentSupply * totalUSD;
 
         const taxFactor = applyTax ? 0.94 : 1;
-        const estimatedBNB = valueLiquidityBNB * taxFactor;
+        let estimatedBNB = valueLiquidityBNB * taxFactor;
+        let slippageBNB = '';
+
+        if (applyImpact) {
+          const outAmt = calculatePriceImpact(estimatedBNB, totalBNB, totalSupply);
+          slippageBNB = `<p><strong>Est. slippage:</strong> ${format(valueLiquidityBNB - estimatedBNB)} BNB (due to pool depth)</p>`;
+        }
+
+        if (applyGas) {
+          estimatedBNB -= 0.0012;
+          slippageBNB += `<p><strong>Gas Fee Deducted:</strong> ~0.0012 BNB</p>`;
+        }
 
         out.innerHTML = `
           <h2>📊 Sell Estimate</h2>
@@ -128,19 +161,29 @@
 
           <h3>After Tax (${applyTax ? '6%' : '0%'})</h3>
           <p>≈ <strong>${format(estimatedBNB)} BNB</strong> (net after transaction)</p>
+          ${slippageBNB}
 
           <h3>🧠 Liquidity Context</h3>
           <p>Market Cap: $${format(marketCap)}</p>
           <p>Total Liquidity: $${format(totalUSD)} (${format(totalBNB)} BNB)</p>
           <p>Liquidity as % of Market Cap: ${format(liquidityRatio * 100)}%</p>
           <p>Your share of market cap: $${format(percentSupply * marketCap)}</p>
-          <p><em>Price impact estimates assume linear liquidity curve and constant product (k=x*y)</em></p>
         `;
       } else {
         const bnbInput = raw;
         const taxFactor = applyTax ? 0.94 : 1;
-        const netBNB = bnbInput * taxFactor;
-        const supdogReceived = (netBNB * bnbPrice) / tokenPrice;
+        let netBNB = bnbInput * taxFactor;
+
+        if (applyGas) netBNB -= 0.0012;
+
+        let supdogReceived = (netBNB * bnbPrice) / tokenPrice;
+        let slippageNote = '';
+
+        if (applyImpact) {
+          const bought = calculatePriceImpact(netBNB, totalBNB, totalSupply);
+          supdogReceived = bought;
+          slippageNote = `<p><strong>Est. price impact:</strong> SUPDOG received adjusted by AMM curve.</p>`;
+        }
 
         const buyPercentSupply = supdogReceived / totalSupply;
         const projectedMarketCap = (totalSupply + supdogReceived) * tokenPrice;
@@ -148,10 +191,11 @@
         out.innerHTML = `
           <h2>🛒 Buy Estimate</h2>
           <p><strong>BNB Input:</strong> ${bnbInput} BNB</p>
-          <p><strong>Net BNB after ${applyTax ? '6%' : '0%'} tax:</strong> ${format(netBNB)} BNB</p>
+          <p><strong>Net BNB after ${applyTax ? '6%' : '0%'} tax${applyGas ? ' and gas' : ''}:</strong> ${format(netBNB)} BNB</p>
           <p><strong>SUPDOG Received:</strong> ≈ <strong>${formatInt(supdogReceived)}</strong> tokens</p>
           <p><strong>Current Token Price:</strong> $${format(tokenPrice)}</p>
           <p><strong>USD Equivalent:</strong> ≈ $${format(netBNB * bnbPrice)}</p>
+          ${slippageNote}
 
           <h3>🧠 Liquidity Context</h3>
           <p>Total Supply: ${formatInt(totalSupply)}</p>
@@ -160,7 +204,6 @@
           <p>Liquidity as % of Market Cap: ${format(liquidityRatio * 100)}%</p>
           <p>Your SUPDOG share (post-buy): ${(buyPercentSupply * 100).toFixed(4)}%</p>
           <p>Projected Market Cap after buy: $${format(projectedMarketCap)}</p>
-          <p><em>Estimates assume no price impact or slippage</em></p>
         `;
       }
     };
@@ -168,6 +211,8 @@
     document.getElementById('holdings').addEventListener('input', calculate);
     document.getElementById('mode').addEventListener('change', calculate);
     document.getElementById('applyTax').addEventListener('change', calculate);
+    document.getElementById('applyImpact').addEventListener('change', calculate);
+    document.getElementById('applyGas').addEventListener('change', calculate);
     calculate();
   </script>
 </body>
