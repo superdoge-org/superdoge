@@ -1,10 +1,30 @@
-<div style="background: #f4f8ff; border: 2px solid #cdddfb; padding: 1.2rem; border-radius: 12px; max-width: 600px; font-family: Arial, sans-serif;">
+<div style="background: #f4f8ff; border: 2px solid #cdddfb; padding: 1.4rem; border-radius: 12px; max-width: 700px; font-family: Arial, sans-serif; line-height: 1.6;">
   <h2 style="margin-top: 0;">🔐 Liquidity Lock Verified</h2>
-  <p><strong>100%</strong> of SUPDOG’s main PancakeSwap V1 liquidity is <strong>locked</strong> in a time-locked smart contract.</p>
+  <p><strong>100% of SUPDOG’s PancakeSwap V1 liquidity</strong> is locked in a smart contract and cannot be removed.</p>
+
   <ul style="padding-left: 1.2rem;">
-    <li>✅ Locked Since: <strong>June 27, 2021</strong></li>
-    <li>⏳ Unlocks On: <strong>November 20, 2286</strong></li>
-    <li>🔗 <a href="https://bscscan.com/tx/0x414529a2400bb5635fd63c0dd57d91e3084fef7f89feb8f1a1884c2237223b0c" target="_blank">View Lock on BscScan</a></li>
+    <li>✅ <strong>Locked On:</strong> June 27, 2021</li>
+    <li>⏳ <strong>Unlock Date:</strong> November 20, 2286 (265 years)</li>
+    <li>🔗 <a href="https://bscscan.com/tx/0x414529a2400bb5635fd63c0dd57d91e3084fef7f89feb8f1a1884c2237223b0c" target="_blank">View Lock Transaction on BscScan</a></li>
+    <li>📦 <strong>LP Token Locked:</strong> 9.534 SUPDOG-WBNB LP (100% of pool)</li>
   </ul>
-  <p style="margin-bottom: 0;">This provides long-term confidence to the community — liquidity cannot be rug-pulled or removed for over 260 years.</p>
+
+  <h3>🔎 How This Was Verified</h3>
+  <ol>
+    <li>We identified the main SUPDOG-WBNB liquidity pool on PancakeSwap V1.</li>
+    <li>We checked the LP token address: <code>0x6096bd...77da</code>.</li>
+    <li>100% of those LP tokens were sent to a smart contract: <code>0x9a9A8d...26f9</code>.</li>
+    <li>In the lock transaction, the unlock time is set to <strong>Unix 9999999999</strong>.</li>
+    <li>This translates to <strong>November 20, 2286</strong> — verifiable on BscScan.</li>
+  </ol>
+
+  <h3>💡 Common Questions</h3>
+  <strong>Can anyone unlock it early?</strong>  
+  <p>No. The LP tokens are locked in a smart contract without public access. No wallet can withdraw before the unlock date unless the contract itself is flawed — which appears unlikely based on current data.</p>
+
+  <strong>Why was “79 years” used originally?</strong>  
+  <p>This was likely a conservative or symbolic figure used in early marketing. The actual unlock date is over 260 years away (not just 79).</p>
+
+  <h3>⚠️ Disclaimer</h3>
+  <p>This verification is based on publicly viewable blockchain data on BscScan. While the lock appears valid and time-based, users should always verify smart contract security independently and recognize that unforeseen vulnerabilities may exist in any blockchain system.</p>
 </div>
