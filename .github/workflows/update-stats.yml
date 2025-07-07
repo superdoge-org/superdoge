@@ -48,9 +48,13 @@ jobs:
         env:
           BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }}
 
-      - name: 🪣 Log Daily Liquidity (only at 4:00 UTC)
+      - name: 💦 Log Daily Liquidity (only at 4:00 UTC)
         if: github.event.schedule == '0 4 * * *'
         run: node fetch_liquidity_log.js
+
+      - name: 📦 Log Daily Volume (only at 4:00 UTC)
+        if: github.event.schedule == '0 4 * * *'
+        run: node fetch_volume_log.js
 
       - name: ✅ Commit and Push Changes
         run: |
