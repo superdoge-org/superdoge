@@ -95,19 +95,20 @@
     </div>
   </div>
 
-  <h2>📈 Daily Burn, Volume & Price History</h2>
+  <h2>📊 Daily Burn, Volume, Price & Liquidity</h2>
   <table id="historyTable">
     <thead>
       <tr>
         <th>Date</th>
         <th>Total Supply</th>
         <th>Burned</th>
-        <th>Est. Volume</th>
+        <th>Est. Volume (SUPDOG)</th>
         <th>Token Price</th>
+        <th>Liquidity (USD)</th>
       </tr>
     </thead>
     <tbody id="dailyTable">
-      <tr><td colspan="5">Loading...</td></tr>
+      <tr><td colspan="6">Loading...</td></tr>
     </tbody>
   </table>
 
@@ -132,28 +133,22 @@
           fetch("/stats/daily-log.json").then(r => r.json())
         ]);
 
-        // Total Supply & Burned
         const totalSupply = Number(totalData.totalSupply);
         const totalBurned = 1_000_000_000 - totalSupply;
         document.getElementById("totalSupply").textContent = formatter(totalSupply) + " SUPDOG";
         document.getElementById("totalBurned").textContent = formatter(totalBurned) + " SUPDOG";
 
-        // Token Price & Market Cap
         const tokenPrice = Number(tokenData.price);
         const marketCap = totalSupply * tokenPrice;
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
         document.getElementById("marketCap").textContent = "$" + formatter(marketCap);
 
-        // BNB Price
         document.getElementById("bnbPrice").textContent = "$" + formatter(bnbData.price);
-
-        // Liquidity
         document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
         document.getElementById("liquidityBNB").textContent = formatter(liquidity.totalBNB) + " BNB";
 
-        // Volume Estimate (30-day total from dailyLog)
-        let totalVolume30d = 0;
-        let burnSinceJul4 = 0;
+        let volume30d = 0;
+        let volumeSinceJul4 = 0;
         const table = document.getElementById("dailyTable");
         table.innerHTML = "";
 
@@ -163,17 +158,14 @@
           const burned = prev.totalSupply - curr.totalSupply;
           const estVolume = burned * 50;
           const tokenPrice = curr.price || 0;
+          const liquidity = curr.liquidityUSD || 0;
 
-          // Only sum last 30 days
           const date = new Date(curr.date);
           const now = new Date();
           const diffDays = (now - date) / (1000 * 60 * 60 * 24);
 
-          if (diffDays <= 30) totalVolume30d += estVolume;
-
-          // Burn since July 4
-          const startJul4 = new Date("2025-07-04");
-          if (date >= startJul4) burnSinceJul4 += estVolume * 0.02;
+          if (diffDays <= 30) volume30d += estVolume;
+          if (date >= new Date("2025-07-04")) volumeSinceJul4 += estVolume;
 
           const row = `
             <tr>
@@ -182,36 +174,17 @@
               <td>${formatter(burned)}</td>
               <td>${formatter(estVolume)}</td>
               <td>$${formatter(tokenPrice)}</td>
+              <td>$${formatter(liquidity)}</td>
             </tr>`;
           table.innerHTML += row;
         }
 
-        document.getElementById("volume30d").textContent = "$" + formatter(totalVolume30d);
-        document.getElementById("burnSinceJul4").textContent = "$" + formatter(burnSinceJul4);
-
-        enableTableSort("historyTable");
+        document.getElementById("volume30d").textContent = formatter(volume30d) + " SUPDOG";
+        document.getElementById("burnSinceJul4").textContent = formatter(volumeSinceJul4) + " SUPDOG";
       } catch (err) {
         console.error("❌ Error loading stats data:", err);
-        document.getElementById("dailyTable").innerHTML = `<tr><td colspan="5">Error loading data.</td></tr>`;
+        document.getElementById("dailyTable").innerHTML = `<tr><td colspan="6">Error loading data.</td></tr>`;
       }
-    }
-
-    function enableTableSort(id) {
-      const table = document.getElementById(id);
-      const headers = table.querySelectorAll("th");
-
-      headers.forEach((th, i) => {
-        th.addEventListener("click", () => {
-          const rows = Array.from(table.querySelector("tbody").rows);
-          const sorted = rows.sort((a, b) => {
-            const aVal = a.cells[i].innerText.replace(/[^\d.-]/g, '');
-            const bVal = b.cells[i].innerText.replace(/[^\d.-]/g, '');
-            return parseFloat(bVal) - parseFloat(aVal);
-          });
-          table.querySelector("tbody").innerHTML = "";
-          sorted.forEach(row => table.querySelector("tbody").appendChild(row));
-        });
-      });
     }
 
     loadStats();
