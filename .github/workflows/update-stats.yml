@@ -22,6 +22,10 @@ jobs:
       - name: 📥 Install dependencies
         run: npm install
 
+      # New step: Append hourly total supply log
+      - name: ⏰ Append Hourly Total Supply Log
+        run: node hourly_supply_logger.js
+
       - name: 💰 Fetch BNB Price
         run: node fetch_bnb_price.js
 
