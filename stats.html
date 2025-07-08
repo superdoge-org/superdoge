@@ -58,6 +58,15 @@
       margin: 0.3rem;
       padding: 0.4rem 1rem;
     }
+    .disclaimer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
 </head>
 <body>
@@ -123,8 +132,14 @@
     </tbody>
   </table>
 
+  <div class="disclaimer">
+    Tracking data as of July 4th, 2025, some data later. This is a beta experimental tool. Use at your own risk.<br/>
+    Liquidity (USD) / Liquidity (BNB) represent the total value if converted fully to that currency — not additive.
+  </div>
+
   <script>
     const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    const formatter2 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
     let allData = [];
 
     async function loadStats() {
@@ -140,8 +155,8 @@
         allData = allLog;
 
         const latest = allData[allData.length - 1];
-        document.getElementById("totalSupply").textContent = formatter(totalData.totalSupply) + " SUPDOG";
-        document.getElementById("totalBurned").textContent = formatter(1_000_000_000 - totalData.totalSupply) + " SUPDOG";
+        document.getElementById("totalSupply").textContent = formatter2(totalData.totalSupply) + " SUPDOG";
+        document.getElementById("totalBurned").textContent = formatter2(1_000_000_000 - totalData.totalSupply) + " SUPDOG";
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenData.price);
         document.getElementById("bnbPrice").textContent = "$" + formatter(bnbData.price);
         document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
