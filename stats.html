@@ -1,60 +1,185 @@
-<script>
-  const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SuperDoge Stats Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background-color: #f9f9f9;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.6rem;
+      text-align: center;
+    }
+    th {
+      background: #eee;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .stat-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .stat-title {
+      font-weight: bold;
+      color: #444;
+    }
+    .stat-value {
+      font-size: 1.3rem;
+      margin-top: 0.3rem;
+    }
+    .filter-buttons {
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .filter-buttons button {
+      margin: 0.3rem;
+      padding: 0.4rem 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐶 SuperDoge Token Stats</h1>
 
-  async function loadStats() {
-    try {
-      const [totalData, tokenData, bnbData, liquidity, allData] = await Promise.all([
-        fetch("/stats/total-supply.json").then(r => r.json()),
-        fetch("/stats/token-price.json").then(r => r.json()),
-        fetch("/stats/bnb-price.json").then(r => r.json()),
-        fetch("/stats/liquidity.json").then(r => r.json()),
-        fetch("/stats/all-data.json").then(r => r.json())
-      ]);
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Supply</div>
+      <div class="stat-value" id="totalSupply">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Total Burned</div>
+      <div class="stat-value" id="totalBurned">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Token Price</div>
+      <div class="stat-value" id="tokenPrice">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">BNB Price</div>
+      <div class="stat-value" id="bnbPrice">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Liquidity (USD)</div>
+      <div class="stat-value" id="liquidityUSD">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Liquidity (BNB)</div>
+      <div class="stat-value" id="liquidityBNB">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Burned Volume (<span id="rangeLabel">30d</span>)</div>
+      <div class="stat-value" id="burnedVolumeRange">Loading...</div>
+    </div>
+  </div>
 
-      const totalSupply = Number(totalData.totalSupply);
-      const totalBurned = 1_000_000_000 - totalSupply;
-      document.getElementById("totalSupply").textContent = formatter(totalSupply) + " SUPDOG";
-      document.getElementById("totalBurned").textContent = formatter(totalBurned) + " SUPDOG";
-      document.getElementById("tokenPrice").textContent = "$" + formatter(tokenData.price);
-      document.getElementById("marketCap").textContent = "$" + formatter(totalSupply * tokenData.price);
-      document.getElementById("bnbPrice").textContent = "$" + formatter(bnbData.price);
-      document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
-      document.getElementById("liquidityBNB").textContent = formatter(liquidity.totalBNB) + " BNB";
+  <div class="filter-buttons">
+    <button onclick="applyFilter(1)">1d</button>
+    <button onclick="applyFilter(7)">7d</button>
+    <button onclick="applyFilter(30)">30d</button>
+    <button onclick="applyFilter(90)">90d</button>
+    <button onclick="applyFilter(9999)">All</button>
+  </div>
 
+  <h2>📊 Daily Stats</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Total Supply</th>
+        <th>Burned</th>
+        <th>Volume</th>
+        <th>Price</th>
+        <th>Liquidity (USD)</th>
+      </tr>
+    </thead>
+    <tbody id="dailyTable">
+      <tr><td colspan="6">Loading...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    let allData = [];
+
+    async function loadStats() {
+      try {
+        const [totalData, tokenData, bnbData, liquidity, allLog] = await Promise.all([
+          fetch("/stats/total-supply.json").then(r => r.json()),
+          fetch("/stats/token-price.json").then(r => r.json()),
+          fetch("/stats/bnb-price.json").then(r => r.json()),
+          fetch("/stats/liquidity.json").then(r => r.json()),
+          fetch("/stats/all-data.json").then(r => r.json())
+        ]);
+
+        allData = allLog;
+
+        // Use most recent for top-level stats
+        const latest = allData[allData.length - 1];
+        document.getElementById("totalSupply").textContent = formatter(totalData.totalSupply) + " SUPDOG";
+        document.getElementById("totalBurned").textContent = formatter(1_000_000_000 - totalData.totalSupply) + " SUPDOG";
+        document.getElementById("tokenPrice").textContent = "$" + formatter(tokenData.price);
+        document.getElementById("bnbPrice").textContent = "$" + formatter(bnbData.price);
+        document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
+        document.getElementById("liquidityBNB").textContent = formatter(liquidity.totalBNB) + " BNB";
+
+        applyFilter(30);
+      } catch (err) {
+        console.error("❌ Failed to load stats:", err);
+        document.getElementById("dailyTable").innerHTML = `<tr><td colspan='6'>Error loading data</td></tr>`;
+      }
+    }
+
+    function applyFilter(days) {
+      const now = new Date();
+      const filtered = allData.filter(entry => {
+        const entryDate = new Date(entry.date);
+        return (now - entryDate) / (1000 * 60 * 60 * 24) <= days;
+      });
+
+      let totalVolume = 0;
       const table = document.getElementById("dailyTable");
       table.innerHTML = "";
 
-      let volume30d = 0;
-      let burnedSinceJul4 = 0;
-      const now = new Date();
-
-      for (const entry of allData) {
-        const logDate = new Date(entry.date);
-        const daysAgo = (now - logDate) / (1000 * 60 * 60 * 24);
-
-        if (daysAgo <= 30) volume30d += entry.volume;
-        if (logDate >= new Date("2025-07-04")) burnedSinceJul4 += entry.burned;
-
-        const row = `
+      for (const row of filtered.reverse()) {
+        totalVolume += row.volume;
+        table.innerHTML += `
           <tr>
-            <td>${entry.date}</td>
-            <td>${formatter(entry.totalSupply)}</td>
-            <td>${formatter(entry.burned)}</td>
-            <td>${formatter(entry.volume)}</td>
-            <td>$${formatter(entry.price || 0)}</td>
-            <td>$${formatter(entry.liquidityUSD || 0)}</td>
+            <td>${row.date}</td>
+            <td>${formatter(row.totalSupply)}</td>
+            <td>${formatter(row.burned)}</td>
+            <td>${formatter(row.volume)}</td>
+            <td>${row.price !== null ? "$" + formatter(row.price) : "-"}</td>
+            <td>${row.liquidityUSD !== null ? "$" + formatter(row.liquidityUSD) : "-"}</td>
           </tr>`;
-        table.innerHTML += row;
       }
 
-      document.getElementById("volume30d").textContent = formatter(volume30d) + " SUPDOG";
-      document.getElementById("burnSinceJul4").textContent = formatter(burnedSinceJul4) + " SUPDOG";
-
-    } catch (err) {
-      console.error("❌ Error loading stats data:", err);
-      document.getElementById("dailyTable").innerHTML = `<tr><td colspan="6">Error loading data.</td></tr>`;
+      document.getElementById("burnedVolumeRange").textContent = formatter(totalVolume) + " SUPDOG";
+      document.getElementById("rangeLabel").textContent = days === 9999 ? "All" : `${days}d`;
     }
-  }
 
-  loadStats();
-</script>
+    loadStats();
+  </script>
+</body>
+</html>
