@@ -55,7 +55,10 @@ jobs:
       - name: 📦 Log Daily Volume (only at 4:00 UTC)
         if: github.event.schedule == '0 4 * * *'
         run: node fetch_volume_log.js
-      
+
+      - name: 📝 Log Token Price
+        run: node fetch_token_price_log.js
+
       - name: 🧠 Generate All Stats Data
         run: node generate_all_data.js
 
