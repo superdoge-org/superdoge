@@ -19,12 +19,24 @@
       padding: 4rem 1rem 3rem;
     }
     header img {
-      max-width: 420px;
+      max-width: 300px;
     }
     .tagline {
       font-size: 2.8rem;
       margin-top: 2rem;
       color: #ffd700;
+    }
+    .unit-labels {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      color: #444;
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+    }
+    .unit-labels div {
+      font-weight: bold;
     }
     .stats-grid {
       display: grid;
@@ -58,24 +70,26 @@
     <div class="tagline">Saving the World One Block at a Time</div>
   </header>
 
+  <div class="unit-labels">
+    <div>SUPDOG</div>
+    <div>USD</div>
+  </div>
+
   <section class="stats-grid">
     <div class="stat">
       <div class="stat-title">Total Supply</div>
       <div class="stat-value" id="totalSupply">Loading...</div>
-      <div style="font-size: 0.8rem; margin-top: 0.3rem;">SUPDOG</div>
     </div>
     <div class="stat">
       <div class="stat-title">Burned (30d)</div>
       <div class="stat-value" id="burnedVolumeRange">Loading...</div>
-      <div style="font-size: 0.8rem; margin-top: 0.3rem;">SUPDOG</div>
     </div>
     <div class="stat">
       <div class="stat-title">Volume (30d)</div>
       <div class="stat-value" id="volumeRange">Loading...</div>
-      <div style="font-size: 0.8rem; margin-top: 0.3rem;">SUPDOG</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Liquidity (USD)</div>
+      <div class="stat-title">Liquidity</div>
       <div class="stat-value" id="liquidityUSD">Loading...</div>
     </div>
     <div class="stat">
