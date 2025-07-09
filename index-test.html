@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Superdoge | The First Crypto Superhero</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&display=swap">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Bangers', cursive;
+      background: linear-gradient(to bottom, #f8f9fc, #dce3f7);
+      color: #222;
+    }
+    header {
+      background: #002d72;
+      color: #fff;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    header img {
+      max-width: 220px;
+    }
+    h1 {
+      font-size: 3rem;
+      margin: 1rem 0 0.25rem;
+    }
+    .tagline {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #ffd700;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .stat {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-title {
+      font-size: 1.1rem;
+      color: #555;
+    }
+    .stat-value {
+      font-size: 2rem;
+      color: #d22;
+    }
+    .ticker {
+      text-align: center;
+      font-size: 2rem;
+      margin-top: 2rem;
+      color: #002d72;
+      animation: flicker 2s ease-in-out infinite;
+    }
+    @keyframes flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="images/superdoge_logo.png" alt="Superdoge Logo">
+    <h1>Superdoge</h1>
+    <div class="tagline">Saving the World One Block at a Time</div>
+    <div class="ticker">★ Superdoge Stats (Ticker: SUPDOG) ★</div>
+  </header>
+
+  <section class="stats-grid">
+    <div class="stat">
+      <div class="stat-title">Total Supply</div>
+      <div class="stat-value" id="total-supply">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Total Burned</div>
+      <div class="stat-value" id="total-burned">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Token Price (USD)</div>
+      <div class="stat-value" id="token-price">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">BNB Price (USD)</div>
+      <div class="stat-value" id="bnb-price">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Liquidity (USD)</div>
+      <div class="stat-value" id="liquidity-usd">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Liquidity (BNB)</div>
+      <div class="stat-value" id="liquidity-bnb">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Burned (Last 30 Days)</div>
+      <div class="stat-value" id="burned-30d">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Total Volume (30d)</div>
+      <div class="stat-value" id="volume-30d">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Market Cap (USD)</div>
+      <div class="stat-value" id="market-cap">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Holders</div>
+      <div class="stat-value" id="holders">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">24hr Change</div>
+      <div class="stat-value" id="change-24h">...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Total Donated</div>
+      <div class="stat-value" id="total-donated">...</div>
+    </div>
+  </section>
+
+  <!-- Scripts will load values and handle animations -->
+  <script src="stats.js"></script>
+</body>
+</html>
