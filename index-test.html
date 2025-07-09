@@ -16,14 +16,14 @@
       background: #002d72;
       color: #fff;
       text-align: center;
-      padding: 2.5rem 1rem;
+      padding: 3rem 1rem;
     }
     header img {
-      max-width: 280px;
+      max-width: 350px;
     }
     .tagline {
-      font-size: 1.8rem;
-      margin-top: 1rem;
+      font-size: 2.2rem;
+      margin-top: 1.5rem;
       color: #ffd700;
     }
     .stats-grid {
@@ -42,11 +42,15 @@
       text-align: center;
     }
     .stat-title {
-      font-size: 1.1rem;
-      color: #555;
+      font-size: 1.4rem;
+      color: #222;
+      margin-bottom: 0.5rem;
     }
     .stat-value {
-      font-size: 2rem;
+      font-size: 2.2rem;
+      color: #0057b8;
+    }
+    .stat-value.red {
       color: #d22;
     }
   </style>
@@ -59,15 +63,15 @@
 
   <section class="stats-grid">
     <div class="stat">
-      <div class="stat-title">Total Supply</div>
+      <div class="stat-title">Total Supply SUPDOG</div>
       <div class="stat-value" id="totalSupply">Loading...</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Burned (30d)</div>
-      <div class="stat-value" id="burnedVolumeRange">Loading...</div>
+      <div class="stat-title">Burned (30d) SUPDOG</div>
+      <div class="stat-value red" id="burnedVolumeRange">Loading...</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Volume (30d)</div>
+      <div class="stat-title">Volume (30d) SUPDOG</div>
       <div class="stat-value" id="volumeRange">Loading...</div>
     </div>
     <div class="stat">
@@ -86,7 +90,7 @@
 
   <script>
     const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
-    const formatter2 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+    const formatter0 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
 
     async function loadStats() {
       try {
@@ -104,12 +108,12 @@
         let volume30d = allLog.slice(-30).reduce((acc, row) => acc + row.volume, 0);
         let burned30d = allLog.slice(-30).reduce((acc, row) => acc + row.burned, 0);
 
-        document.getElementById("totalSupply").textContent = formatter2(totalSupply) + " SUPDOG";
-        document.getElementById("burnedVolumeRange").textContent = formatter2(burned30d) + " SUPDOG";
-        document.getElementById("volumeRange").textContent = formatter2(volume30d) + " SUPDOG";
-        document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
+        document.getElementById("totalSupply").textContent = formatter0(totalSupply);
+        document.getElementById("burnedVolumeRange").textContent = formatter0(burned30d);
+        document.getElementById("volumeRange").textContent = formatter0(volume30d);
+        document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
-        document.getElementById("marketCap").textContent = "$" + formatter(totalSupply * tokenPrice);
+        document.getElementById("marketCap").textContent = "$" + formatter0(totalSupply * tokenPrice);
       } catch (err) {
         console.error("❌ Failed to load stats:", err);
       }
