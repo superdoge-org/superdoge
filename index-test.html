@@ -16,24 +16,20 @@
       background: #002d72;
       color: #fff;
       text-align: center;
-      padding: 2rem 1rem;
+      padding: 2.5rem 1rem;
     }
     header img {
-      max-width: 220px;
-    }
-    h1 {
-      font-size: 3rem;
-      margin: 1rem 0 0.25rem;
+      max-width: 280px;
     }
     .tagline {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      margin-top: 1rem;
       color: #ffd700;
     }
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1rem;
+      gap: 1.5rem;
       padding: 2rem;
       max-width: 1000px;
       margin: auto;
@@ -53,80 +49,73 @@
       font-size: 2rem;
       color: #d22;
     }
-    .ticker {
-      text-align: center;
-      font-size: 2rem;
-      margin-top: 2rem;
-      color: #002d72;
-      animation: flicker 2s ease-in-out infinite;
-    }
-    @keyframes flicker {
-      0% { opacity: 1; }
-      50% { opacity: 0.3; }
-      100% { opacity: 1; }
-    }
   </style>
 </head>
 <body>
   <header>
     <img src="images/superdoge_logo.png" alt="Superdoge Logo">
-    <h1>Superdoge</h1>
     <div class="tagline">Saving the World One Block at a Time</div>
-    <div class="ticker">★ Superdoge Stats (Ticker: SUPDOG) ★</div>
   </header>
 
   <section class="stats-grid">
     <div class="stat">
       <div class="stat-title">Total Supply</div>
-      <div class="stat-value" id="total-supply">...</div>
+      <div class="stat-value" id="totalSupply">Loading...</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Total Burned</div>
-      <div class="stat-value" id="total-burned">...</div>
+      <div class="stat-title">Burned (30d)</div>
+      <div class="stat-value" id="burnedVolumeRange">Loading...</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Token Price (USD)</div>
-      <div class="stat-value" id="token-price">...</div>
-    </div>
-    <div class="stat">
-      <div class="stat-title">BNB Price (USD)</div>
-      <div class="stat-value" id="bnb-price">...</div>
+      <div class="stat-title">Volume (30d)</div>
+      <div class="stat-value" id="volumeRange">Loading...</div>
     </div>
     <div class="stat">
       <div class="stat-title">Liquidity (USD)</div>
-      <div class="stat-value" id="liquidity-usd">...</div>
+      <div class="stat-value" id="liquidityUSD">Loading...</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Liquidity (BNB)</div>
-      <div class="stat-value" id="liquidity-bnb">...</div>
+      <div class="stat-title">Market Cap</div>
+      <div class="stat-value" id="marketCap">Loading...</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Burned (Last 30 Days)</div>
-      <div class="stat-value" id="burned-30d">...</div>
-    </div>
-    <div class="stat">
-      <div class="stat-title">Total Volume (30d)</div>
-      <div class="stat-value" id="volume-30d">...</div>
-    </div>
-    <div class="stat">
-      <div class="stat-title">Market Cap (USD)</div>
-      <div class="stat-value" id="market-cap">...</div>
-    </div>
-    <div class="stat">
-      <div class="stat-title">Holders</div>
-      <div class="stat-value" id="holders">...</div>
-    </div>
-    <div class="stat">
-      <div class="stat-title">24hr Change</div>
-      <div class="stat-value" id="change-24h">...</div>
-    </div>
-    <div class="stat">
-      <div class="stat-title">Total Donated</div>
-      <div class="stat-value" id="total-donated">...</div>
+      <div class="stat-title">Token Price</div>
+      <div class="stat-value" id="tokenPrice">Loading...</div>
     </div>
   </section>
 
-  <!-- Scripts will load values and handle animations -->
-  <script src="stats.js"></script>
+  <script>
+    const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    const formatter2 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+
+    async function loadStats() {
+      try {
+        const [totalData, tokenData, bnbData, liquidity, allLog] = await Promise.all([
+          fetch("/stats/total-supply.json").then(r => r.json()),
+          fetch("/stats/token-price.json").then(r => r.json()),
+          fetch("/stats/bnb-price.json").then(r => r.json()),
+          fetch("/stats/liquidity.json").then(r => r.json()),
+          fetch("/stats/all-data.json").then(r => r.json())
+        ]);
+
+        const latest = allLog[allLog.length - 1];
+        let totalSupply = totalData.totalSupply;
+        let tokenPrice = tokenData.price;
+        let volume30d = allLog.slice(-30).reduce((acc, row) => acc + row.volume, 0);
+        let burned30d = allLog.slice(-30).reduce((acc, row) => acc + row.burned, 0);
+
+        document.getElementById("totalSupply").textContent = formatter2(totalSupply) + " SUPDOG";
+        document.getElementById("burnedVolumeRange").textContent = formatter2(burned30d) + " SUPDOG";
+        document.getElementById("volumeRange").textContent = formatter2(volume30d) + " SUPDOG";
+        document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
+        document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
+        document.getElementById("marketCap").textContent = "$" + formatter(totalSupply * tokenPrice);
+      } catch (err) {
+        console.error("❌ Failed to load stats:", err);
+      }
+    }
+
+    loadStats();
+  </script>
 </body>
 </html>
