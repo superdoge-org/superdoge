@@ -9,21 +9,21 @@
     body {
       margin: 0;
       font-family: 'Bangers', cursive;
-      background: linear-gradient(to bottom, #f8f9fc, #dce3f7);
+      background: radial-gradient(circle at center top, #dce3f7 0%, #b0c4de 100%);
       color: #222;
     }
     header {
       background: #002d72;
       color: #fff;
       text-align: center;
-      padding: 3rem 1rem;
+      padding: 4rem 1rem 3rem;
     }
     header img {
-      max-width: 350px;
+      max-width: 420px;
     }
     .tagline {
-      font-size: 2.2rem;
-      margin-top: 1.5rem;
+      font-size: 2.8rem;
+      margin-top: 2rem;
       color: #ffd700;
     }
     .stats-grid {
@@ -42,16 +42,13 @@
       text-align: center;
     }
     .stat-title {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       color: #222;
       margin-bottom: 0.5rem;
     }
     .stat-value {
       font-size: 2.2rem;
       color: #0057b8;
-    }
-    .stat-value.red {
-      color: #d22;
     }
   </style>
 </head>
@@ -63,16 +60,19 @@
 
   <section class="stats-grid">
     <div class="stat">
-      <div class="stat-title">Total Supply SUPDOG</div>
+      <div class="stat-title">Total Supply</div>
       <div class="stat-value" id="totalSupply">Loading...</div>
+      <div style="font-size: 0.8rem; margin-top: 0.3rem;">SUPDOG</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Burned (30d) SUPDOG</div>
-      <div class="stat-value red" id="burnedVolumeRange">Loading...</div>
+      <div class="stat-title">Burned (30d)</div>
+      <div class="stat-value" id="burnedVolumeRange">Loading...</div>
+      <div style="font-size: 0.8rem; margin-top: 0.3rem;">SUPDOG</div>
     </div>
     <div class="stat">
-      <div class="stat-title">Volume (30d) SUPDOG</div>
+      <div class="stat-title">Volume (30d)</div>
       <div class="stat-value" id="volumeRange">Loading...</div>
+      <div style="font-size: 0.8rem; margin-top: 0.3rem;">SUPDOG</div>
     </div>
     <div class="stat">
       <div class="stat-title">Liquidity (USD)</div>
