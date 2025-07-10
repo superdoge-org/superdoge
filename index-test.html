@@ -293,40 +293,46 @@
 </section>
 <!-- End of Tokenomics Section -->
 
-<!-- ✅ STEP 1: HOMEPAGE HOW-TO-BUY SECTION -->
-<section class="how-to-buy-section" style="background:#f4f8fb; padding:3rem 1.5rem; text-align:center;">
-  <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:1.5rem;">How to Buy SuperDoge ($SUPDOG)</h2>
+<section id="how-to-buy" style="background:#f9fafd; padding: 3rem 1.5rem; text-align: left;">
+  <div style="max-width: 900px; margin: auto;">
+    <h2 style="font-size: 2.2rem; color: #002d72; margin-bottom: 1.5rem;">🛒 How to Buy SuperDoge ($SUPDOG) – Quick Guide</h2>
+    <p style="margin-bottom: 1.5rem;">
+      For full instructions, <a href="#how-to-buy-full" style="color:#0077cc; text-decoration:underline;">see the detailed How to Buy Guide</a>.
+    </p>
 
-  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:2rem; max-width:950px; margin:0 auto;">
-    <div style="background:#fff; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72;">1. Get a Wallet</h3>
-      <p>Install MetaMask or TrustWallet and set it to BNB Chain.</p>
-    </div>
-    <div style="background:#fff; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72;">2. Add BNB</h3>
-      <p>Buy BNB on Binance or Coinbase and transfer it to your wallet.</p>
-    </div>
-    <div style="background:#fff; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72;">3. Connect to PancakeSwap</h3>
-      <p>Go to <a href="https://pancakeswap.finance/swap" target="_blank">PancakeSwap</a> and connect your wallet.</p>
-    </div>
-    <div style="background:#fff; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72;">4. Swap for $SUPDOG</h3>
-      <p>Paste contract:<br><code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></p>
-    </div>
+    <h3 style="font-size: 1.3rem; color: #004080;">1. Set Up Wallet & BSC</h3>
+    <p>
+      Use <strong>MetaMask</strong> or <strong>TrustWallet</strong> with Binance Smart Chain (BSC):
+      <br>
+      RPC: <code>https://bsc-dataseed.binance.org</code> &nbsp;&nbsp;|&nbsp;&nbsp; Chain ID: <code>56</code>
+      <br>
+      Fund your wallet with BEP-20 BNB (plus 0.01–0.05 BNB for gas fees).
+    </p>
+
+    <h3 style="font-size: 1.3rem; color: #004080;">2. Swap on PancakeSwap</h3>
+    <p>
+      Go to <a href="https://pancakeswap.finance" target="_blank" style="color:#0077cc;">PancakeSwap</a> and connect your wallet (ensure BSC is selected).
+      <br>
+      Paste the official SuperDoge contract address:
+      <code id="supdog-contract">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
+      <button onclick="navigator.clipboard.writeText('0x622A1297057ea233287ce77bdBF2AB4E63609F23')" style="margin-left: 10px; font-size: 0.9rem; padding: 4px 10px; cursor: pointer;">📋 Copy</button>
+      <br>
+      Set slippage to <strong>6–8%</strong> (or up to 10% if needed), then swap BNB for $SUPDOG.
+    </p>
+
+    <h3 style="font-size: 1.3rem; color: #004080;">3. Add & Verify</h3>
+    <p>
+      Add $SUPDOG to your wallet manually (Symbol: <strong>SUPDOG</strong>, Decimals: <strong>9</strong>).
+      <br>
+      Verify your balance on <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" target="_blank" style="color:#0077cc;">BscScan</a>.
+    </p>
+
+    <p style="margin-top: 2rem; background: #fff8dc; padding: 1rem; border-left: 4px solid #ffa500;">
+      ⚠️ <strong>Safety Tip:</strong> Always verify the contract address and only use official links to avoid scams.
+    </p>
   </div>
-
-  <a href="https://pancakeswap.finance/swap?outputCurrency=0x622A1297057ea233287ce77bdBF2AB4E63609F23" target="_blank"
-     style="display:inline-block; margin-top:2.5rem; padding:0.9rem 1.8rem; background:#0057b8; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; font-size:1.1rem;">
-    🚀 Buy on PancakeSwap
-  </a>
-
-  <p style="margin-top:1.8rem; font-size:0.95rem; color:#666;">
-    Need help? <a href="/how-to-buy.html" target="_blank" style="color:#0057b8;">View the full step-by-step guide</a>
-  </p>
 </section>
 
-<!-- ✅ STEP 2: FULL HOW-TO-BUY PAGE (/how-to-buy.html) WILL BE DELIVERED NEXT -->
 
 
   <script>
