@@ -220,16 +220,16 @@
   <h2 style="color:#002d72; font-size:1.9rem; margin-bottom:1.2rem;">In the News</h2>
 
   <div style="position:relative; max-width:800px; margin:0 auto 2rem;">
-    <img id="newsImage" src="/assets/news-article1.jpg" alt="SuperDoge News Article"
+    <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News Article"
          style="width:100%; max-height:420px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:cover;">
   </div>
 
   <script>
     const newsImages = [
-      "/assets/news-article1.jpg",
-      "/assets/news-article2.jpg",
-      "/assets/news-article3.jpg",
-      "/assets/news-article4.jpg"
+      "/assets/news-article-1.jpg",
+      "/assets/news-article-2.jpg",
+      "/assets/news-article-3.jpg",
+      "/assets/news-article-4.jpg"
     ];
     let newsIndex = 0;
     setInterval(() => {
@@ -240,46 +240,29 @@
 
   <h3 style="font-size:1.5rem; color:#002d72; margin-top:2.2rem; margin-bottom:1.2rem;">As Featured In</h3>
 
-  <div style="position:relative; overflow:hidden; max-width:1000px; margin:auto;">
-    <div id="logoRow" style="display:flex; gap:1.5rem; justify-content:flex-start; transition:transform 0.4s ease; padding:1rem;">
-      <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
-        <img src="/assets/cnbc.png" alt="CNBC" style="height:40px;">
-      </a>
-      <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank">
-        <img src="/assets/bloomberg.png" alt="Bloomberg" style="height:40px;">
-      </a>
-      <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
-        <img src="/assets/financialpost.png" alt="Financial Post" style="height:40px;">
-      </a>
-      <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
-        <img src="/assets/globalnews.png" alt="Global News" style="height:40px; background:#f0f0f0; padding:4px; border-radius:6px;">
-      </a>
-      <a href="https://web.archive.org/web/20211120154649/https://finance.yahoo.com/news/superdoge-meme-coin-launches-reaches-170500547.html?guccounter=1" target="_blank">
-        <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance" style="height:40px;">
-      </a>
-      <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank">
-        <img src="/assets/E-crypto-news.png" alt="E-Crypto News" style="height:40px;">
-      </a>
-      <a href="https://blockchainwire.io/press-release/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours" target="_blank">
-        <img src="/assets/blockchainwire-logo.png" alt="BlockchainWire" style="height:40px; background:#f0f0f0; padding:4px; border-radius:6px;">
-      </a>
-    </div>
-    <!-- Optional: Add manual scroll arrows -->
-    <button onclick="scrollLogos(-1)" style="position:absolute; top:50%; left:0; transform:translateY(-50%); background:none; border:none; font-size:2rem; cursor:pointer;">&#8249;</button>
-    <button onclick="scrollLogos(1)" style="position:absolute; top:50%; right:0; transform:translateY(-50%); background:none; border:none; font-size:2rem; cursor:pointer;">&#8250;</button>
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; align-items:center; padding: 1rem;">
+    <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
+      <img src="/assets/cnbc.png" alt="CNBC" style="height:40px;">
+    </a>
+    <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank">
+      <img src="/assets/bloomberg.png" alt="Bloomberg" style="height:40px;">
+    </a>
+    <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
+      <img src="/assets/financialpost.png" alt="Financial Post" style="height:40px;">
+    </a>
+    <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
+      <img src="/assets/globalnews.png" alt="Global News" style="height:40px; background:#ddd; padding:6px; border-radius:6px;">
+    </a>
+    <a href="https://web.archive.org/web/20211120154649/https://finance.yahoo.com/news/superdoge-meme-coin-launches-reaches-170500547.html?guccounter=1" target="_blank">
+      <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance" style="height:40px;">
+    </a>
+    <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank">
+      <img src="/assets/E-crypto-news.png" alt="E-Crypto News" style="height:40px;">
+    </a>
   </div>
-
-  <script>
-    let scrollPos = 0;
-    function scrollLogos(dir) {
-      const row = document.getElementById("logoRow");
-      scrollPos += dir * 200;
-      scrollPos = Math.max(0, Math.min(scrollPos, row.scrollWidth - row.clientWidth));
-      row.style.transform = `translateX(-${scrollPos}px)`;
-    }
-  </script>
 </section>
 <!-- End of Media Section -->
+
 
 
 
