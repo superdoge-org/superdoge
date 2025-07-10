@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Buy $SUPDOG</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f8fb;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.7;
+      color: #222;
+    }
+    h1, h2, h3 {
+      color: #002d72;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .step {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    img.logo {
+      vertical-align: middle;
+      height: 40px;
+      margin: 0 6px;
+    }
+    code {
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    button.copy-btn {
+      padding: 4px 10px;
+      font-size: 0.9rem;
+      margin-left: 10px;
+      cursor: pointer;
+      background: #0057b8;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+    a {
+      color: #0057b8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    ul {
+      padding-left: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>How to Buy SuperDoge ($SUPDOG)</h1>
+
+  <div class="step">
+    <h2>Step 1: Set Up a Wallet</h2>
+    <p>Download a wallet that supports Binance Smart Chain (BSC):</p>
+    <ul>
+      <li>
+        MetaMask <a href="https://metamask.io" target="_blank">Download here</a>
+        <img src="assets/metamask-logo.png" alt="MetaMask" class="logo">
+      </li>
+      <li>
+        TrustWallet <a href="https://trustwallet.com" target="_blank">Download here</a>
+        <img src="assets/trustwallet-logo.png" alt="TrustWallet" class="logo">
+      </li>
+    </ul>
+    <p>Back up your recovery phrase. For MetaMask, add Binance Smart Chain:</p>
+    <ul>
+      <li><strong>Network Name:</strong> BNB Smart Chain</li>
+      <li><strong>RPC URL:</strong> https://bsc-dataseed.binance.org</li>
+      <li><strong>Chain ID:</strong> 56</li>
+      <li><strong>Currency Symbol:</strong> BNB</li>
+      <li><strong>Block Explorer:</strong> http://bscscan.com</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h2>Step 2: Fund Your Wallet with BNB</h2>
+    <p>Buy BNB on Binance, Coinbase, or KuCoin, and send it to your wallet’s BEP-20 address (starts with “0x”). Use “Binance Smart Chain (BEP-20)” when withdrawing.</p>
+    <p>Keep a little extra BNB (0.01–0.05 BNB) for gas fees.</p>
+  </div>
+
+  <div class="step">
+    <h2>Step 3: Connect to PancakeSwap</h2>
+    <p>Visit <a href="https://pancakeswap.finance" target="_blank">https://pancakeswap.finance</a> and click “Connect Wallet.” Choose MetaMask or TrustWallet.</p>
+    <p>Make sure your network is set to BNB Smart Chain.</p>
+  </div>
+
+  <div class="step">
+    <h2>Step 4: Swap BNB for $SUPDOG</h2>
+    <p>Go to “Trade” > “Swap”. Set BNB as the “From” token. Paste the SuperDoge contract below into the “To” token field:</p>
+    <p>
+      <code id="contract">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
+      <button class="copy-btn" onclick="copyAddress()">Copy</button>
+    </p>
+    <p>Set slippage to 6–8% (click the ⚙️ icon). Increase to 10% if needed.</p>
+    <p>Click “Swap” and confirm the transaction in your wallet.</p>
+  </div>
+
+  <div class="step">
+    <h2>Step 5: Add $SUPDOG to Your Wallet</h2>
+    <p>After the swap, manually add $SUPDOG if it doesn’t show up:</p>
+    <ul>
+      <li><strong>MetaMask:</strong> Add Token > Custom Token > paste contract</li>
+      <li><strong>TrustWallet:</strong> Tap the toggle (top right), paste the contract</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <h2>Step 6: Verify Your Purchase</h2>
+    <p>Check your balance in your wallet, or visit <a href="https://bscscan.com" target="_blank">BscScan</a> and search your address.</p>
+  </div>
+
+  <div class="step">
+    <h2>Safety Tips</h2>
+    <ul>
+      <li><strong>Always verify the contract address:</strong> <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
+      <li><strong>Beware of phishing sites:</strong> Use <a href="https://pancakeswap.finance" target="_blank">official PancakeSwap</a></li>
+      <li><strong>Secure your wallet:</strong> Never share your recovery phrase or private keys</li>
+      <li><strong>Research before investing:</strong> Crypto is volatile. Know the risks.</li>
+    </ul>
+  </div>
+
+  <script>
+    function copyAddress() {
+      const address = document.getElementById('contract').textContent;
+      navigator.clipboard.writeText(address);
+      alert("Contract address copied to clipboard!");
+    }
+  </script>
+</body>
+</html>
