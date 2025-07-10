@@ -49,6 +49,7 @@
       font-size: 1.8rem;
       color: #002d72;
       margin-bottom: 0.6rem;
+      letter-spacing: 0.5px;
     }
     .stat-value {
       font-size: 2.4rem;
@@ -89,14 +90,16 @@
       text-align: center;
     }
     .charity img {
-      max-width: 100%;
-      height: auto;
+      width: 100%;
+      height: 80px;
+      object-fit: contain;
       border-radius: 12px;
       margin-bottom: 0.5rem;
     }
     .charity p {
-      font-size: 1rem;
+      font-size: 1.05rem;
       color: #444;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -145,7 +148,7 @@
         <p>Bringing clean water and sanitation to the poorest communities.</p>
       </div>
       <div class="charity">
-        <img src="/images/child-enrichment.png" alt="Child Enrichment">
+        <img src="/images/child-enrichment-logo.jpg" alt="Child Enrichment">
         <p>Supporting children in foster care who've faced abuse or neglect.</p>
       </div>
       <div class="charity">
@@ -154,9 +157,9 @@
       </div>
     </div>
     <p style="margin-top:2rem">
-      🔗 <a href="https://www.charitynavigator.org/" target="_blank">Charity Navigator</a> | 
-      🔉 <a href="/assets/Superdoge-Charity-AMA.mp3" target="_blank">Charity AMA Audio</a> | 
-      📝 <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Thank You Letter</a>
+      🔉 <audio controls style="vertical-align: middle; height: 28px;"><source src="/assets/Superdoge-Charity-AMA.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio>
+      &nbsp;|&nbsp;
+      📝 <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Just one thank-you letter we received</a>
     </p>
   </section>
 
@@ -204,7 +207,6 @@
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
         document.getElementById("marketCap").textContent = "$" + formatter0(totalSupply * tokenPrice);
 
-        // Update BNB USD value of 836.34 BNB
         let bnbPrice = bnbData.price;
         document.getElementById("bnbUsdValue").textContent = "$" + formatter0(836.34 * bnbPrice);
 
