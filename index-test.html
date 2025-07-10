@@ -117,19 +117,10 @@
         let volume30d = allLog.slice(-30).reduce((acc, row) => acc + row.volume, 0);
         let burned30d = allLog.slice(-30).reduce((acc, row) => acc + row.burned, 0);
 
-        // Step 1: Start volume count immediately (2.5s)
-        animateCount("volumeRange", 0, volume30d, " SUPDOG", 2500);
-
-        // Step 2: Start burned count after 1s delay (3.5s)
-        setTimeout(() => {
-          animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 3500, true);
-        }, 1000);
-
-        // Step 3: Start total supply count down after 1s delay following burned finish
-        setTimeout(() => {
-          const tempStart = totalSupply + burned30d;
-          animateCount("totalSupply", tempStart, totalSupply, "", 3000);
-        }, 1000 + 3500 + 1000);
+        // Slowed down effect for volume and burned
+        animateCount("volumeRange", 0, volume30d, " SUPDOG", 4000);
+        animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 4000, true);
+        animateCount("totalSupply", totalSupply + burned30d, totalSupply, "", 4000);
 
         document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
