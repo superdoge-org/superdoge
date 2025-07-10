@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Superdoge | The First Crypto Superhero</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&display=swap">
+  <link rel="icon" href="/assets/favicon.jpg" type="image/jpeg" />
   <style>
     body {
       margin: 0;
@@ -137,6 +138,60 @@
     .about-section ul li {
       margin-bottom: 0.8rem;
     }
+    /* Added Useful Links styles */
+    #useful-links {
+      background: #f1f5f9;
+      padding: 2rem 1.5rem;
+      max-width: 900px;
+      margin: 3rem auto;
+      border-radius: 12px;
+      font-family: sans-serif;
+      color: #222;
+    }
+    #useful-links h2 {
+      font-family: 'Bangers', cursive;
+      font-size: 2.2rem;
+      color: #002d72;
+      margin-bottom: 1rem;
+    }
+    #useful-links ul {
+      list-style: none;
+      padding-left: 0;
+      font-size: 1.1rem;
+    }
+    #useful-links ul li {
+      margin-bottom: 0.8rem;
+    }
+    #useful-links ul li a {
+      color: #0057b8;
+      text-decoration: none;
+    }
+    #useful-links ul li a:hover {
+      text-decoration: underline;
+    }
+    /* Footer styles */
+    footer {
+      background: #eaf0f7;
+      padding: 2rem 1rem;
+      font-family: sans-serif;
+      color: #444;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    footer .social-icons {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+    footer .social-icons a img {
+      height: 32px;
+      filter: grayscale(0.3);
+      transition: filter 0.3s ease;
+    }
+    footer .social-icons a:hover img {
+      filter: none;
+    }
   </style>
 </head>
 <body>
@@ -199,140 +254,167 @@
     </p>
   </section>
 
-<!-- Start of About SuperDoge -->
-<section class="about-section">
-  <h2>About SuperDoge</h2>
-  <p>
-    Built on the BNB Chain, SuperDoge is crypto’s first superhero — a parody blending the spirit of Dogecoin with the legend of Superman.
-    His mission: to bring transparency and real-world impact to DeFi.
-    With every transaction, SuperDoge grows stronger through deflationary tokenomics that burn tokens, reward holders, improve liquidity, and support charitable causes.
-  </p>
-
-  <p style="margin-top: 1.5rem;">
-    SuperDoge stands apart with a Certik-audited smart contract, liquidity locked for 79 years, 100% of supply circulating, and a resilient community.
-    SuperDoge is not just another meme — he’s the only crypto superhero making a difference, one block at a time.
-  </p>
-</section>
-<!-- End of About SuperDoge -->
-
-<!-- Start of Media Section -->
-<section class="media-section" style="background:#f9fafc; padding:2.5rem 1.2rem; text-align:center;">
-  <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:2rem;">AS SEEN ON:</h2>
-
-  <!-- Rotating banner image (fully visible, uncropped) -->
-  <div style="position:relative; max-width:800px; margin:0 auto 2rem; height:auto;">
-    <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News"
-         style="width:100%; max-height:500px; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:contain;">
-  </div>
-
-  <script>
-    const newsImages = [
-      "/assets/news-article-1.jpg",
-      "/assets/news-article-2.jpg",
-      "/assets/news-article-3.jpg",
-      "/assets/news-article-4.jpg"
-    ];
-    let newsIndex = 0;
-    setInterval(() => {
-      newsIndex = (newsIndex + 1) % newsImages.length;
-      document.getElementById("newsImage").src = newsImages[newsIndex];
-    }, 4000);
-  </script>
-
-  <!-- Mini logo row -->
-  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; align-items:center; padding: 1rem;">
-    <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
-      <img src="/assets/cnbc.png" alt="CNBC" style="height:40px;">
-    </a>
-    <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank">
-      <img src="/assets/bloomberg.png" alt="Bloomberg" style="height:40px;">
-    </a>
-    <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
-      <img src="/assets/financialpost.png" alt="Financial Post" style="height:40px;">
-    </a>
-    <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
-      <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance (GlobeNewswire link)" style="height:40px;">
-    </a>
-    <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank">
-      <img src="/assets/E-crypto-news.png" alt="E-Crypto News" style="height:40px;">
-    </a>
-  </div>
-</section>
-<!-- End of Media Section -->
-
-<!-- Start of Tokenomics Section -->
-<section class="tokenomics-section" style="background:#fff; padding:3rem 1.5rem; text-align:center;">
-  <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:1.8rem;">Tokenomics</h2>
-
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; max-width:1000px; margin:0 auto;">
-    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72; font-size:1.3rem;">🔥 2% Burn</h3>
-      <p style="color:#333;">Reduces supply automatically with every transaction.</p>
-    </div>
-    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72; font-size:1.3rem;">🎁 2% Reflections</h3>
-      <p style="color:#333;">Redistributed to all holders to reward loyalty.</p>
-    </div>
-    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72; font-size:1.3rem;">💧 1.5% Liquidity</h3>
-      <p style="color:#333;">Automatically added to PancakeSwap to strengthen price floors.</p>
-    </div>
-    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-      <h3 style="color:#002d72; font-size:1.3rem;">💙 0.5% Charity</h3>
-      <p style="color:#333;">Supports vetted real-world causes transparently on-chain.</p>
-    </div>
-  </div>
-
-  <p style="margin-top:2.5rem; font-size:1.15rem; max-width:760px; margin-left:auto; margin-right:auto; color:#444;">
-    SuperDoge uses a deflationary token model with a 6% transaction fee: 2% is burned to reduce supply and increase value, 2% is automatically redistributed to holders, and 2% strengthens liquidity while funding charitable efforts. Every transaction supports the community and generates real-world impact.
-  </p>
-
-  <p style="margin-top:2rem; color:#333; font-size:1.05rem;">
-    ✅ 100% supply in circulation &nbsp;|&nbsp; 🔒 Liquidity locked for 79 years &nbsp;|&nbsp; ✅ Certik-audited
-  </p>
-</section>
-<!-- End of Tokenomics Section -->
-
-<!-- ======================= HOW TO BUY ======================= -->
-<section id="how-to-buy" style="background:#f9fafd; padding: 3rem 1.5rem;">
-  <div style="max-width: 900px; margin: auto; font-family: sans-serif;">
-    <h2 style="font-size: 2.5rem; color: #002d72; margin-bottom: 1.5rem; font-family: 'Bangers', cursive;">
-      How to Buy SuperDoge ($SUPDOG)
-    </h2>
-
-    <p style="font-size: 1.1rem; margin-bottom: 1rem;">
-      Use <strong>MetaMask</strong> (browser) or <strong>Trust Wallet</strong> (mobile) — or any BSC-compatible wallet.
+  <!-- Start of About SuperDoge -->
+  <section class="about-section">
+    <h2>About SuperDoge</h2>
+    <p>
+      Built on the BNB Chain, SuperDoge is crypto’s first superhero — a parody blending the spirit of Dogecoin with the legend of Superman.
+      His mission: to bring transparency and real-world impact to DeFi.
+      With every transaction, SuperDoge grows stronger through deflationary tokenomics that burn tokens, reward holders, improve liquidity, and support charitable causes.
     </p>
 
-    <ul style="font-size: 1.05rem; line-height: 1.7; padding-left: 1.2rem;">
-      <li>Set your wallet to use the <strong>Binance Smart Chain (BSC)</strong> network.</li>
-      <li>Buy or transfer <strong>BNB</strong> into your wallet (BEP-20 format).</li>
-      <li>Visit <a href="https://pancakeswap.finance" target="_blank" style="color:#0057b8;">PancakeSwap</a> and connect your wallet.</li>
-      <li>Import SuperDoge token using this contract:<br>
-        <code style="font-size: 1rem;">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
-        <button onclick="navigator.clipboard.writeText('0x622A1297057ea233287ce77bdBF2AB4E63609F23')" 
-          style="margin-left: 10px; font-size: 0.85rem; padding: 3px 8px; cursor: pointer;">Copy</button>
-      </li>
-      <li>Swap <strong>BNB</strong> for <strong>$SUPDOG</strong>.<br>
-        Set <strong>slippage to 6–8%</strong> (or up to 10%) to allow for the 6% fee.
-      </li>
-      <li>Add <strong>$SUPDOG</strong> to your wallet manually:
-        <br>Symbol: <strong>SUPDOG</strong> &nbsp;&nbsp;|&nbsp;&nbsp; Decimals: <strong>9</strong>
-      </li>
-      <li>Verify your balance anytime on <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" 
-        target="_blank" style="color:#0057b8;">BscScan</a>.</li>
+    <p style="margin-top: 1.5rem;">
+      SuperDoge stands apart with a Certik-audited smart contract, liquidity locked for 79 years, 100% of supply circulating, and a resilient community.
+      SuperDoge is not just another meme — he’s the only crypto superhero making a difference, one block at a time.
+    </p>
+  </section>
+  <!-- End of About SuperDoge -->
+
+  <!-- Start of Media Section -->
+  <section class="media-section" style="background:#f9fafc; padding:2.5rem 1.2rem; text-align:center;">
+    <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:2rem;">AS SEEN ON:</h2>
+
+    <!-- Rotating banner image (fully visible, uncropped) -->
+    <div style="position:relative; max-width:800px; margin:0 auto 2rem; height:auto;">
+      <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News"
+           style="width:100%; max-height:500px; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:contain;">
+    </div>
+
+    <script>
+      const newsImages = [
+        "/assets/news-article-1.jpg",
+        "/assets/news-article-2.jpg",
+        "/assets/news-article-3.jpg",
+        "/assets/news-article-4.jpg"
+      ];
+      let newsIndex = 0;
+      setInterval(() => {
+        newsIndex = (newsIndex + 1) % newsImages.length;
+        document.getElementById("newsImage").src = newsImages[newsIndex];
+      }, 4000);
+    </script>
+
+    <!-- Mini logo row -->
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; align-items:center; padding: 1rem;">
+      <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
+        <img src="/assets/cnbc.png" alt="CNBC" style="height:40px;">
+      </a>
+      <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank">
+        <img src="/assets/bloomberg.png" alt="Bloomberg" style="height:40px;">
+      </a>
+      <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
+        <img src="/assets/financialpost.png" alt="Financial Post" style="height:40px;">
+      </a>
+      <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
+        <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance (GlobeNewswire link)" style="height:40px;">
+      </a>
+      <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank">
+        <img src="/assets/E-crypto-news.png" alt="E-Crypto News" style="height:40px;">
+      </a>
+    </div>
+  </section>
+  <!-- End of Media Section -->
+
+  <!-- Start of Tokenomics Section -->
+  <section class="tokenomics-section" style="background:#fff; padding:3rem 1.5rem; text-align:center;">
+    <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:1.8rem;">Tokenomics</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; max-width:1000px; margin:0 auto;">
+      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+        <h3 style="color:#002d72; font-size:1.3rem;">🔥 2% Burn</h3>
+        <p style="color:#333;">Reduces supply automatically with every transaction.</p>
+      </div>
+      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+        <h3 style="color:#002d72; font-size:1.3rem;">🎁 2% Reflections</h3>
+        <p style="color:#333;">Redistributed to all holders to reward loyalty.</p>
+      </div>
+      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+        <h3 style="color:#002d72; font-size:1.3rem;">💧 1.5% Liquidity</h3>
+        <p style="color:#333;">Automatically added to PancakeSwap to strengthen price floors.</p>
+      </div>
+      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+        <h3 style="color:#002d72; font-size:1.3rem;">💙 0.5% Charity</h3>
+        <p style="color:#333;">Supports vetted real-world causes transparently on-chain.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:2.5rem; font-size:1.15rem; max-width:760px; margin-left:auto; margin-right:auto; color:#444;">
+      SuperDoge uses a deflationary token model with a 6% transaction fee: 2% is burned to reduce supply and increase value, 2% is automatically redistributed to holders, and 2% strengthens liquidity while funding charitable efforts. Every transaction supports the community and generates real-world impact.
+    </p>
+
+    <p style="margin-top:2rem; color:#333; font-size:1.05rem;">
+      ✅ 100% supply in circulation &nbsp;|&nbsp; 🔒 Liquidity locked for 79 years &nbsp;|&nbsp; ✅ Certik-audited
+    </p>
+  </section>
+  <!-- End of Tokenomics Section -->
+
+  <!-- ======================= HOW TO BUY ======================= -->
+  <section id="how-to-buy" style="background:#f9fafd; padding: 3rem 1.5rem;">
+    <div style="max-width: 900px; margin: auto; font-family: sans-serif;">
+      <h2 style="font-size: 2.5rem; color: #002d72; margin-bottom: 1.5rem; font-family: 'Bangers', cursive;">
+        How to Buy SuperDoge ($SUPDOG)
+      </h2>
+
+      <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+        Use <strong>MetaMask</strong> (browser) or <strong>Trust Wallet</strong> (mobile) — or any BSC-compatible wallet.
+      </p>
+
+      <ul style="font-size: 1.05rem; line-height: 1.7; padding-left: 1.2rem;">
+        <li>Set your wallet to use the <strong>Binance Smart Chain (BSC)</strong> network.</li>
+        <li>Buy or transfer <strong>BNB</strong> into your wallet (BEP-20 format).</li>
+        <li>Visit <a href="https://pancakeswap.finance" target="_blank" style="color:#0057b8;">PancakeSwap</a> and connect your wallet.</li>
+        <li>Import SuperDoge token using this contract:<br>
+          <code style="font-size: 1rem;">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
+          <button onclick="navigator.clipboard.writeText('0x622A1297057ea233287ce77bdBF2AB4E63609F23')" 
+            style="margin-left: 10px; font-size: 0.85rem; padding: 3px 8px; cursor: pointer;">Copy</button>
+        </li>
+        <li>Swap <strong>BNB</strong> for <strong>$SUPDOG</strong>.<br>
+          Set <strong>slippage to 6–8%</strong> (or up to 10%) to allow for the 6% fee.
+        </li>
+        <li>Add <strong>$SUPDOG</strong> to your wallet manually:
+          <br>Symbol: <strong>SUPDOG</strong> &nbsp;&nbsp;|&nbsp;&nbsp; Decimals: <strong>9</strong>
+        </li>
+        <li>Verify your balance anytime on <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" 
+          target="_blank" style="color:#0057b8;">BscScan</a>.</li>
+      </ul>
+
+      <p style="margin-top: 2rem; background: #fff8dc; padding: 1rem; border-left: 4px solid #ffc107; font-size: 1rem;">
+        <strong>Reminder:</strong> Only use the official SuperDoge contract and trusted sites to avoid scams.
+      </p>
+    </div>
+  </section>
+  <!-- ===================== END HOW TO BUY ===================== -->
+
+  <!-- ======= New Useful Links Section ======= -->
+  <section id="useful-links" aria-label="Useful Links">
+    <h2>Useful Links</h2>
+    <ul>
+      <li><a href="https://superdoge.org/stats.html" target="_blank" rel="noopener">Stats Dashboard</a></li>
+      <li><a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" target="_blank" rel="noopener">BscScan Token Page</a></li>
+      <li><a href="https://pancakeswap.finance" target="_blank" rel="noopener">Buy on PancakeSwap</a></li>
+      <li><a href="https://docs.superdoge.org" target="_blank" rel="noopener">Documentation</a></li>
+      <li><a href="https://t.me/superdogeofficial" target="_blank" rel="noopener">Telegram</a></li>
     </ul>
+  </section>
 
-    <p style="margin-top: 2rem; background: #fff8dc; padding: 1rem; border-left: 4px solid #ffc107; font-size: 1rem;">
-      <strong>Reminder:</strong> Only use the official SuperDoge contract and trusted sites to avoid scams.
-    </p>
-  </div>
-</section>
-<!-- ===================== END HOW TO BUY ===================== -->
-
-
-
-
+  <!-- ======= Footer with Social Icons ======= -->
+  <footer>
+    <div>© 2025 SuperDoge • All rights reserved.</div>
+    <div class="social-icons" aria-label="Social media links">
+      <a href="https://twitter.com/superdogeofficial" target="_blank" rel="noopener" aria-label="Twitter">
+        <img src="/assets/twitter.svg" alt="Twitter logo" />
+      </a>
+      <a href="https://t.me/superdogeofficial" target="_blank" rel="noopener" aria-label="Telegram">
+        <img src="/assets/telegram.svg" alt="Telegram logo" />
+      </a>
+      <a href="https://discord.gg/superdoge" target="_blank" rel="noopener" aria-label="Discord">
+        <img src="/assets/discord.svg" alt="Discord logo" />
+      </a>
+      <a href="https://www.reddit.com/r/superdoge" target="_blank" rel="noopener" aria-label="Reddit">
+        <img src="/assets/reddit.svg" alt="Reddit logo" />
+      </a>
+    </div>
+  </footer>
 
   <script>
     const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
