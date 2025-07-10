@@ -217,28 +217,7 @@
 
 <!-- Start of Media Section -->
 <section class="media-section" style="background:#f9fafc; padding:2.5rem 1.2rem; text-align:center;">
-  <h2 style="color:#002d72; font-size:1.9rem; margin-bottom:1.2rem;">In the News</h2>
-
-  <div style="position:relative; max-width:800px; margin:0 auto 2rem;">
-    <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News Article"
-         style="width:100%; max-height:420px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:cover;">
-  </div>
-
-  <script>
-    const newsImages = [
-      "/assets/news-article-1.jpg",
-      "/assets/news-article-2.jpg",
-      "/assets/news-article-3.jpg",
-      "/assets/news-article-4.jpg"
-    ];
-    let newsIndex = 0;
-    setInterval(() => {
-      newsIndex = (newsIndex + 1) % newsImages.length;
-      document.getElementById("newsImage").src = newsImages[newsIndex];
-    }, 4000);
-  </script>
-
-  <h3 style="font-size:1.5rem; color:#002d72; margin-top:2.2rem; margin-bottom:1.2rem;">As Featured In</h3>
+  <h2 style="color:#002d72; font-size:1.9rem; margin-bottom:2rem;">In the News</h2>
 
   <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; align-items:center; padding: 1rem;">
     <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
@@ -250,9 +229,6 @@
     <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
       <img src="/assets/financialpost.png" alt="Financial Post" style="height:40px;">
     </a>
-    <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
-      <img src="/assets/globalnews.png" alt="Global News" style="height:40px; background:#ddd; padding:6px; border-radius:6px;">
-    </a>
     <a href="https://web.archive.org/web/20211120154649/https://finance.yahoo.com/news/superdoge-meme-coin-launches-reaches-170500547.html?guccounter=1" target="_blank">
       <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance" style="height:40px;">
     </a>
@@ -262,10 +238,6 @@
   </div>
 </section>
 <!-- End of Media Section -->
-
-
-
-
 
 
   <script>
