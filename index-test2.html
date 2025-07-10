@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Superdoge | The First Crypto Superhero</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&display=swap">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Bangers', cursive;
+      background: radial-gradient(circle at center top, #dce3f7 0%, #b0c4de 100%);
+      color: #222;
+    }
+    header {
+      background: #002d72;
+      color: #fff;
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+    header img {
+      max-width: 200px;
+    }
+    .tagline {
+      font-size: 3rem;
+      margin-top: 1.5rem;
+      color: #ffd700;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .stat {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-title {
+      font-size: 1.8rem;
+      color: #002d72;
+      margin-bottom: 0.6rem;
+    }
+    .stat-value {
+      font-size: 2.4rem;
+      color: #0057b8;
+    }
+    .highlight {
+      color: #d9534f;
+    }
+    .burn-anim {
+      animation: burnColor 1.5s ease-in-out;
+    }
+    @keyframes burnColor {
+      0% { color: #666; }
+      50% { color: #ff4500; }
+      100% { color: #222; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="images/superdoge_logo.png" alt="Superdoge Logo">
+    <div class="tagline">Saving the World One Block at a Time</div>
+  </header>
+
+  <section class="stats-grid">
+    <div class="stat">
+      <div class="stat-title">Total Supply</div>
+      <div class="stat-value" id="totalSupply">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Burned (30d)</div>
+      <div class="stat-value" id="burnedVolumeRange">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Volume (30d)</div>
+      <div class="stat-value" id="volumeRange">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Liquidity</div>
+      <div class="stat-value" id="liquidityUSD">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Market Cap</div>
+      <div class="stat-value" id="marketCap">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Token Price</div>
+      <div class="stat-value" id="tokenPrice">Loading...</div>
+    </div>
+  </section>
+
+  <script>
+    const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    const formatter0 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
+
+    async function loadStats() {
+      try {
+        const [totalData, tokenData, bnbData, liquidity, allLog] = await Promise.all([
+          fetch("/stats/total-supply.json").then(r => r.json()),
+          fetch("/stats/token-price.json").then(r => r.json()),
+          fetch("/stats/bnb-price.json").then(r => r.json()),
+          fetch("/stats/liquidity.json").then(r => r.json()),
+          fetch("/stats/all-data.json").then(r => r.json())
+        ]);
+
+        const latest = allLog[allLog.length - 1];
+        let totalSupply = totalData.totalSupply;
+        let tokenPrice = tokenData.price;
+        let volume30d = allLog.slice(-30).reduce((acc, row) => acc + row.volume, 0);
+        let burned30d = allLog.slice(-30).reduce((acc, row) => acc + row.burned, 0);
+
+        document.getElementById("totalSupply").textContent = formatter0(totalSupply);
+        document.getElementById("burnedVolumeRange").innerHTML = `<span class="burn-anim">${formatter0(burned30d)} SUPDOG</span>`;
+        document.getElementById("volumeRange").textContent = formatter0(volume30d) + " SUPDOG";
+        document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
+        document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
+        document.getElementById("marketCap").textContent = "$" + formatter0(totalSupply * tokenPrice);
+      } catch (err) {
+        console.error("❌ Failed to load stats:", err);
+      }
+    }
+
+    loadStats();
+  </script>
+</body>
+</html>
