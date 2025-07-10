@@ -199,6 +199,7 @@
     </p>
   </section>
 
+<!-- Start of About SuperDoge -->
 <section class="about-section">
   <h2>About SuperDoge</h2>
   <p>
@@ -212,6 +213,43 @@
     SuperDoge is not just another meme — he’s the only crypto superhero making a difference, one block at a time.
   </p>
 </section>
+<!-- End of About SuperDoge -->
+
+<!-- Start of Media Section -->
+<section class="media-section" style="background:#f9fafc; padding:3rem 1.5rem; text-align:center;">
+  <h2 style="color:#002d72; font-size:2.3rem; margin-bottom:1.5rem;">In The News</h2>
+
+  <div id="newsCarousel" style="max-width:800px; margin:0 auto 2rem;">
+    <img id="newsImage" src="/assets/news-article3.jpg" alt="SuperDoge News Article"
+         style="width:100%; max-height:400px; border-radius:12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); object-fit:cover;">
+  </div>
+
+  <script>
+    const newsImages = [
+      "/assets/news-article3.jpg",
+      "/assets/Superdoge-news-article2.jpg",
+      "/assets/superdoge-news-article.jpg",
+      "/assets/news-article4.jpg"
+    ];
+    let newsIndex = 0;
+    setInterval(() => {
+      newsIndex = (newsIndex + 1) % newsImages.length;
+      document.getElementById("newsImage").src = newsImages[newsIndex];
+    }, 4000);
+  </script>
+
+  <h3 style="font-size:1.8rem; color:#002d72; margin-top:2rem; margin-bottom:1rem;">As Featured In</h3>
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; align-items:center;">
+    <img src="/assets/cnbc.png" alt="CNBC" style="height:40px;">
+    <img src="/assets/bloomberg.png" alt="Bloomberg" style="height:40px;">
+    <img src="/assets/financialpost.png" alt="Financial Post" style="height:40px;">
+    <img src="/assets/globalnews.png" alt="Global News" style="height:40px;">
+    <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance" style="height:40px;">
+    <img src="/assets/E-crypto-news.png" alt="E-Crypto News" style="height:40px;">
+  </div>
+</section>
+<!-- End of Media Section -->
+
 
 
 
