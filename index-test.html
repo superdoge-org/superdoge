@@ -15,15 +15,19 @@
     header {
       background: #002d72;
       color: #fff;
-      text-align: center;
-      padding: 3rem 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      flex-wrap: wrap;
     }
     header img {
-      max-width: 200px;
+      max-width: 240px;
+      height: auto;
+      margin-right: 2rem;
     }
     .tagline {
       font-size: 3rem;
-      margin-top: 1.5rem;
       color: #ffd700;
     }
     .stats-grid {
@@ -50,9 +54,6 @@
       font-size: 2.4rem;
       color: #0057b8;
     }
-    .highlight {
-      color: #d9534f;
-    }
     .burn-anim {
       animation: burnColor 1.5s ease-in-out;
     }
@@ -60,6 +61,17 @@
       0% { color: #666; }
       50% { color: #ff4500; }
       100% { color: #222; }
+    }
+    .rocket {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: url('assets/rocket.svg') no-repeat center center / contain;
+      animation: flyRocket 1.2s ease-out;
+    }
+    @keyframes flyRocket {
+      from { transform: translate(100px, 0); opacity: 1; }
+      to { transform: translate(-100px, 0); opacity: 0; }
     }
   </style>
 </head>
@@ -116,15 +128,38 @@
         let volume30d = allLog.slice(-30).reduce((acc, row) => acc + row.volume, 0);
         let burned30d = allLog.slice(-30).reduce((acc, row) => acc + row.burned, 0);
 
-        document.getElementById("totalSupply").textContent = formatter0(totalSupply);
-        document.getElementById("burnedVolumeRange").innerHTML = `<span class="burn-anim">${formatter0(burned30d)} SUPDOG</span>`;
-        document.getElementById("volumeRange").textContent = formatter0(volume30d) + " SUPDOG";
+        animateCount("volumeRange", 0, volume30d, " SUPDOG", 1200);
+        animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 1200, true);
+
+        setTimeout(() => {
+          const impact = document.getElementById("totalSupply");
+          const tempStart = totalSupply + burned30d;
+          animateCount("totalSupply", tempStart, totalSupply, "", 1500);
+        }, 1300);
+
         document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
         document.getElementById("marketCap").textContent = "$" + formatter0(totalSupply * tokenPrice);
       } catch (err) {
         console.error("❌ Failed to load stats:", err);
       }
+    }
+
+    function animateCount(id, start, end, suffix = '', duration = 1000, burnStyle = false) {
+      const el = document.getElementById(id);
+      const range = end - start;
+      const increment = range / (duration / 30);
+      let current = start;
+      let steps = 0;
+      const interval = setInterval(() => {
+        current += increment;
+        steps++;
+        if ((increment > 0 && current >= end) || (increment < 0 && current <= end) || steps > 100) {
+          current = end;
+          clearInterval(interval);
+        }
+        el.innerHTML = `<span class="${burnStyle ? 'burn-anim' : ''}">${formatter0(current)}${suffix}</span>`;
+      }, 30);
     }
 
     loadStats();
