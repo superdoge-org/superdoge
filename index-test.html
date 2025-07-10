@@ -31,6 +31,54 @@
       font-size: 3rem;
       color: #ffd700;
     }
+    .links-section {
+      background: #fff;
+      padding: 3rem 1.5rem;
+      font-family: sans-serif;
+      text-align: center;
+    }
+    .links-section h2 {
+      font-size: 2.2rem;
+      color: #002d72;
+      margin-bottom: 1.2rem;
+    }
+    .links-section ul {
+      list-style: none;
+      padding: 0;
+      max-width: 700px;
+      margin: auto;
+      font-size: 1rem;
+    }
+    .links-section ul li {
+      margin-bottom: 0.8rem;
+    }
+    .socials {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .socials a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+      color: #0057b8;
+      text-decoration: none;
+    }
+    .socials img {
+      width: 28px;
+      height: 28px;
+    }
+    .disclaimer {
+      font-size: 0.9rem;
+      color: #555;
+      background: #f7f7f7;
+      padding: 2rem 1rem;
+      font-family: sans-serif;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -66,24 +114,9 @@
     </div>
   </section>
 
-  <!-- HOW TO BUY SECTION -->
-  <section id="how-to-buy" style="background:#f9fafd; padding: 3rem 1.5rem;">
-    <div style="max-width: 900px; margin: auto; font-family: sans-serif;">
-      <h2 style="font-size: 2.5rem; color: #002d72; margin-bottom: 1.5rem; font-family: 'Bangers', cursive;">
-        How to Buy SuperDoge ($SUPDOG)
-      </h2>
-      <ul style="font-size: 1.1rem; line-height: 1.7; padding-left: 1.2rem;">
-        <li>Use MetaMask or Trust Wallet on the BNB Smart Chain.</li>
-        <li>Buy or transfer BNB (BEP-20) into your wallet.</li>
-        <li>Visit <a href="https://pancakeswap.finance" target="_blank">PancakeSwap</a> and connect.</li>
-        <li>Import token: <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code></li>
-        <li>Set slippage to 6–8% and swap BNB for SUPDOG.</li>
-      </ul>
-    </div>
-  </section>
+  <!-- More restored sections will be added next -->
 
-  <!-- USEFUL LINKS SECTION -->
-  <section id="useful-links">
+  <section class="links-section">
     <h2>Useful Links</h2>
     <ul>
       <li><a href="https://bscscan.com/token/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">BSCSCAN</a></li>
@@ -92,18 +125,19 @@
       <li><a href="https://www.certik.com/projects/superdoge" target="_blank">Certik Audit</a></li>
       <li><a href="https://www.charitynavigator.org/" target="_blank">Charity Navigator</a></li>
       <li><a href="https://superdoge.org/locked-liquidity.html" target="_blank">Proof of Liquidity</a></li>
-      <li><a href="https://dex.coinmarketcap.com/token/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23/" target="_blank">Coinmarketcap Dex V1</a></li>
+      <li><a href="https://dex.coinmarketcap.com/token/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23/" target="_blank">CoinMarketCap Dex V1</a></li>
     </ul>
-    <h2>Socials</h2>
-    <ul>
-      <li><img src="/images/x-twitter-log.png" alt="Twitter Logo" style="height: 22px; vertical-align: middle;"> <a href="https://x.com/SUPERDOGEorg" target="_blank">X/Twitter</a></li>
-      <li><img src="/images/telegram.png" alt="Telegram Logo" style="height: 22px; vertical-align: middle;"> <a href="https://t.me/SUPERDOGEio" target="_blank">Telegram</a></li>
-      <li><img src="/images/email-logo.png" alt="Email Logo" style="height: 22px; vertical-align: middle;"> <a href="mailto:Superdoge2021@gmail.com">Email</a></li>
-    </ul>
-    <p style="font-size:0.95rem; line-height:1.6; margin-top:1.5rem;">
-      <strong>Disclaimer:</strong> Superdoge (SUPDOG) is a meme coin parody of Superdoge and Dogecoin, with zero intrinsic value or promise of financial gain—use at your own risk! Data is sourced from blockchain and APIs, which may occasionally glitch, so always double-check. Liquidity (USD/BNB) shows total value if converted to one currency—not combined. Charity donations are calculated from 836.34 BNB at current prices. Verify smart contract security yourself, as hidden bugs may lurk. Not affiliated with Krypto the Superdog, Superman, Dogecoin, Floki, or Babydogecoin. This community-run site may have errors—let us know to fix them! Superdoge.org: The Crypto Superhero, Saving the World One Block at a Time! (2025)
-    </p>
+
+    <div class="socials">
+      <a href="https://x.com/SUPERDOGEorg" target="_blank"><img src="/images/x-twitter-log.png" alt="X">X/Twitter</a>
+      <a href="https://t.me/SUPERDOGEio" target="_blank"><img src="/images/telegram.png" alt="Telegram">Telegram</a>
+      <a href="mailto:Superdoge2021@gmail.com"><img src="/images/email-logo.png" alt="Email">Email Us</a>
+    </div>
   </section>
+
+  <footer class="disclaimer">
+    <strong>Disclaimer:</strong> Superdoge (SUPDOG) is a meme coin parody of Superdoge and Dogecoin, with zero intrinsic value or promise of financial gain—use at your own risk! This is an experiment in community run charity meme coin. Data is sourced from blockchain and APIs, which may occasionally glitch, so always double-check. Liquidity (USD/BNB) shows total value if converted to one currency—not combined. Verify smart contract details. Not affiliated with Krypto the Superdog, Superman, Dogecoin, Floki, or Babydogecoin. This is a community-run site and may have errors—let us know to fix them! Superdoge.org: The First Crypto Superhero, Saving the World One Block at a Time! (2025)
+  </footer>
 
   <script>
     const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
