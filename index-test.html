@@ -103,60 +103,307 @@
       color: #444;
       line-height: 1.6;
     }
-    footer {
-      background: #eaf0f7;
-      padding: 2rem 1rem;
-      font-family: sans-serif;
+    .about-section {
+      background: #f4f8fb;
+      padding: 3rem 1.5rem;
+      text-align: center;
     }
-    footer div {
-      max-width: 1000px;
-      margin: auto;
+    .about-section h2 {
+      font-size: 2.5rem;
+      color: #002d72;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
       align-items: center;
+      justify-content: center;
+      gap: 1rem;
     }
-    footer img {
-      height: 28px;
+    .about-section p {
+      font-size: 1.3rem;
+      max-width: 800px;
+      margin: auto;
+      color: #333;
+      line-height: 1.7;
+    }
+    .about-section ul {
+      list-style: disc;
+      text-align: left;
+      max-width: 720px;
+      margin: 1.5rem auto;
+      padding-left: 2rem;
+      font-size: 1.25rem;
+      color: #333;
+    }
+    .about-section ul li {
+      margin-bottom: 0.8rem;
     }
   </style>
 </head>
 <body>
-  <!-- Existing content above remains -->
+  <header>
+    <img src="images/superdoge_logo.png" alt="Superdoge Logo">
+    <div class="tagline">Saving the World One Block at a Time</div>
+  </header>
 
-  <!-- ======================= 🔗 USEFUL LINKS ======================= -->
-  <section id="useful-links" style="background:#f1f5f9; padding: 2.5rem 1rem; font-family: sans-serif;">
-    <div style="max-width: 1000px; margin: auto;">
-      <h2 style="font-size: 2rem; font-family: 'Bangers', cursive; color: #002d72; margin-bottom: 1.5rem;">
-        🔗 Useful Links
-      </h2>
-      <ul style="list-style: none; padding: 0; font-size: 1.05rem; line-height: 1.9;">
-        <li><a href="https://bscscan.com/token/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">📘 BscScan Token Tracker</a></li>
-        <li><a href="https://poocoin.app/tokens/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">📈 PooCoin Chart</a></li>
-        <li><a href="https://www.certik.com/projects/superdoge" target="_blank">✅ Certik Security Audit</a></li>
-        <li><a href="https://www.charitynavigator.org/" target="_blank">💙 Charity Navigator</a></li>
-        <li><a href="https://superdoge.org/locked-liquidity.html" target="_blank">🔒 Locked Liquidity Proof</a></li>
-        <li><a href="https://dex.coinmarketcap.com/token/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">💹 CoinMarketCap DEX Chart</a></li>
-      </ul>
+  <section class="stats-grid">
+    <div class="stat">
+      <div class="stat-title">Total Supply</div>
+      <div class="stat-value" id="totalSupply">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Burned (30d)</div>
+      <div class="stat-value" id="burnedVolumeRange">.....</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Volume (30d)</div>
+      <div class="stat-value" id="volumeRange">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Liquidity</div>
+      <div class="stat-value" id="liquidityUSD">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Market Cap</div>
+      <div class="stat-value" id="marketCap">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Token Price</div>
+      <div class="stat-value" id="tokenPrice">Loading...</div>
     </div>
   </section>
 
-  <!-- ==================== SOCIAL / CONTACT ==================== -->
-  <footer>
-    <div>
-      <div style="font-size: 1rem; color: #555;">© 2025 SuperDoge. All rights reserved.</div>
-      <div style="display: flex; gap: 1.5rem; align-items: center; margin-top: 1rem;">
-        <a href="#" title="Twitter (coming soon)">
-          <img src="/images/x-twitter-log.png" alt="Twitter">
-        </a>
-        <a href="#" title="Telegram (coming soon)">
-          <img src="/images/telegram.png" alt="Telegram">
-        </a>
-        <a href="#" title="Email (coming soon)">
-          <img src="/images/email-logo.png" alt="Email">
-        </a>
+  <section class="impact-section">
+    <h2>🌍 Real World Impact</h2>
+    <div class="impact-highlight">
+      Superdoge has donated over <strong style="letter-spacing: 1.5px;">836.34 BNB</strong> to real-world causes<br>
+      currently worth <strong id="bnbUsdValue" style="letter-spacing: 1.5px;">~$---</strong>.
+    </div>
+    <div class="charities">
+      <div class="charity">
+        <img src="/images/wells.png" alt="Wells Bring Hope">
+        <p>Bringing clean water and sanitation to the poorest communities.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/child-enrichment-logo.jpg" alt="Child Enrichment">
+        <p>Supporting children in foster care who've faced abuse or neglect.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/clare-matrix.png" alt="Clare Matrix">
+        <p>Providing addiction recovery support to vulnerable populations.</p>
       </div>
     </div>
-  </footer>
+    <p style="margin-top:2rem">
+      🔉 <audio controls style="vertical-align: middle; height: 28px;"><source src="/assets/Superdoge-Charity-AMA.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio>
+      &nbsp;|&nbsp;
+      📝 <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Just one thank-you letter we received</a>
+    </p>
+  </section>
+
+<!-- Start of About SuperDoge -->
+<section class="about-section">
+  <h2>About SuperDoge</h2>
+  <p>
+    Built on the BNB Chain, SuperDoge is crypto’s first superhero — a parody blending the spirit of Dogecoin with the legend of Superman.
+    His mission: to bring transparency and real-world impact to DeFi.
+    With every transaction, SuperDoge grows stronger through deflationary tokenomics that burn tokens, reward holders, improve liquidity, and support charitable causes.
+  </p>
+
+  <p style="margin-top: 1.5rem;">
+    SuperDoge stands apart with a Certik-audited smart contract, liquidity locked for 79 years, 100% of supply circulating, and a resilient community.
+    SuperDoge is not just another meme — he’s the only crypto superhero making a difference, one block at a time.
+  </p>
+</section>
+<!-- End of About SuperDoge -->
+
+<!-- Start of Media Section -->
+<section class="media-section" style="background:#f9fafc; padding:2.5rem 1.2rem; text-align:center;">
+  <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:2rem;">AS SEEN ON:</h2>
+
+  <!-- Rotating banner image (fully visible, uncropped) -->
+  <div style="position:relative; max-width:800px; margin:0 auto 2rem; height:auto;">
+    <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News"
+         style="width:100%; max-height:500px; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:contain;">
+  </div>
+
+  <script>
+    const newsImages = [
+      "/assets/news-article-1.jpg",
+      "/assets/news-article-2.jpg",
+      "/assets/news-article-3.jpg",
+      "/assets/news-article-4.jpg"
+    ];
+    let newsIndex = 0;
+    setInterval(() => {
+      newsIndex = (newsIndex + 1) % newsImages.length;
+      document.getElementById("newsImage").src = newsImages[newsIndex];
+    }, 4000);
+  </script>
+
+  <!-- Mini logo row -->
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:1.5rem; align-items:center; padding: 1rem;">
+    <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
+      <img src="/assets/cnbc.png" alt="CNBC" style="height:40px;">
+    </a>
+    <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank">
+      <img src="/assets/bloomberg.png" alt="Bloomberg" style="height:40px;">
+    </a>
+    <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
+      <img src="/assets/financialpost.png" alt="Financial Post" style="height:40px;">
+    </a>
+    <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
+      <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance (GlobeNewswire link)" style="height:40px;">
+    </a>
+    <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank">
+      <img src="/assets/E-crypto-news.png" alt="E-Crypto News" style="height:40px;">
+    </a>
+  </div>
+</section>
+<!-- End of Media Section -->
+
+<!-- Start of Tokenomics Section -->
+<section class="tokenomics-section" style="background:#fff; padding:3rem 1.5rem; text-align:center;">
+  <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:1.8rem;">Tokenomics</h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; max-width:1000px; margin:0 auto;">
+    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+      <h3 style="color:#002d72; font-size:1.3rem;">🔥 2% Burn</h3>
+      <p style="color:#333;">Reduces supply automatically with every transaction.</p>
+    </div>
+    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+      <h3 style="color:#002d72; font-size:1.3rem;">🎁 2% Reflections</h3>
+      <p style="color:#333;">Redistributed to all holders to reward loyalty.</p>
+    </div>
+    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+      <h3 style="color:#002d72; font-size:1.3rem;">💧 1.5% Liquidity</h3>
+      <p style="color:#333;">Automatically added to PancakeSwap to strengthen price floors.</p>
+    </div>
+    <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
+      <h3 style="color:#002d72; font-size:1.3rem;">💙 0.5% Charity</h3>
+      <p style="color:#333;">Supports vetted real-world causes transparently on-chain.</p>
+    </div>
+  </div>
+
+  <p style="margin-top:2.5rem; font-size:1.15rem; max-width:760px; margin-left:auto; margin-right:auto; color:#444;">
+    SuperDoge uses a deflationary token model with a 6% transaction fee: 2% is burned to reduce supply and increase value, 2% is automatically redistributed to holders, and 2% strengthens liquidity while funding charitable efforts. Every transaction supports the community and generates real-world impact.
+  </p>
+
+  <p style="margin-top:2rem; color:#333; font-size:1.05rem;">
+    ✅ 100% supply in circulation &nbsp;|&nbsp; 🔒 Liquidity locked for 79 years &nbsp;|&nbsp; ✅ Certik-audited
+  </p>
+</section>
+<!-- End of Tokenomics Section -->
+
+<!-- ======================= HOW TO BUY ======================= -->
+<section id="how-to-buy" style="background:#f9fafd; padding: 3rem 1.5rem;">
+  <div style="max-width: 900px; margin: auto; font-family: sans-serif;">
+    <h2 style="font-size: 2.5rem; color: #002d72; margin-bottom: 1.5rem; font-family: 'Bangers', cursive;">
+      How to Buy SuperDoge ($SUPDOG)
+    </h2>
+
+    <p style="font-size: 1.1rem; margin-bottom: 1rem;">
+      Use <strong>MetaMask</strong> (browser) or <strong>Trust Wallet</strong> (mobile) — or any BSC-compatible wallet.
+    </p>
+
+    <ul style="font-size: 1.05rem; line-height: 1.7; padding-left: 1.2rem;">
+      <li>Set your wallet to use the <strong>Binance Smart Chain (BSC)</strong> network.</li>
+      <li>Buy or transfer <strong>BNB</strong> into your wallet (BEP-20 format).</li>
+      <li>Visit <a href="https://pancakeswap.finance" target="_blank" style="color:#0057b8;">PancakeSwap</a> and connect your wallet.</li>
+      <li>Import SuperDoge token using this contract:<br>
+        <code style="font-size: 1rem;">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
+        <button onclick="navigator.clipboard.writeText('0x622A1297057ea233287ce77bdBF2AB4E63609F23')" 
+          style="margin-left: 10px; font-size: 0.85rem; padding: 3px 8px; cursor: pointer;">Copy</button>
+      </li>
+      <li>Swap <strong>BNB</strong> for <strong>$SUPDOG</strong>.<br>
+        Set <strong>slippage to 6–8%</strong> (or up to 10%) to allow for the 6% fee.
+      </li>
+      <li>Add <strong>$SUPDOG</strong> to your wallet manually:
+        <br>Symbol: <strong>SUPDOG</strong> &nbsp;&nbsp;|&nbsp;&nbsp; Decimals: <strong>9</strong>
+      </li>
+      <li>Verify your balance anytime on <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" 
+        target="_blank" style="color:#0057b8;">BscScan</a>.</li>
+    </ul>
+
+    <p style="margin-top: 2rem; background: #fff8dc; padding: 1rem; border-left: 4px solid #ffc107; font-size: 1rem;">
+      <strong>Reminder:</strong> Only use the official SuperDoge contract and trusted sites to avoid scams.
+    </p>
+  </div>
+</section>
+<!-- ===================== END HOW TO BUY ===================== -->
+
+
+
+
+
+  <script>
+    const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    const formatter0 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
+
+    async function loadStats() {
+      try {
+        const [totalData, tokenData, bnbData, liquidity, allLog] = await Promise.all([
+          fetch("/stats/total-supply.json").then(r => r.json()),
+          fetch("/stats/token-price.json").then(r => r.json()),
+          fetch("/stats/bnb-price.json").then(r => r.json()),
+          fetch("/stats/liquidity.json").then(r => r.json()),
+          fetch("/stats/all-data.json").then(r => r.json())
+        ]);
+
+        const latest = allLog[allLog.length - 1];
+        let totalSupply = totalData.totalSupply;
+        let tokenPrice = tokenData.price;
+        let volume30d = allLog.slice(-30).reduce((acc, row) => acc + row.volume, 0);
+        let burned30d = allLog.slice(-30).reduce((acc, row) => acc + row.burned, 0);
+
+        document.getElementById("totalSupply").textContent = formatter0(totalSupply + burned30d);
+        animateCount("volumeRange", 0, volume30d, " SUPDOG", 4000);
+
+        let burnedDots = [".", "..", "...", "....", "....."];
+        let i = 0;
+        let burnedEl = document.getElementById("burnedVolumeRange");
+        let dotCycle = setInterval(() => {
+          burnedEl.textContent = burnedDots[i % burnedDots.length];
+          i++;
+        }, 400);
+
+        setTimeout(() => {
+          clearInterval(dotCycle);
+          animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 3000, true);
+        }, 4200);
+
+        setTimeout(() => {
+          animateCount("totalSupply", totalSupply + burned30d, totalSupply, "", 4000);
+        }, 7500);
+
+        document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
+        document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
+        document.getElementById("marketCap").textContent = "$" + formatter0(totalSupply * tokenPrice);
+
+        let bnbPrice = bnbData.price;
+        document.getElementById("bnbUsdValue").textContent = "$" + formatter0(836.34 * bnbPrice);
+
+      } catch (err) {
+        console.error("❌ Failed to load stats:", err);
+      }
+    }
+
+    function animateCount(id, start, end, suffix = '', duration = 1000, burnStyle = false) {
+      const el = document.getElementById(id);
+      const range = end - start;
+      const increment = range / (duration / 30);
+      let current = start;
+      let steps = 0;
+      const interval = setInterval(() => {
+        current += increment;
+        steps++;
+        if ((increment > 0 && current >= end) || (increment < 0 && current <= end) || steps > 150) {
+          current = end;
+          clearInterval(interval);
+        }
+        el.innerHTML = <span class="${burnStyle ? 'burn-anim' : ''}">${formatter0(current)}${suffix}</span>;
+      }, 30);
+    }
+
+    loadStats();
+  </script>
 </body>
 </html>
