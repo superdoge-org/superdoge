@@ -64,6 +64,40 @@
       75% { color: #999; }
       100% { color: #222; }
     }
+    .impact-section {
+      background: #fff;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+    .impact-section h2 {
+      font-size: 2.5rem;
+      color: #002d72;
+      margin-bottom: 1rem;
+    }
+    .impact-highlight {
+      font-size: 1.6rem;
+      margin-bottom: 2rem;
+    }
+    .charities {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .charity {
+      max-width: 220px;
+      text-align: center;
+    }
+    .charity img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+    }
+    .charity p {
+      font-size: 1rem;
+      color: #444;
+    }
   </style>
 </head>
 <body>
@@ -99,6 +133,33 @@
     </div>
   </section>
 
+  <section class="impact-section">
+    <h2>🌍 Real World Impact</h2>
+    <div class="impact-highlight">
+      Superdoge has donated over <strong>836.34 BNB</strong> to real-world causes<br>
+      currently worth <strong id="bnbUsdValue">~$---</strong>.
+    </div>
+    <div class="charities">
+      <div class="charity">
+        <img src="/images/wells.png" alt="Wells Bring Hope">
+        <p>Bringing clean water and sanitation to the poorest communities.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/child-enrichment.png" alt="Child Enrichment">
+        <p>Supporting children in foster care who've faced abuse or neglect.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/clare-matrix.png" alt="Clare Matrix">
+        <p>Providing addiction recovery support to vulnerable populations.</p>
+      </div>
+    </div>
+    <p style="margin-top:2rem">
+      🔗 <a href="https://www.charitynavigator.org/" target="_blank">Charity Navigator</a> | 
+      🔉 <a href="/assets/Superdoge-Charity-AMA.mp3" target="_blank">Charity AMA Audio</a> | 
+      📝 <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Thank You Letter</a>
+    </p>
+  </section>
+
   <script>
     const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
     const formatter0 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
@@ -120,7 +181,6 @@
         let burned30d = allLog.slice(-30).reduce((acc, row) => acc + row.burned, 0);
 
         document.getElementById("totalSupply").textContent = formatter0(totalSupply + burned30d);
-
         animateCount("volumeRange", 0, volume30d, " SUPDOG", 4000);
 
         let burnedDots = [".", "..", "...", "....", "....."];
@@ -143,6 +203,11 @@
         document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
         document.getElementById("marketCap").textContent = "$" + formatter0(totalSupply * tokenPrice);
+
+        // Update BNB USD value of 836.34 BNB
+        let bnbPrice = bnbData.price;
+        document.getElementById("bnbUsdValue").textContent = "$" + formatter0(836.34 * bnbPrice);
+
       } catch (err) {
         console.error("❌ Failed to load stats:", err);
       }
