@@ -105,6 +105,10 @@
       <div class="stat-title">Total Volume (<span id="rangeLabel">30d</span>)</div>
       <div class="stat-value" id="volumeRange">Loading...</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-title">Last Updated</div>
+      <div class="stat-value" id="lastUpdated">Loading...</div>
+    </div>
   </div>
 
   <div class="filter-buttons">
@@ -161,6 +165,7 @@
         document.getElementById("bnbPrice").textContent = "$" + formatter(bnbData.price);
         document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
         document.getElementById("liquidityBNB").textContent = formatter(liquidity.totalBNB) + " BNB";
+        document.getElementById("lastUpdated").textContent = new Date(latest.date).toLocaleString();
 
         applyFilter(30);
       } catch (err) {
