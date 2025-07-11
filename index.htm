@@ -129,7 +129,314 @@
       100% { color: #0057b8; }
     }
     @media (max-width: 600px) { .stat-value { font-size: 1.3rem; } }
-    /* ...rest of your CSS unchanged... */
+    /* Impact section */
+    .impact-section {
+      background: #fff;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
+    }
+    .impact-highlight {
+      font-size: 1.5rem;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      color: #222;
+    }
+    .charities {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .charity {
+      max-width: 220px;
+      text-align: center;
+    }
+    .charity img {
+      width: 100%;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+    }
+    .charity p {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.5;
+    }
+    .impact-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #222;
+    }
+    .impact-divider {
+      font-size: 1.2rem;
+      color: #bbb;
+      user-select: none;
+    }
+    @media (max-width: 600px) {
+      .impact-links {
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+      }
+      .impact-divider {
+        display: none;
+      }
+    }
+    /* About section */
+    .about-section {
+      background: #f4f8fb;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
+    }
+    .about-section p {
+      font-size: 1rem;
+      max-width: 800px;
+      margin: 0 auto 1.5rem;
+      color: #333;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+    /* Media section */
+    .media-section {
+      background:#f9fafc;
+      padding:2.5rem 1.2rem;
+      text-align:center;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
+    }
+    .media-section h2 {
+      margin-bottom: 2rem;
+      font-size: 2.25rem;
+      color: #002d72;
+    }
+    .news-image-wrapper {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto 2.5rem auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+    #newsImage {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 0;
+    }
+    .mini-logos {
+      display:flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 1rem;
+    }
+    .mini-logos img {
+      height: 44px;
+      transition: height 0.2s;
+    }
+    @media (max-width: 900px) {
+      .mini-logos img {
+        height: 36px !important;
+      }
+    }
+    @media (max-width: 600px) {
+      .mini-logos img {
+        height: 28px !important;
+      }
+    }
+    /* Tokenomics section */
+    .tokenomics-section {
+      background: #fff;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
+    }
+    .tokenomics-section h2 {
+      font-size: 2.25rem;
+      margin-bottom: 1.8rem;
+      color: #002d72;
+    }
+    .tokenomics-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .tokenomics-card {
+      background:#f4f8fb;
+      padding:1.5rem;
+      border-radius:12px;
+      font-family: 'Poppins', Arial, sans-serif;
+      min-width: 0;
+    }
+    .tokenomics-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.6rem;
+      color: #002d72;
+      font-weight: 600;
+    }
+    .tokenomics-card p {
+      font-size: 1rem;
+      color: #333;
+      margin: 0;
+    }
+    .tokenomics-text {
+      font-size: 1.1rem;
+      max-width: 760px;
+      margin: 0 auto 2rem;
+      color: #444;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .tokenomics-bullets {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      align-items: center;
+      color: #333;
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+    .tokenomics-divider {
+      color: #bbb;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+    @media (max-width: 900px) {
+      .tokenomics-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+      }
+      .tokenomics-section {
+        max-width: 100vw;
+        padding: 2rem 0.5rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .tokenomics-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .tokenomics-bullets {
+        gap: 0.5rem;
+        font-size: 0.95rem;
+      }
+      .tokenomics-divider {
+        display: none;
+      }
+    }
+    /* How to Buy Section */
+    #how-to-buy {
+      background:#f9fafd;
+      padding: 3rem 1.5rem;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+    .how-to-buy-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .how-to-buy-header h2 {
+      font-size: 2.25rem;
+      color: #002d72;
+      margin: 0;
+      text-align: center;
+    }
+    .how-to-buy-header img {
+      height: 64px;
+      width: auto;
+      max-width: 120px;
+    }
+    ul {
+      font-size: 1rem;
+      line-height: 1.7;
+      padding-left: 1.2rem;
+      margin: 0;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #222;
+    }
+    ul li {
+      margin-bottom: 0.8rem;
+    }
+    p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #222;
+    }
+    /* Useful links & socials */
+    .links-section {
+      background:#fff;
+      padding: 3rem 1.5rem;
+      text-align:center;
+      max-width: 900px;
+      margin: 2rem auto;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+    .links-section h2 {
+      font-size: 2rem;
+      color: #002d72;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+    .links-section ul {
+      list-style:none;
+      padding:0;
+      max-width: 600px;
+      margin: auto;
+      font-size: 1rem;
+    }
+    .links-section ul li {
+      margin-bottom: 0.8rem;
+    }
+    .links-section ul li a {
+      color:#0057b8;
+      text-decoration:none;
+    }
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .socials a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration:none;
+      color:#0057b8;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .socials img {
+      width: 28px;
+      height: 28px;
+    }
+    /* Footer */
     footer {
       background:#f7f7f7;
       color:#555;
@@ -188,11 +495,180 @@
     </div>
   </section>
 
-  <!-- ...rest of your sections unchanged... -->
-  <!-- (Paste your Impact, About, Media, Tokenomics, How to Buy, Links, etc. sections here as before) -->
+  <section class="impact-section">
+    <h2>🌍 Real World Impact</h2>
+    <div class="impact-highlight">
+      Superdoge has donated over <strong style="letter-spacing: 1.5px;">836.34 BNB</strong><br />
+      currently worth <strong id="bnbUsdValue" style="letter-spacing: 1.5px;">~$---</strong>.
+    </div>
+    <div class="charities">
+      <div class="charity">
+        <img src="/images/wells.png" alt="Wells Bring Hope" />
+        <p>Bringing clean water and sanitation to the poorest communities.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/child-enrichment-logo.jpg" alt="Child Enrichment" />
+        <p>Supporting children in foster care who've faced abuse or neglect.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/clare-matrix.png" alt="Clare Matrix" />
+        <p>Providing addiction recovery support to vulnerable populations.</p>
+      </div>
+    </div>
+    <div class="impact-links">
+      🔉
+      <audio controls style="vertical-align: middle; height: 28px; max-width: 180px;">
+        <source src="/assets/Superdoge-Charity-AMA.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+      <span class="impact-divider">|</span>
+      📝
+      <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Just one thank-you letter we received</a>
+    </div>
+  </section>
+
+  <section class="about-section">
+    <h2>About SuperDoge</h2>
+    <p>
+      Built on the BNB Chain, SuperDoge is crypto’s first superhero — a parody blending the spirit of Dogecoin with the legend of Superman.
+      His mission: to bring transparency and real-world impact to DeFi.
+      With every transaction, SuperDoge grows stronger through deflationary tokenomics that burn tokens, reward holders, improve liquidity, and support charitable causes.
+    </p>
+    <p>
+      SuperDoge stands apart with a Certik-audited smart contract, liquidity locked for 79 years, 100% of supply circulating, and a resilient community.
+      SuperDoge is not just another meme — he’s the only crypto superhero making a difference, one block at a time.
+    </p>
+  </section>
+
+  <section class="media-section">
+    <h2>AS SEEN ON:</h2>
+    <div class="news-image-wrapper">
+      <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News" />
+    </div>
+    <script>
+      const newsImages = [
+        "/assets/news-article-1.jpg",
+        "/assets/news-article-2.jpg",
+        "/assets/news-article-3.jpg",
+        "/assets/news-article-4.jpg",
+      ];
+      let newsIndex = 0;
+      setInterval(() => {
+        newsIndex = (newsIndex + 1) % newsImages.length;
+        document.getElementById("newsImage").src = newsImages[newsIndex];
+      }, 4000);
+    </script>
+    <div class="mini-logos">
+      <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
+        <img src="/assets/cnbc.png" alt="CNBC" />
+      </a>
+      <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank">
+        <img src="/assets/bloomberg.png" alt="Bloomberg" />
+      </a>
+      <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
+        <img src="/assets/financialpost.png" alt="Financial Post" />
+      </a>
+      <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
+        <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance (GlobeNewswire link)" />
+      </a>
+      <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank">
+        <img src="/assets/E-crypto-news.png" alt="E-Crypto News" />
+      </a>
+    </div>
+  </section>
+
+  <section class="tokenomics-section">
+    <h2>Tokenomics</h2>
+    <div class="tokenomics-cards">
+      <div class="tokenomics-card">
+        <h3>🔥 2% Burn</h3>
+        <p>Reduces supply automatically with every transaction.</p>
+      </div>
+      <div class="tokenomics-card">
+        <h3>🎁 2% Reflections</h3>
+        <p>Redistributed to all holders to reward loyalty.</p>
+      </div>
+      <div class="tokenomics-card">
+        <h3>💧 1.5% Liquidity</h3>
+        <p>Automatically added to PancakeSwap to strengthen price floors.</p>
+      </div>
+      <div class="tokenomics-card">
+        <h3>💙 0.5% Charity</h3>
+        <p>Supports vetted real-world causes transparently on-chain.</p>
+      </div>
+    </div>
+    <p class="tokenomics-text">
+      SuperDoge uses a deflationary token model with a 6% transaction fee: 2% is burned to reduce supply and increase value, 2% is automatically redistributed to holders, and 2% strengthens liquidity while funding charitable efforts. Every transaction supports the community and generates real-world impact.
+    </p>
+    <div class="tokenomics-bullets">
+      <span>✅ 100% supply in circulation</span>
+      <span class="tokenomics-divider">|</span>
+      <span>🔒 Liquidity locked for 79 years</span>
+      <span class="tokenomics-divider">|</span>
+      <span>✅ Certik-audited</span>
+    </div>
+  </section>
+
+  <section id="how-to-buy">
+    <div class="how-to-buy-header">
+      <h2>How to Buy</h2>
+      <img src="/images/superdoge-full-crossed.png" alt="Superdoge" />
+    </div>
+    <p>
+      Use
+      <a href="https://metamask.io/download" target="_blank" style="color:#0057b8; text-decoration:underline;">MetaMask</a>
+      or
+      <a href="https://trustwallet.com/download" target="_blank" style="color:#0057b8; text-decoration:underline;">Trust Wallet</a>
+      (or any BSC-compatible wallet).
+    </p>
+    <ul>
+      <li>Set your wallet to use the <strong>Binance Smart Chain (BSC)</strong> network.</li>
+      <li>Buy or transfer <strong>BNB</strong> into your wallet (BEP-20 format).</li>
+      <li>Visit <a href="https://pancakeswap.finance" target="_blank" style="color:#0057b8;">PancakeSwap</a> and connect your wallet.</li>
+      <li>
+        Import SuperDoge token using this contract:<br />
+        <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
+        <button onclick="navigator.clipboard.writeText('0x622A1297057ea233287ce77bdBF2AB4E63609F23')" style="margin-left: 10px; font-size: 0.85rem; padding: 3px 8px; cursor: pointer;">Copy</button>
+      </li>
+      <li>
+        Swap <strong>BNB</strong> for <strong>$SUPDOG</strong>.<br />
+        Set <strong>slippage to 6–8%</strong> (or up to 10%) to allow for the 6% fee.
+      </li>
+      <li>
+        Add <strong>$SUPDOG</strong> to your wallet manually:<br />
+        Symbol: <strong>SUPDOG</strong>
+      </li>
+      <li>
+        Verify your balance anytime on <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" target="_blank" style="color:#0057b8;">BscScan</a>.
+      </li>
+    </ul>
+    <p style="margin-top: 2rem; background: #fff8dc; padding: 1rem; border-left: 4px solid #ffc107; font-size: 1rem;">
+      <strong>Reminder:</strong> Only use the official SuperDoge contract and trusted sites to avoid scams.
+    </p>
+  </section>
 
   <section class="links-section">
-    <!-- ... -->
+    <h2>Useful Links</h2>
+    <ul>
+      <li><a href="https://bscscan.com/token/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">BSCSCAN</a></li>
+      <li><a href="https://bscscan.com/address/0x6096bd38ec74579026e51dac897f3a16800177da#asset-tokens" target="_blank">Liquidity Pool (Main)</a></li>
+      <li><a href="https://poocoin.app/tokens/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">PooCoin Chart</a></li>
+      <li><a href="https://www.certik.com/projects/superdoge" target="_blank">Certik Audit</a></li>
+      <li><a href="https://www.charitynavigator.org/" target="_blank">Charity Navigator</a></li>
+      <li><a href="https://superdoge.org/locked-liquidity.html" target="_blank">Proof of Liquidity</a></li>
+      <li><a href="https://dex.coinmarketcap.com/token/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23/" target="_blank">CoinMarketCap Dex V1</a></li>
+    </ul>
+    <div class="socials">
+      <a href="https://x.com/SUPERDOGEorg" target="_blank">
+        <img src="/images/x-twitter-log.png" alt="X/Twitter" />X/Twitter
+      </a>
+      <a href="https://t.me/SUPERDOGEio" target="_blank">
+        <img src="/images/telegram.png" alt="Telegram" />Telegram
+      </a>
+      <a href="mailto:Superdoge2021@gmail.com">
+        <img src="/images/email-logo.png" alt="Email" />Email Us
+      </a>
+    </div>
   </section>
 
   <footer>
@@ -223,34 +699,43 @@
 
         document.getElementById("totalSupply").textContent = formatter0(totalSupply + burned30d);
 
-        // Volume: show dots, then count up slowly (2.4s)
+        // Volume: show dots, then count up slowly (3.5s)
         let volumeDots = [".", "..", "...", "....", "....."];
         let vi = 0;
         let volumeEl = document.getElementById("volumeRange");
         let vDotCycle = setInterval(() => {
           volumeEl.textContent = volumeDots[vi % volumeDots.length];
           vi++;
-        }, 300);
+        }, 350);
 
         setTimeout(() => {
           clearInterval(vDotCycle);
-          animateCount("volumeRange", 0, volume30d, " SUPDOG", 2400);
-        }, 1200);
+          animateCount("volumeRange", 0, volume30d, " SUPDOG", 3500);
+        }, 1400);
 
-        // Burned (30d): count up after Volume finishes (2.4s)
+        // Burned (30d): count up after Volume finishes (3.5s)
         setTimeout(() => {
-          animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 2400, true);
+          let burnedEl = document.getElementById("burnedVolumeRange");
+          let burnedDots = [".", "..", "...", "....", "....."];
+          let bi = 0;
+          let bDotCycle = setInterval(() => {
+            burnedEl.textContent = burnedDots[bi % burnedDots.length];
+            bi++;
+          }, 350);
           setTimeout(() => {
-            const el = document.getElementById("burnedVolumeRange");
-            el.classList.add("burn-anim");
-            setTimeout(() => el.classList.remove("burn-anim"), 700);
-          }, 2400);
-        }, 3600);
+            clearInterval(bDotCycle);
+            animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 3500, true);
+            setTimeout(() => {
+              burnedEl.classList.add("burn-anim");
+              setTimeout(() => burnedEl.classList.remove("burn-anim"), 700);
+            }, 3500);
+          }, 1400);
+        }, 4900);
 
         // Total Supply: animate after Burned finishes
         setTimeout(() => {
-          animateCount("totalSupply", totalSupply + burned30d, totalSupply, "", 1500);
-        }, 6100);
+          animateCount("totalSupply", totalSupply + burned30d, totalSupply, "", 2000);
+        }, 10500);
 
         // The rest update instantly
         document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
