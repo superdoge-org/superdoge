@@ -52,12 +52,13 @@ function main() {
   const volume = parseFloat((burned / 0.02).toFixed(6));
 
   const output = {
-    date: today.date,
-    burnedAmount: parseFloat(burned.toFixed(6)),
-    estimatedVolume: volume
-  };
+  value: volume,
+  burnedAmount: parseFloat(burned.toFixed(6)),
+  lastUpdated: new Date().toISOString()
+};
 
-  saveJSON(OUTPUT_FILE, output);
+saveJSON(OUTPUT_FILE, output);
+
 }
 
 main();
