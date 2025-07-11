@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
-const OUTPUT_FILE = path.join("stats", "total-volume.json");
+const OUTPUT_FILE = path.join("stats", "volume-estimate.json");
 
 // Load daily log safely
 function loadJSON(filepath) {
@@ -44,9 +44,7 @@ function main() {
     return;
   }
 
-  // Sort using Date objects to avoid time issues
-  const sorted = log.sort((a, b) => new Date(a.date) - new Date(b.date));
-
+  const sorted = log.sort((a, b) => a.date.localeCompare(b.date));
   const yesterday = sorted[sorted.length - 2];
   const today = sorted[sorted.length - 1];
 
@@ -54,10 +52,9 @@ function main() {
   const volume = parseFloat((burned / 0.02).toFixed(6));
 
   const output = {
-    date: today.date.split("T")[0],
-    value: volume,
+    date: today.date,
     burnedAmount: parseFloat(burned.toFixed(6)),
-    lastUpdated: new Date().toISOString()
+    estimatedVolume: volume
   };
 
   saveJSON(OUTPUT_FILE, output);
