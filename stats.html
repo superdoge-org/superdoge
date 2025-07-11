@@ -105,14 +105,6 @@
       <div class="stat-title">Total Volume (<span id="rangeLabel">30d</span>)</div>
       <div class="stat-value" id="volumeRange">Loading...</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Last Updated (EST)</div>
-      <div class="stat-value" id="lastUpdated">Loading...</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-title">Holders</div>
-      <div class="stat-value" id="holders">Loading...</div>
-    </div>
   </div>
 
   <div class="filter-buttons">
@@ -148,19 +140,16 @@
   <script>
     const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
     const formatter2 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
-    const formatDate = iso => new Date(iso).toLocaleString('en-US', { timeZone: 'America/New_York' });
-
     let allData = [];
 
     async function loadStats() {
       try {
-        const [totalData, tokenData, bnbData, liquidity, allLog, holdersData] = await Promise.all([
+        const [totalData, tokenData, bnbData, liquidity, allLog] = await Promise.all([
           fetch("/stats/total-supply.json").then(r => r.json()),
           fetch("/stats/token-price.json").then(r => r.json()),
           fetch("/stats/bnb-price.json").then(r => r.json()),
           fetch("/stats/liquidity.json").then(r => r.json()),
-          fetch("/stats/all-data.json").then(r => r.json()),
-          fetch("/stats/holders.json").then(r => r.json()).catch(() => ({ holders: null }))
+          fetch("/stats/all-data.json").then(r => r.json())
         ]);
 
         allData = allLog;
@@ -172,10 +161,6 @@
         document.getElementById("bnbPrice").textContent = "$" + formatter(bnbData.price);
         document.getElementById("liquidityUSD").textContent = "$" + formatter(liquidity.totalUSD);
         document.getElementById("liquidityBNB").textContent = formatter(liquidity.totalBNB) + " BNB";
-        document.getElementById("lastUpdated").textContent = formatDate(latest.date);
-        document.getElementById("holders").textContent = holdersData.holders !== null
-          ? formatter(holdersData.holders) + " wallets"
-          : "Unavailable";
 
         applyFilter(30);
       } catch (err) {
@@ -201,7 +186,7 @@
         totalBurned += row.burned;
         table.innerHTML += `
           <tr>
-            <td>${formatDate(row.date)}</td>
+            <td>${row.date}</td>
             <td>${formatter(row.totalSupply)}</td>
             <td>${formatter(row.burned)}</td>
             <td>${formatter(row.volume)}</td>
