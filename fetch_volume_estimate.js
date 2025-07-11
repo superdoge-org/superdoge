@@ -44,7 +44,7 @@ function main() {
     return;
   }
 
-  // Sort by actual date
+  // Sort using Date objects to avoid time issues
   const sorted = log.sort((a, b) => new Date(a.date) - new Date(b.date));
 
   const yesterday = sorted[sorted.length - 2];
@@ -54,6 +54,7 @@ function main() {
   const volume = parseFloat((burned / 0.02).toFixed(6));
 
   const output = {
+    date: today.date.split("T")[0],
     value: volume,
     burnedAmount: parseFloat(burned.toFixed(6)),
     lastUpdated: new Date().toISOString()
