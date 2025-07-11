@@ -2,8 +2,8 @@
   {
     "date": "2025-07-04",
     "totalSupply": 885528765.51,
-    "burned": 134.49,
-    "volume": 6724.5,
+    "burned": 134.48561823368073,
+    "volume": 6724.28,
     "price": null,
     "liquidityUSD": null,
     "liquidityBNB": null
@@ -20,8 +20,8 @@
   {
     "date": "2025-07-06",
     "totalSupply": 885528765.45,
-    "burned": 0.07,
-    "volume": 3.5,
+    "burned": 0.06858527660369873,
+    "volume": 3.43,
     "price": null,
     "liquidityUSD": 281960.07,
     "liquidityBNB": 431.0723
@@ -29,8 +29,8 @@
   {
     "date": "2025-07-07",
     "totalSupply": 885528764.97,
-    "burned": 0.47,
-    "volume": 23.5,
+    "burned": 0.47488951683044434,
+    "volume": 23.74,
     "price": null,
     "liquidityUSD": 284908.61,
     "liquidityBNB": 431.0723
@@ -63,7 +63,7 @@
     "liquidityBNB": 431.0723
   },
   {
-    "date": "2025-07-11",
+    "date": "2025-07-11T19:39:05.397Z",
     "totalSupply": 885528378.3,
     "burned": 0,
     "volume": 0,
