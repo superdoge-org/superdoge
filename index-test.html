@@ -27,12 +27,15 @@
       height: auto;
       margin-right: 2rem;
     }
+    /* Fix tagline center on mobile */
     .tagline {
       font-size: 3rem;
       color: #ffd700;
       flex: 1 1 100%;
       text-align: center;
+      margin-top: 0.5rem;
     }
+
     @media (max-width: 600px) {
       header {
         flex-direction: column;
@@ -43,64 +46,413 @@
       }
     }
 
-    /* Universal Section Font Fix */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .stat {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-title {
+      font-size: 1.8rem;
+      color: #002d72;
+      margin-bottom: 0.6rem;
+      letter-spacing: 1px;
+    }
+    .stat-value {
+      font-size: 2.4rem;
+      color: #0057b8;
+    }
+    .burn-anim {
+      animation: burnColor 1.5s ease-in-out;
+    }
+    @keyframes burnColor {
+      0% { color: #666; }
+      25% { color: #ff4500; }
+      50% { color: #ffa500; }
+      75% { color: #999; }
+      100% { color: #222; }
+    }
+
+    /* CHANGE #1: For all section content below main titles, use easier-to-read font */
     .impact-section,
     .about-section,
     .tokenomics-section,
     .media-section,
     .links-section,
-    #how-to-buy {
+    #how-to-buy div,
+    #how-to-buy p,
+    #how-to-buy ul,
+    footer {
       font-family: Arial, sans-serif;
     }
 
-    /* Media Logos Sizing */
-    .media-section img[alt*="CNBC"],
-    .media-section img[alt*="Bloomberg"],
-    .media-section img[alt*="Financial"],
-    .media-section img[alt*="Yahoo"],
-    .media-section img[alt*="E-Crypto"] {
-      height: 44px;
+    .impact-section {
+      background: #fff;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+    .impact-section h2 {
+      font-size: 2.5rem;
+      color: #002d72;
+      margin-bottom: 1.2rem;
+      letter-spacing: 1.5px;
+    }
+    .impact-highlight {
+      font-size: 1.75rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+    .charities {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .charity {
+      max-width: 220px;
+      text-align: center;
+    }
+    .charity img {
+      width: 100%;
+      height: 80px;
+      object-fit: contain;
+      border-radius: 12px;
+      margin-bottom: 0.5rem;
+    }
+    .charity p {
+      font-size: 1.05rem;
+      color: #444;
+      line-height: 1.6;
+    }
+    .about-section {
+      background: #f4f8fb;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+    .about-section h2 {
+      font-size: 2.5rem;
+      color: #002d72;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .about-section p {
+      font-size: 1.3rem;
+      max-width: 800px;
+      margin: auto;
+      color: #333;
+      line-height: 1.7;
+    }
+    .about-section ul {
+      list-style: disc;
+      text-align: left;
+      max-width: 720px;
+      margin: 1.5rem auto;
+      padding-left: 2rem;
+      font-size: 1.25rem;
+      color: #333;
+    }
+    .about-section ul li {
+      margin-bottom: 0.8rem;
     }
 
-    @media (max-width: 768px) {
-      .charities, .socials {
-        flex-direction: column;
-        align-items: center;
+    /* MEDIA SECTION */
+    .media-section {
+      background:#f9fafc; 
+      padding:2.5rem 1.2rem; 
+      text-align:center;
+      font-family: Arial, sans-serif;
+    }
+    .media-section h2 {
+      color:#002d72; 
+      font-size:2.5rem; 
+      margin-bottom:2rem;
+    }
+    .media-section img {
+      height: 44px;
+      transition: height 0.3s ease;
+    }
+    /* CHANGE #2: Make media logos about 10% larger, but keep one row on desktop */
+    .media-section div a img {
+      height: 44px;
+    }
+    @media (min-width: 769px) {
+      .media-section div a img {
+        height: 48px; /* ~10% larger than 44px */
       }
+    }
+    @media (max-width: 768px) {
       .media-section img {
         max-width: 80%;
         height: auto;
       }
     }
 
-    /* How to Buy Layout */
-    #how-to-buy-container {
+    /* How to Buy section styles */
+    #how-to-buy {
+      background:#f9fafd; 
+      padding: 3rem 1.5rem;
+    }
+    #how-to-buy > div {
+      max-width: 900px; 
+      margin: auto; 
+      font-family: Arial, sans-serif; /* Changed for readability */
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
-    #how-to-buy-text {
-      flex: 1 1 60%;
+    #how-to-buy > div > div:first-child {
+      flex: 1 1 55%;
+      min-width: 280px;
     }
-    #how-to-buy-image {
+    #how-to-buy > div > div:last-child {
       flex: 1 1 35%;
       text-align: center;
     }
-    #how-to-buy-image img {
+    #how-to-buy img {
       max-width: 100%;
       height: auto;
+      max-height: 280px;
+      border-radius: 12px;
     }
     @media (max-width: 768px) {
-      #how-to-buy-container {
+      #how-to-buy > div {
         flex-direction: column;
+        align-items: center;
       }
+      #how-to-buy > div > div:first-child,
+      #how-to-buy > div > div:last-child {
+        flex: 1 1 100%;
+      }
+    }
+
+    /* Links Section */
+    .links-section {
+      background:#fff; 
+      padding: 3rem 1.5rem; 
+      text-align:center; 
+      font-family: Arial, sans-serif;
+      max-width: 900px; 
+      margin: 2rem auto;
+    }
+    .links-section h2 {
+      font-size: 2.2rem; 
+      color: #002d72; 
+      margin-bottom: 1.2rem;
+    }
+    .links-section ul {
+      list-style:none; 
+      padding:0; 
+      max-width: 600px; 
+      margin: auto; 
+      font-size: 1rem;
+    }
+    .links-section ul li {
+      margin-bottom: 0.8rem;
+    }
+    .links-section ul li a {
+      color:#0057b8; 
+      text-decoration:none;
+    }
+
+    /* Social Links */
+    .socials {
+      display: flex; 
+      justify-content: center; 
+      gap: 3rem; 
+      margin-top: 2rem; 
+      flex-wrap: wrap;
+    }
+    .socials a {
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+      text-decoration:none; 
+      color:#0057b8; 
+      font-weight:bold;
+    }
+    .socials img {
+      width: 28px; 
+      height: 28px;
+    }
+
+    footer {
+      background:#f7f7f7; 
+      color:#555; 
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem; 
+      padding: 2rem 1rem; 
+      text-align: center; 
+      max-width: 900px; 
+      margin: 0 auto 3rem;
     }
   </style>
 </head>
 <body>
-  <!-- All sections from your index will go here -->
-  <!-- We retained full layout, styling, JavaScript, and structure as you provided -->
-  <!-- This is a saved, complete structure with only your requested updates applied -->
-</body>
-</html>
+  <header>
+    <img src="images/superdoge_logo.png" alt="Superdoge Logo" />
+    <div class="tagline">Saving the World One Block at a Time</div>
+  </header>
+
+  <section class="stats-grid">
+    <div class="stat">
+      <div class="stat-title">Total Supply</div>
+      <div class="stat-value" id="totalSupply">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Burned (30d)</div>
+      <div class="stat-value" id="burnedVolumeRange">.....</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Volume (30d)</div>
+      <div class="stat-value" id="volumeRange">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Liquidity</div>
+      <div class="stat-value" id="liquidityUSD">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Market Cap</div>
+      <div class="stat-value" id="marketCap">Loading...</div>
+    </div>
+    <div class="stat">
+      <div class="stat-title">Token Price</div>
+      <div class="stat-value" id="tokenPrice">Loading...</div>
+    </div>
+  </section>
+
+  <section class="impact-section">
+    <h2>🌍 Real World Impact</h2>
+    <div class="impact-highlight">
+      Superdoge has donated over <strong style="letter-spacing: 1.5px;">836.34 BNB</strong> to real-world causes<br />
+      currently worth <strong id="bnbUsdValue" style="letter-spacing: 1.5px;">~$---</strong>.
+    </div>
+    <div class="charities">
+      <div class="charity">
+        <img src="/images/wells.png" alt="Wells Bring Hope" />
+        <p>Bringing clean water and sanitation to the poorest communities.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/child-enrichment-logo.jpg" alt="Child Enrichment" />
+        <p>Supporting children in foster care who've faced abuse or neglect.</p>
+      </div>
+      <div class="charity">
+        <img src="/images/clare-matrix.png" alt="Clare Matrix" />
+        <p>Providing addiction recovery support to vulnerable populations.</p>
+      </div>
+    </div>
+    <p style="margin-top:2rem">
+      🔉 <audio controls style="vertical-align: middle; height: 28px;">
+        <source src="/assets/Superdoge-Charity-AMA.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+      &nbsp;|&nbsp;
+      📝 <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Just one thank-you letter we received</a>
+    </p>
+  </section>
+
+  <!-- Start of About SuperDoge -->
+  <section class="about-section">
+    <h2>About SuperDoge</h2>
+    <p>
+      Built on the BNB Chain, SuperDoge is crypto’s first superhero — a parody blending the spirit of Dogecoin with the legend of Superman.
+      His mission: to bring transparency and real-world impact to DeFi.
+      With every transaction, SuperDoge grows stronger through deflationary tokenomics that burn tokens, reward holders, improve liquidity, and support charitable causes.
+    </p>
+
+    <p style="margin-top: 1.5rem;">
+      SuperDoge stands apart with a Certik-audited smart contract, liquidity locked for 79 years, 100% of supply circulating, and a resilient community.
+      SuperDoge is not just another meme — he’s the only crypto superhero making a difference, one block at a time.
+    </p>
+  </section>
+  <!-- End of About SuperDoge -->
+
+  <!-- Start of Media Section -->
+  <section class="media-section">
+    <h2>AS SEEN ON:</h2>
+
+    <!-- Rotating banner image (fully visible, uncropped) -->
+    <div style="position:relative; max-width:800px; margin:0 auto 2rem; height:auto;">
+      <img
+        id="newsImage"
+        src="/assets/news-article-1.jpg"
+        alt="SuperDoge News"
+        style="width:100%; max-height:500px; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:contain;"
+      />
+    </div>
+
+    <script>
+      const newsImages = [
+        "/assets/news-article-1.jpg",
+        "/assets/news-article-2.jpg",
+        "/assets/news-article-3.jpg",
+        "/assets/news-article-4.jpg",
+      ];
+      let newsIndex = 0;
+      setInterval(() => {
+        newsIndex = (newsIndex + 1) % newsImages.length;
+        document.getElementById("newsImage").src = newsImages[newsIndex];
+      }, 4000);
+    </script>
+
+    <!-- Mini logo row -->
+    <div
+      style="
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        align-items: center;
+        padding: 1rem;
+      "
+    >
+      <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank"
+        ><img src="/assets/cnbc.png" alt="CNBC" style="height:48px;" />
+      </a>
+      <a
+        href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall"
+        target="_blank"
+        ><img src="/assets/bloomberg.png" alt="Bloomberg" style="height:48px;" />
+      </a>
+      <a
+        href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do"
+        target="_blank"
+        ><img src="/assets/financialpost.png" alt="Financial Post" style="height:48px;" />
+      </a>
+      <a
+        href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html"
+        target="_blank"
+        ><img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance (GlobeNewswire link)" style="height:48px;" />
+      </a>
+      <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank"
+        ><img src="/assets/E-crypto-news.png" alt="E-Crypto News" style="height:48px;" />
+      </a>
+    </div>
+  </section>
+  <!-- End of Media Section -->
+
+  <!-- Start of Tokenomics Section -->
+  <section class="tokenomics-section" style="background:#fff; padding:3rem 1.5rem; text-align:center;">
+    <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:1.8rem;">Tokenomics</h2>
+
+    <div
+      style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+        max-width: 1000px;
+        margin: 0 auto;
