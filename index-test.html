@@ -4,13 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Superdoge | The First Crypto Superhero</title>
-  <!-- Poppins font from Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" />
   <style>
-    /* Reset and base */
     html {
       box-sizing: border-box;
-      font-size: 16px; /* base font size */
+      font-size: 16px;
     }
     *, *::before, *::after {
       box-sizing: inherit;
@@ -23,45 +21,52 @@
       line-height: 1.5;
       font-weight: 400;
     }
-    /* Headings with hierarchy */
-    h1, .tagline {
+    header {
+      background: #002d72;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem 1.2rem 1rem;
+    }
+    .main-logo {
+      width: 180px;
+      max-width: 90vw;
+      height: auto;
+      margin-bottom: 1.2rem;
+      display: block;
+    }
+    .tagline {
       font-weight: 700;
-      font-size: 3rem; /* 48px */
-      margin: 0;
-      color: #ffd700;
+      font-size: 2rem;
+      color: #fff;
+      background: #0057b8;
+      padding: 0.4em 1.4em;
+      border-radius: 2em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin: 0 auto 1.5rem auto;
+      display: inline-block;
       text-align: center;
+      letter-spacing: 0.03em;
+    }
+    /* Headings */
+    h1, h2, h3, .stat-title {
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      margin: 0;
     }
     h2 {
-      font-weight: 700;
-      font-size: 2.25rem; /* 36px */
+      font-size: 2.25rem;
       color: #002d72;
       margin-bottom: 1rem;
-      letter-spacing: 0.03em;
       text-align: center;
     }
     h3, .stat-title {
-      font-weight: 600;
-      font-size: 1.75rem; /* 28px */
+      font-size: 1.5rem;
       color: #002d72;
       margin-bottom: 0.5rem;
-      letter-spacing: 0.02em;
-    }
-    h4 {
-      font-weight: 600;
-      font-size: 1.375rem; /* 22px */
-      color: #002d72;
-      margin-bottom: 0.5rem;
-    }
-    h5 {
-      font-weight: 600;
-      font-size: 1.125rem; /* 18px */
-      color: #002d72;
-      margin-bottom: 0.5rem;
-    }
-    /* Tagline */
-    .tagline {
-      margin: 1rem 0 2rem;
-      color: #ffd700;
     }
     /* Stats grid */
     .stats-grid {
@@ -69,7 +74,7 @@
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
       padding: 2rem 1rem;
-      max-width: 1000px;
+      max-width: 900px;
       margin: auto;
     }
     .stat {
@@ -81,7 +86,7 @@
     }
     .stat-value {
       font-weight: 600;
-      font-size: 2rem; /* 32px */
+      font-size: 2rem;
       color: #0057b8;
       font-family: 'Poppins', Arial, sans-serif;
     }
@@ -100,9 +105,11 @@
       background: #fff;
       padding: 3rem 1.5rem;
       text-align: center;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
     }
     .impact-highlight {
-      font-size: 1.5rem; /* 24px */
+      font-size: 1.5rem;
       line-height: 1.5;
       margin-bottom: 2rem;
       font-weight: 500;
@@ -126,11 +133,10 @@
       margin-bottom: 0.5rem;
     }
     .charity p {
-      font-size: 1rem; /* 16px */
+      font-size: 1rem;
       color: #444;
       line-height: 1.5;
     }
-    /* Audio and letter link container */
     .impact-links {
       display: flex;
       align-items: center;
@@ -152,40 +158,39 @@
       padding: 3rem 1.5rem;
       text-align: center;
       max-width: 900px;
-      margin: auto;
+      margin: 0 auto 2rem auto;
     }
     .about-section p {
-      font-size: 1rem; /* 16px */
+      font-size: 1rem;
       max-width: 800px;
       margin: 0 auto 1.5rem;
       color: #333;
       line-height: 1.6;
       font-weight: 400;
     }
-    .about-section ul {
-      list-style: disc;
-      text-align: left;
-      max-width: 720px;
-      margin: 1rem auto 0;
-      padding-left: 2rem;
-      font-size: 1rem;
-      color: #333;
-      line-height: 1.6;
-    }
-    .about-section ul li {
-      margin-bottom: 0.6rem;
-    }
     /* Media section */
     .media-section {
       background:#f9fafc;
       padding:2.5rem 1.2rem;
       text-align:center;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
     }
     .media-section h2 {
       margin-bottom: 2rem;
-      font-weight: 700;
-      font-size: 2.25rem; /* 36px */
+      font-size: 2.25rem;
       color: #002d72;
+    }
+    #newsImage {
+      width: 100%;
+      max-width: 800px;
+      max-height: 380px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
     }
     .mini-logos {
       display:flex;
@@ -196,26 +201,25 @@
       padding: 1rem;
     }
     .mini-logos img {
-      height: 44px; /* 10% larger */
+      height: 44px;
       transition: height 0.2s;
     }
     /* Tokenomics section */
     .tokenomics-section {
-      background:#fff;
-      padding:3rem 1.5rem;
-      text-align:center;
-      max-width: 1000px;
-      margin: 0 auto;
+      background: #fff;
+      padding: 3rem 1.5rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 2rem auto;
     }
     .tokenomics-section h2 {
-      font-size: 2.25rem; /* 36px */
+      font-size: 2.25rem;
       margin-bottom: 1.8rem;
       color: #002d72;
-      font-weight: 700;
     }
     .tokenomics-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 2rem;
       margin-bottom: 2.5rem;
     }
@@ -224,27 +228,27 @@
       padding:1.5rem;
       border-radius:12px;
       font-family: 'Poppins', Arial, sans-serif;
+      min-width: 0;
     }
     .tokenomics-card h3 {
-      font-size: 1.25rem; /* 20px */
+      font-size: 1.25rem;
       margin-bottom: 0.6rem;
       color: #002d72;
       font-weight: 600;
     }
     .tokenomics-card p {
-      font-size: 1rem; /* 16px */
+      font-size: 1rem;
       color: #333;
       margin: 0;
     }
     .tokenomics-text {
-      font-size: 1.1rem; /* 18px */
+      font-size: 1.1rem;
       max-width: 760px;
       margin: 0 auto 2rem;
       color: #444;
       font-weight: 400;
       line-height: 1.6;
     }
-    /* Tokenomics bullets with emojis */
     .tokenomics-bullets {
       display: flex;
       flex-wrap: wrap;
@@ -266,7 +270,7 @@
       background:#f9fafd;
       padding: 3rem 1.5rem;
       max-width: 900px;
-      margin: 0 auto 3rem;
+      margin: 0 auto 2rem auto;
       font-family: 'Poppins', Arial, sans-serif;
     }
     .how-to-buy-header {
@@ -278,8 +282,7 @@
       margin-bottom: 1.5rem;
     }
     .how-to-buy-header h2 {
-      font-weight: 700;
-      font-size: 2.25rem; /* 36px */
+      font-size: 2.25rem;
       color: #002d72;
       margin: 0;
       text-align: center;
@@ -368,25 +371,40 @@
       margin: 0 auto 3rem;
       line-height: 1.4;
     }
-
     /* Responsive adjustments */
+    @media (max-width: 1200px) {
+      .stats-grid,
+      .impact-section,
+      .about-section,
+      .media-section,
+      .tokenomics-section,
+      #how-to-buy,
+      .links-section,
+      footer {
+        max-width: 98vw;
+      }
+    }
     @media (max-width: 900px) {
       .mini-logos img {
         height: 36px !important;
       }
+      .tokenomics-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+      }
+      .tokenomics-section {
+        max-width: 100vw;
+        padding: 2rem 0.5rem;
+      }
     }
     @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        align-items: center;
-        padding: 1.2rem 0.5rem;
-      }
-      header img {
-        margin: 0 0 1rem 0;
-        max-width: 180px;
+      .main-logo {
+        width: 120px;
+        margin-bottom: 0.7rem;
       }
       .tagline {
-        font-size: 2rem;
+        font-size: 1.2rem;
+        padding: 0.3em 1em;
       }
       .stats-grid {
         grid-template-columns: 1fr;
@@ -394,16 +412,20 @@
         padding: 1rem;
       }
       .stat-title {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
       }
       .stat-value {
-        font-size: 1.7rem;
+        font-size: 1.2rem;
       }
       .media-section h2 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
       }
-      .media-section img {
-        height: 32px !important;
+      #newsImage {
+        max-width: 98vw;
+        max-height: 200px;
+      }
+      .mini-logos img {
+        height: 28px !important;
       }
       .impact-links {
         flex-direction: column;
@@ -412,6 +434,10 @@
       }
       .impact-divider {
         display: none;
+      }
+      .tokenomics-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
       }
       .tokenomics-bullets {
         gap: 0.5rem;
@@ -433,7 +459,7 @@
 </head>
 <body>
   <header>
-    <img src="images/superdoge_logo.png" alt="Superdoge Logo" />
+    <img src="images/superdoge_logo.png" alt="Superdoge Logo" class="main-logo" />
     <div class="tagline">Saving the World One Block at a Time</div>
   </header>
 
@@ -496,7 +522,6 @@
     </div>
   </section>
 
-  <!-- About SuperDoge -->
   <section class="about-section">
     <h2>About SuperDoge</h2>
     <p>
@@ -510,15 +535,13 @@
     </p>
   </section>
 
-  <!-- Media Section -->
   <section class="media-section">
     <h2>AS SEEN ON:</h2>
-    <div style="position:relative; max-width:800px; margin:0 auto 2rem; height:auto;">
+    <div>
       <img
         id="newsImage"
         src="/assets/news-article-1.jpg"
         alt="SuperDoge News"
-        style="width:100%; max-height:500px; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:contain;"
       />
     </div>
     <script>
@@ -553,7 +576,6 @@
     </div>
   </section>
 
-  <!-- Tokenomics Section -->
   <section class="tokenomics-section">
     <h2>Tokenomics</h2>
     <div class="tokenomics-cards">
@@ -586,10 +608,9 @@
     </div>
   </section>
 
-  <!-- How to Buy Section -->
   <section id="how-to-buy">
     <div class="how-to-buy-header">
-      <h2>How to Buy SuperDoge ($SUPDOG)</h2>
+      <h2>How to Buy</h2>
       <img src="/images/superdoge-full-crossed.png" alt="Superdoge" />
     </div>
     <p>
@@ -625,7 +646,6 @@
     </p>
   </section>
 
-  <!-- Useful Links & Socials -->
   <section class="links-section">
     <h2>Useful Links</h2>
     <ul>
