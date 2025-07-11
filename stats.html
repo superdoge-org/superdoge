@@ -106,7 +106,7 @@
       <div class="stat-value" id="volumeRange">Loading...</div>
     </div>
     <div class="stat-card">
-      <div class="stat-title">Last Updated</div>
+      <div class="stat-title">Last Updated (EST)</div>
       <div class="stat-value" id="lastUpdated">Loading...</div>
     </div>
     <div class="stat-card">
@@ -148,10 +148,7 @@
   <script>
     const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
     const formatter2 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
-    const formatDate = iso => {
-      const date = new Date(iso);
-      return date.toLocaleString("en-US", { timeZone: "America/New_York" }) + " EST";
-    };
+    const formatDate = iso => new Date(iso).toLocaleString('en-US', { timeZone: 'America/New_York' });
 
     let allData = [];
 
