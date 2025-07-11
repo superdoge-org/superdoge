@@ -61,25 +61,30 @@ function generateAllData() {
     });
   }
 
-  // Load hourly logs
-  const supplyLog = load(path.join(STATS_DIR, "total-supply-log.json"));
-  const priceLogFull = priceLog;
-  const liquidityLogFull = liquidityLog;
+  // Now update the *last* entry for current day with latest data from hourly logs if exists
+  // This assumes your hourly logs have a latest entry with a timestamp including today's date
+  // Let's find the latest hourly data point for today
 
-  // Find last hourly supply entry for today
+  // Load hourly logs (you'll need to have these logs - e.g. total-supply-log.json or similar)
+  const supplyLog = load(path.join(STATS_DIR, "total-supply-log.json"));
+  const priceLogFull = priceLog;       // Already loaded
+  const liquidityLogFull = liquidityLog; // Already loaded
+
+  // Find last supplyLog entry for today
   const latestSupplyEntry = supplyLog
     .filter(e => getDateOnly(e.date) === todayUTC)
     .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
 
   if (latestSupplyEntry) {
-    // Find matching price and liquidity for this timestamp or fallback
+    // Find matching price and liquidity for the latest hourly timestamp or fallback
     const priceEntry = priceLogFull.find(e => e.date === latestSupplyEntry.date) ||
-                       priceLogFull.slice(-1)[0];
+                       priceLogFull.slice(-1)[0]; // fallback to last price
 
     const liquidityEntry = liquidityLogFull.find(e => e.date === latestSupplyEntry.date) ||
-                           liquidityLogFull.slice(-1)[0];
+                           liquidityLogFull.slice(-1)[0]; // fallback to last liquidity
 
-    // Find previous supply (either previous hourly or yesterday’s daily)
+    // Calculate burned and volume relative to previous hourly supply or previous day (whichever is later)
+    // We'll get the previous supply entry (the one before latestSupplyEntry)
     const idx = supplyLog.indexOf(latestSupplyEntry);
     let prevSupplyEntry = null;
     if (idx > 0) prevSupplyEntry = supplyLog[idx - 1];
@@ -91,7 +96,7 @@ function generateAllData() {
       const totalSupply = +latestSupplyEntry.totalSupply.toFixed(2);
 
       const updatedEntry = {
-        date: todayUTC, // 🛠️ Normalize to YYYY-MM-DD
+        date: getDateOnly(latestSupplyEntry.date), // <-- Fix: convert to date-only string
         totalSupply,
         burned,
         volume,
@@ -100,16 +105,20 @@ function generateAllData() {
         liquidityBNB: liquidityEntry ? +liquidityEntry.totalBNB.toFixed(5) : null
       };
 
-      const todayIndex = result.findIndex(e => e.date === todayUTC);
+      // Now replace or add this updated entry into result for today:
+      const todayIndex = result.findIndex(e => getDateOnly(e.date) === todayUTC);
 
       if (todayIndex >= 0) {
+        // Replace existing today's entry (older daily snapshot) with hourly updated one
         result[todayIndex] = updatedEntry;
       } else {
+        // If no entry for today (e.g. first hourly run of the day), append it
         result.push(updatedEntry);
       }
     }
   }
 
+  // Sort results by date ascending again to be safe
   result.sort((a, b) => new Date(a.date) - new Date(b.date));
 
   fs.writeFileSync(OUTPUT_FILE, JSON.stringify(result, null, 2));
