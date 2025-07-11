@@ -44,7 +44,9 @@ function main() {
     return;
   }
 
-  const sorted = log.sort((a, b) => a.date.localeCompare(b.date));
+  // Sort by actual date
+  const sorted = log.sort((a, b) => new Date(a.date) - new Date(b.date));
+
   const yesterday = sorted[sorted.length - 2];
   const today = sorted[sorted.length - 1];
 
@@ -52,13 +54,12 @@ function main() {
   const volume = parseFloat((burned / 0.02).toFixed(6));
 
   const output = {
-  value: volume,
-  burnedAmount: parseFloat(burned.toFixed(6)),
-  lastUpdated: new Date().toISOString()
-};
+    value: volume,
+    burnedAmount: parseFloat(burned.toFixed(6)),
+    lastUpdated: new Date().toISOString()
+  };
 
-saveJSON(OUTPUT_FILE, output);
-
+  saveJSON(OUTPUT_FILE, output);
 }
 
 main();
