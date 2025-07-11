@@ -172,7 +172,7 @@
     </div>
     <div class="stat">
       <div class="stat-title">Volume (30d)</div>
-      <div class="stat-value" id="volumeRange">Loading...</div>
+      <div class="stat-value" id="volumeRange">.....</div>
     </div>
     <div class="stat">
       <div class="stat-title">Liquidity</div>
@@ -189,9 +189,15 @@
   </section>
 
   <!-- ...rest of your sections unchanged... -->
+  <!-- (Paste your Impact, About, Media, Tokenomics, How to Buy, Links, etc. sections here as before) -->
+
+  <section class="links-section">
+    <!-- ... -->
+  </section>
 
   <footer>
-    <strong>Disclaimer:</strong> Superdoge ($SUPDOG) is a parody meme coin with no intrinsic value or financial guarantees, powered by its dedicated community. Stats may be delayed by up to 1 hour and can glitch—always verify data via the smart contract (links above). Not affiliated with Krypto the Superdog, Superman, Dogecoin, Floki, Babydogecoin, or Brokoli. Spot an error? Let us know!<br />
+    <strong>Disclaimer:</strong> Superdoge is a parody meme coin with no intrinsic value or financial guarantees. Stats may be delayed by up to 1 hour and can glitch—always verify data via the smart contract (links above). Not affiliated with Krypto the Superdog, Superman, Dogecoin, Floki, Babydogecoin. Spot an error? Let us know!
+    <br /><br />
     2025 — Superdoge.org: The First Crypto Superhero, Saving the World One Block at a Time.
   </footer>
 
@@ -217,23 +223,36 @@
 
         document.getElementById("totalSupply").textContent = formatter0(totalSupply + burned30d);
 
-        // Sequence: Volume → Burned (with effect) → Total Supply
-        animateCount("volumeRange", 0, volume30d, " SUPDOG", 1200);
+        // Volume: show dots, then count up slowly (2.4s)
+        let volumeDots = [".", "..", "...", "....", "....."];
+        let vi = 0;
+        let volumeEl = document.getElementById("volumeRange");
+        let vDotCycle = setInterval(() => {
+          volumeEl.textContent = volumeDots[vi % volumeDots.length];
+          vi++;
+        }, 300);
 
         setTimeout(() => {
-          animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 1200, true);
-          // Subtle burn effect after count finishes
+          clearInterval(vDotCycle);
+          animateCount("volumeRange", 0, volume30d, " SUPDOG", 2400);
+        }, 1200);
+
+        // Burned (30d): count up after Volume finishes (2.4s)
+        setTimeout(() => {
+          animateCount("burnedVolumeRange", 0, burned30d, " SUPDOG", 2400, true);
           setTimeout(() => {
             const el = document.getElementById("burnedVolumeRange");
             el.classList.add("burn-anim");
             setTimeout(() => el.classList.remove("burn-anim"), 700);
-          }, 1200);
-        }, 1200);
+          }, 2400);
+        }, 3600);
 
+        // Total Supply: animate after Burned finishes
         setTimeout(() => {
-          animateCount("totalSupply", totalSupply + burned30d, totalSupply, "", 1000);
-        }, 2600);
+          animateCount("totalSupply", totalSupply + burned30d, totalSupply, "", 1500);
+        }, 6100);
 
+        // The rest update instantly
         document.getElementById("liquidityUSD").textContent = "$" + formatter0(liquidity.totalUSD);
         document.getElementById("tokenPrice").textContent = "$" + formatter(tokenPrice);
         document.getElementById("marketCap").textContent = "$" + formatter0(totalSupply * tokenPrice);
@@ -248,18 +267,21 @@
     function animateCount(id, start, end, suffix = "", duration = 1000, burnStyle = false) {
       const el = document.getElementById(id);
       const range = end - start;
-      const increment = range / (duration / 30);
+      const steps = Math.ceil(duration / 30);
       let current = start;
-      let steps = 0;
-      const interval = setInterval(() => {
-        current += increment;
-        steps++;
-        if ((increment > 0 && current >= end) || (increment < 0 && current <= end) || steps > 150) {
+      let step = 0;
+      function update() {
+        step++;
+        current = start + (range * step / steps);
+        if ((range > 0 && current >= end) || (range < 0 && current <= end) || step >= steps) {
           current = end;
-          clearInterval(interval);
         }
         el.innerHTML = `<span class="${burnStyle ? "burn-anim" : ""}">${formatter0(current)}${suffix}</span>`;
-      }, 30);
+        if (step < steps) {
+          setTimeout(update, 30);
+        }
+      }
+      update();
     }
 
     loadStats();
