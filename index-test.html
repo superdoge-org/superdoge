@@ -31,11 +31,25 @@
       padding: 2rem 1rem 1.2rem 1rem;
     }
     .main-logo {
-      width: 180px;
-      max-width: 90vw;
-      height: auto;
-      margin-bottom: 1.2rem;
       display: block;
+      width: 240px;
+      max-width: 95vw;
+      min-width: 160px;
+      height: auto;
+      margin: 0 auto 1.2rem auto;
+    }
+    @media (max-width: 900px) {
+      .main-logo {
+        width: 180px;
+      }
+    }
+    @media (max-width: 600px) {
+      .main-logo {
+        width: 60%;
+        max-width: 180px;
+        min-width: 100px;
+        margin-bottom: 1rem;
+      }
     }
     .tagline {
       font-weight: 700;
@@ -50,7 +64,12 @@
       text-align: center;
       letter-spacing: 0.03em;
     }
-    /* Headings */
+    @media (max-width: 600px) {
+      .tagline {
+        font-size: 1.2rem;
+        padding: 0.3em 1em;
+      }
+    }
     h1, h2, h3, .stat-title {
       font-family: 'Poppins', Arial, sans-serif;
       font-weight: 700;
@@ -89,6 +108,14 @@
       font-size: 2rem;
       color: #0057b8;
       font-family: 'Poppins', Arial, sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    @media (max-width: 600px) {
+      .stat-value {
+        font-size: 1.3rem;
+      }
     }
     .burn-anim {
       animation: burnColor 1.5s ease-in-out;
@@ -152,6 +179,16 @@
       color: #bbb;
       user-select: none;
     }
+    @media (max-width: 600px) {
+      .impact-links {
+        flex-direction: column;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+      }
+      .impact-divider {
+        display: none;
+      }
+    }
     /* About section */
     .about-section {
       background: #f4f8fb;
@@ -181,16 +218,21 @@
       font-size: 2.25rem;
       color: #002d72;
     }
-    #newsImage {
+    .news-image-wrapper {
       width: 100%;
       max-width: 800px;
-      max-height: 380px;
-      height: auto;
+      margin: 0 auto 2.5rem auto;
       border-radius: 12px;
+      overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      object-fit: contain;
+      background: #fff;
+    }
+    #newsImage {
       display: block;
-      margin: 0 auto;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 0;
     }
     .mini-logos {
       display:flex;
@@ -203,6 +245,16 @@
     .mini-logos img {
       height: 44px;
       transition: height 0.2s;
+    }
+    @media (max-width: 900px) {
+      .mini-logos img {
+        height: 36px !important;
+      }
+    }
+    @media (max-width: 600px) {
+      .mini-logos img {
+        height: 28px !important;
+      }
     }
     /* Tokenomics section */
     .tokenomics-section {
@@ -264,6 +316,29 @@
       color: #bbb;
       font-size: 1.3rem;
       user-select: none;
+    }
+    @media (max-width: 900px) {
+      .tokenomics-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+      }
+      .tokenomics-section {
+        max-width: 100vw;
+        padding: 2rem 0.5rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .tokenomics-cards {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .tokenomics-bullets {
+        gap: 0.5rem;
+        font-size: 0.95rem;
+      }
+      .tokenomics-divider {
+        display: none;
+      }
     }
     /* How to Buy Section */
     #how-to-buy {
@@ -371,7 +446,6 @@
       margin: 0 auto 3rem;
       line-height: 1.4;
     }
-    /* Responsive adjustments */
     @media (max-width: 1200px) {
       .stats-grid,
       .impact-section,
@@ -382,77 +456,6 @@
       .links-section,
       footer {
         max-width: 98vw;
-      }
-    }
-    @media (max-width: 900px) {
-      .mini-logos img {
-        height: 36px !important;
-      }
-      .tokenomics-cards {
-        grid-template-columns: 1fr 1fr;
-        gap: 1.2rem;
-      }
-      .tokenomics-section {
-        max-width: 100vw;
-        padding: 2rem 0.5rem;
-      }
-    }
-    @media (max-width: 600px) {
-      .main-logo {
-        width: 120px;
-        margin-bottom: 0.7rem;
-      }
-      .tagline {
-        font-size: 1.2rem;
-        padding: 0.3em 1em;
-      }
-      .stats-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 1rem;
-      }
-      .stat-title {
-        font-size: 1.1rem;
-      }
-      .stat-value {
-        font-size: 1.2rem;
-      }
-      .media-section h2 {
-        font-size: 1.5rem;
-      }
-      #newsImage {
-        max-width: 98vw;
-        max-height: 200px;
-      }
-      .mini-logos img {
-        height: 28px !important;
-      }
-      .impact-links {
-        flex-direction: column;
-        gap: 0.5rem;
-        font-size: 0.95rem;
-      }
-      .impact-divider {
-        display: none;
-      }
-      .tokenomics-cards {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      .tokenomics-bullets {
-        gap: 0.5rem;
-        font-size: 0.95rem;
-      }
-      .tokenomics-divider {
-        display: none;
-      }
-      .how-to-buy-header {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      .how-to-buy-header img {
-        height: 48px;
-        max-width: 90px;
       }
     }
   </style>
@@ -537,12 +540,8 @@
 
   <section class="media-section">
     <h2>AS SEEN ON:</h2>
-    <div>
-      <img
-        id="newsImage"
-        src="/assets/news-article-1.jpg"
-        alt="SuperDoge News"
-      />
+    <div class="news-image-wrapper">
+      <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News" />
     </div>
     <script>
       const newsImages = [
