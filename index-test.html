@@ -4,50 +4,71 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Superdoge | The First Crypto Superhero</title>
-  <!-- Font pairing: Bangers for headings, Montserrat for body -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Montserrat:wght@400;600&display=swap">
+  <!-- Poppins font from Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" />
   <style>
+    /* Reset and base */
     html {
       box-sizing: border-box;
+      font-size: 16px; /* base font size */
     }
-    *, *:before, *:after {
+    *, *::before, *::after {
       box-sizing: inherit;
     }
     body {
       margin: 0;
-      font-family: 'Montserrat', Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
       background: radial-gradient(circle at center top, #dce3f7 0%, #b0c4de 100%);
       color: #222;
+      line-height: 1.5;
+      font-weight: 400;
     }
-    header {
-      background: #002d72;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem;
-      flex-wrap: wrap;
-    }
-    header img {
-      max-width: 240px;
-      height: auto;
-      margin-right: 2rem;
-    }
-    .tagline {
-      font-size: 3rem;
+    /* Headings with hierarchy */
+    h1, .tagline {
+      font-weight: 700;
+      font-size: 3rem; /* 48px */
+      margin: 0;
       color: #ffd700;
-      font-family: 'Bangers', cursive;
       text-align: center;
     }
-    h1, h2, h3, .stat-title {
-      font-family: 'Bangers', cursive;
-      letter-spacing: 1px;
+    h2 {
+      font-weight: 700;
+      font-size: 2.25rem; /* 36px */
+      color: #002d72;
+      margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+      text-align: center;
     }
+    h3, .stat-title {
+      font-weight: 600;
+      font-size: 1.75rem; /* 28px */
+      color: #002d72;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+    h4 {
+      font-weight: 600;
+      font-size: 1.375rem; /* 22px */
+      color: #002d72;
+      margin-bottom: 0.5rem;
+    }
+    h5 {
+      font-weight: 600;
+      font-size: 1.125rem; /* 18px */
+      color: #002d72;
+      margin-bottom: 0.5rem;
+    }
+    /* Tagline */
+    .tagline {
+      margin: 1rem 0 2rem;
+      color: #ffd700;
+    }
+    /* Stats grid */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
-      padding: 2rem;
+      padding: 2rem 1rem;
       max-width: 1000px;
       margin: auto;
     }
@@ -58,15 +79,11 @@
       padding: 1.5rem;
       text-align: center;
     }
-    .stat-title {
-      font-size: 1.8rem;
-      color: #002d72;
-      margin-bottom: 0.6rem;
-    }
     .stat-value {
-      font-size: 2.4rem;
+      font-weight: 600;
+      font-size: 2rem; /* 32px */
       color: #0057b8;
-      font-family: 'Montserrat', Arial, sans-serif;
+      font-family: 'Poppins', Arial, sans-serif;
     }
     .burn-anim {
       animation: burnColor 1.5s ease-in-out;
@@ -78,21 +95,18 @@
       75% { color: #999; }
       100% { color: #222; }
     }
+    /* Impact section */
     .impact-section {
       background: #fff;
       padding: 3rem 1.5rem;
       text-align: center;
     }
-    .impact-section h2 {
-      font-size: 2.5rem;
-      color: #002d72;
-      margin-bottom: 1.2rem;
-      letter-spacing: 1.5px;
-    }
     .impact-highlight {
-      font-size: 1.75rem;
-      line-height: 1.6;
-      margin-bottom: 2.5rem;
+      font-size: 1.5rem; /* 24px */
+      line-height: 1.5;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      color: #222;
     }
     .charities {
       display: flex;
@@ -112,84 +126,252 @@
       margin-bottom: 0.5rem;
     }
     .charity p {
-      font-size: 1.05rem;
+      font-size: 1rem; /* 16px */
       color: #444;
-      line-height: 1.6;
-      font-family: 'Montserrat', Arial, sans-serif;
+      line-height: 1.5;
     }
+    /* Audio and letter link container */
+    .impact-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+      font-size: 1rem;
+      color: #222;
+    }
+    .impact-divider {
+      font-size: 1.2rem;
+      color: #bbb;
+      user-select: none;
+    }
+    /* About section */
     .about-section {
       background: #f4f8fb;
       padding: 3rem 1.5rem;
       text-align: center;
-    }
-    .about-section h2 {
-      font-size: 2.5rem;
-      color: #002d72;
-      margin-bottom: 1.5rem;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
+      max-width: 900px;
+      margin: auto;
     }
     .about-section p {
-      font-size: 1.3rem;
+      font-size: 1rem; /* 16px */
       max-width: 800px;
-      margin: auto;
+      margin: 0 auto 1.5rem;
       color: #333;
-      line-height: 1.7;
-      font-family: 'Montserrat', Arial, sans-serif;
+      line-height: 1.6;
+      font-weight: 400;
     }
     .about-section ul {
       list-style: disc;
       text-align: left;
       max-width: 720px;
-      margin: 1.5rem auto;
+      margin: 1rem auto 0;
       padding-left: 2rem;
-      font-size: 1.25rem;
+      font-size: 1rem;
       color: #333;
-      font-family: 'Montserrat', Arial, sans-serif;
+      line-height: 1.6;
     }
     .about-section ul li {
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.6rem;
     }
-
-    /* Media Section Styles */
+    /* Media section */
     .media-section {
-      background:#f9fafc; 
-      padding:2.5rem 1.2rem; 
+      background:#f9fafc;
+      padding:2.5rem 1.2rem;
       text-align:center;
     }
     .media-section h2 {
-      color:#002d72; 
-      font-size:2.5rem; 
-      margin-bottom:2rem;
-      font-family: 'Bangers', cursive;
+      margin-bottom: 2rem;
+      font-weight: 700;
+      font-size: 2.25rem; /* 36px */
+      color: #002d72;
     }
-    .media-section img[alt*="CNBC"],
-    .media-section img[alt*="Bloomberg"],
-    .media-section img[alt*="Financial Post"],
-    .media-section img[alt*="Yahoo Finance"],
-    .media-section img[alt*="E-Crypto News"] {
-      height: 44px !important; /* 10% larger than 40px */
-      transition: height 0.2s;
-    }
-    .media-section .mini-logos {
-      display:flex; 
-      flex-wrap:wrap; 
-      justify-content:center; 
-      gap:1.5rem; 
-      align-items:center; 
+    .mini-logos {
+      display:flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      align-items: center;
       padding: 1rem;
     }
+    .mini-logos img {
+      height: 44px; /* 10% larger */
+      transition: height 0.2s;
+    }
+    /* Tokenomics section */
+    .tokenomics-section {
+      background:#fff;
+      padding:3rem 1.5rem;
+      text-align:center;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .tokenomics-section h2 {
+      font-size: 2.25rem; /* 36px */
+      margin-bottom: 1.8rem;
+      color: #002d72;
+      font-weight: 700;
+    }
+    .tokenomics-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .tokenomics-card {
+      background:#f4f8fb;
+      padding:1.5rem;
+      border-radius:12px;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+    .tokenomics-card h3 {
+      font-size: 1.25rem; /* 20px */
+      margin-bottom: 0.6rem;
+      color: #002d72;
+      font-weight: 600;
+    }
+    .tokenomics-card p {
+      font-size: 1rem; /* 16px */
+      color: #333;
+      margin: 0;
+    }
+    .tokenomics-text {
+      font-size: 1.1rem; /* 18px */
+      max-width: 760px;
+      margin: 0 auto 2rem;
+      color: #444;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    /* Tokenomics bullets with emojis */
+    .tokenomics-bullets {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      align-items: center;
+      color: #333;
+      font-size: 1.05rem;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+    .tokenomics-divider {
+      color: #bbb;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+    /* How to Buy Section */
+    #how-to-buy {
+      background:#f9fafd;
+      padding: 3rem 1.5rem;
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+    .how-to-buy-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .how-to-buy-header h2 {
+      font-weight: 700;
+      font-size: 2.25rem; /* 36px */
+      color: #002d72;
+      margin: 0;
+      text-align: center;
+    }
+    .how-to-buy-header img {
+      height: 64px;
+      width: auto;
+      max-width: 120px;
+    }
+    ul {
+      font-size: 1rem;
+      line-height: 1.7;
+      padding-left: 1.2rem;
+      margin: 0;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #222;
+    }
+    ul li {
+      margin-bottom: 0.8rem;
+    }
+    p {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #222;
+    }
+    /* Useful links & socials */
+    .links-section {
+      background:#fff;
+      padding: 3rem 1.5rem;
+      text-align:center;
+      max-width: 900px;
+      margin: 2rem auto;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+    .links-section h2 {
+      font-size: 2rem;
+      color: #002d72;
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+    }
+    .links-section ul {
+      list-style:none;
+      padding:0;
+      max-width: 600px;
+      margin: auto;
+      font-size: 1rem;
+    }
+    .links-section ul li {
+      margin-bottom: 0.8rem;
+    }
+    .links-section ul li a {
+      color:#0057b8;
+      text-decoration:none;
+    }
+    .socials {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .socials a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration:none;
+      color:#0057b8;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .socials img {
+      width: 28px;
+      height: 28px;
+    }
+    /* Footer */
+    footer {
+      background:#f7f7f7;
+      color:#555;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 0.9rem;
+      padding: 2rem 1rem;
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      line-height: 1.4;
+    }
 
-    /* Responsive Styles */
+    /* Responsive adjustments */
     @media (max-width: 900px) {
-      .media-section img[alt*="CNBC"],
-      .media-section img[alt*="Bloomberg"],
-      .media-section img[alt*="Financial Post"],
-      .media-section img[alt*="Yahoo Finance"],
-      .media-section img[alt*="E-Crypto News"] {
+      .mini-logos img {
         height: 36px !important;
       }
     }
@@ -205,7 +387,6 @@
       }
       .tagline {
         font-size: 2rem;
-        text-align: center;
       }
       .stats-grid {
         grid-template-columns: 1fr;
@@ -218,32 +399,27 @@
       .stat-value {
         font-size: 1.7rem;
       }
-      .media-section img[alt*="CNBC"],
-      .media-section img[alt*="Bloomberg"],
-      .media-section img[alt*="Financial Post"],
-      .media-section img[alt*="Yahoo Finance"],
-      .media-section img[alt*="E-Crypto News"] {
+      .media-section h2 {
+        font-size: 1.8rem;
+      }
+      .media-section img {
         height: 32px !important;
       }
-      .about-section h2 {
-        font-size: 2rem;
+      .impact-links {
+        flex-direction: column;
         gap: 0.5rem;
+        font-size: 0.95rem;
       }
-    }
-    /* How to Buy Section Image */
-    .how-to-buy-header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .how-to-buy-header img {
-      height: 64px;
-      width: auto;
-      max-width: 120px;
-    }
-    @media (max-width: 600px) {
+      .impact-divider {
+        display: none;
+      }
+      .tokenomics-bullets {
+        gap: 0.5rem;
+        font-size: 0.95rem;
+      }
+      .tokenomics-divider {
+        display: none;
+      }
       .how-to-buy-header {
         flex-direction: column;
         gap: 0.5rem;
@@ -257,7 +433,7 @@
 </head>
 <body>
   <header>
-    <img src="images/superdoge_logo.png" alt="Superdoge Logo">
+    <img src="images/superdoge_logo.png" alt="Superdoge Logo" />
     <div class="tagline">Saving the World One Block at a Time</div>
   </header>
 
@@ -291,31 +467,36 @@
   <section class="impact-section">
     <h2>🌍 Real World Impact</h2>
     <div class="impact-highlight">
-      Superdoge has donated over <strong style="letter-spacing: 1.5px;">836.34 BNB</strong> to real-world causes<br>
+      Superdoge has donated over <strong style="letter-spacing: 1.5px;">836.34 BNB</strong><br />
       currently worth <strong id="bnbUsdValue" style="letter-spacing: 1.5px;">~$---</strong>.
     </div>
     <div class="charities">
       <div class="charity">
-        <img src="/images/wells.png" alt="Wells Bring Hope">
+        <img src="/images/wells.png" alt="Wells Bring Hope" />
         <p>Bringing clean water and sanitation to the poorest communities.</p>
       </div>
       <div class="charity">
-        <img src="/images/child-enrichment-logo.jpg" alt="Child Enrichment">
+        <img src="/images/child-enrichment-logo.jpg" alt="Child Enrichment" />
         <p>Supporting children in foster care who've faced abuse or neglect.</p>
       </div>
       <div class="charity">
-        <img src="/images/clare-matrix.png" alt="Clare Matrix">
+        <img src="/images/clare-matrix.png" alt="Clare Matrix" />
         <p>Providing addiction recovery support to vulnerable populations.</p>
       </div>
     </div>
-    <p style="margin-top:2rem">
-      🔉 <audio controls style="vertical-align: middle; height: 28px;"><source src="/assets/Superdoge-Charity-AMA.mp3" type="audio/mpeg">Your browser does not support the audio element.</audio>
-      &nbsp;|&nbsp;
-      📝 <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Just one thank-you letter we received</a>
-    </p>
+    <div class="impact-links">
+      🔉
+      <audio controls style="vertical-align: middle; height: 28px; max-width: 180px;">
+        <source src="/assets/Superdoge-Charity-AMA.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+      <span class="impact-divider">|</span>
+      📝
+      <a href="/assets/ChildEnrichmentCharityLetter.jpg" target="_blank">Just one thank-you letter we received</a>
+    </div>
   </section>
 
-  <!-- Start of About SuperDoge -->
+  <!-- About SuperDoge -->
   <section class="about-section">
     <h2>About SuperDoge</h2>
     <p>
@@ -323,27 +504,29 @@
       His mission: to bring transparency and real-world impact to DeFi.
       With every transaction, SuperDoge grows stronger through deflationary tokenomics that burn tokens, reward holders, improve liquidity, and support charitable causes.
     </p>
-    <p style="margin-top: 1.5rem;">
+    <p>
       SuperDoge stands apart with a Certik-audited smart contract, liquidity locked for 79 years, 100% of supply circulating, and a resilient community.
       SuperDoge is not just another meme — he’s the only crypto superhero making a difference, one block at a time.
     </p>
   </section>
-  <!-- End of About SuperDoge -->
 
-  <!-- Start of Media Section -->
+  <!-- Media Section -->
   <section class="media-section">
     <h2>AS SEEN ON:</h2>
-    <!-- Rotating banner image (fully visible, uncropped) -->
     <div style="position:relative; max-width:800px; margin:0 auto 2rem; height:auto;">
-      <img id="newsImage" src="/assets/news-article-1.jpg" alt="SuperDoge News"
-           style="width:100%; max-height:500px; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:contain;">
+      <img
+        id="newsImage"
+        src="/assets/news-article-1.jpg"
+        alt="SuperDoge News"
+        style="width:100%; max-height:500px; height:auto; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.1); object-fit:contain;"
+      />
     </div>
     <script>
       const newsImages = [
         "/assets/news-article-1.jpg",
         "/assets/news-article-2.jpg",
         "/assets/news-article-3.jpg",
-        "/assets/news-article-4.jpg"
+        "/assets/news-article-4.jpg",
       ];
       let newsIndex = 0;
       setInterval(() => {
@@ -351,136 +534,138 @@
         document.getElementById("newsImage").src = newsImages[newsIndex];
       }, 4000);
     </script>
-    <!-- Mini logo row -->
     <div class="mini-logos">
       <a href="https://www.cnbc.com/2021/05/03/kelly-evans-taking-crypto-seriously.html" target="_blank">
-        <img src="/assets/cnbc.png" alt="CNBC">
+        <img src="/assets/cnbc.png" alt="CNBC" />
       </a>
       <a href="https://www.bloomberg.com/news/features/2021-05-20/crypto-market-prices-ass-coin-superdoge-billionaires-prosper-and-fall" target="_blank">
-        <img src="/assets/bloomberg.png" alt="Bloomberg">
+        <img src="/assets/bloomberg.png" alt="Bloomberg" />
       </a>
       <a href="https://financialpost.com/globe-newswire/superdoge-meme-coin-launches-reaches-13m-market-cap-in-first-48-hours-worlds-first-crypto-superhero-coin-donates-2-of-all-transactions-to-various-charities-via-smart-contract-150000-already-do" target="_blank">
-        <img src="/assets/financialpost.png" alt="Financial Post">
+        <img src="/assets/financialpost.png" alt="Financial Post" />
       </a>
       <a href="https://www.globenewswire.com/news-release/2021/04/29/2220068/0/en/SuperDOGE-Meme-Coin-Launches-Reaches-13M-Market-Cap-in-First-48-Hours.html" target="_blank">
-        <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance (GlobeNewswire link)">
+        <img src="/assets/Yahoo_Finance.png" alt="Yahoo Finance (GlobeNewswire link)" />
       </a>
       <a href="https://e-cryptonews.com/superdoge-charitable-memecoins/" target="_blank">
-        <img src="/assets/E-crypto-news.png" alt="E-Crypto News">
+        <img src="/assets/E-crypto-news.png" alt="E-Crypto News" />
       </a>
     </div>
   </section>
-  <!-- End of Media Section -->
 
-  <!-- Start of Tokenomics Section -->
-  <section class="tokenomics-section" style="background:#fff; padding:3rem 1.5rem; text-align:center;">
-    <h2 style="color:#002d72; font-size:2.5rem; margin-bottom:1.8rem;">Tokenomics</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; max-width:1000px; margin:0 auto;">
-      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-        <h3 style="color:#002d72; font-size:1.3rem;">🔥 2% Burn</h3>
-        <p style="color:#333; font-family:'Montserrat', Arial, sans-serif;">Reduces supply automatically with every transaction.</p>
+  <!-- Tokenomics Section -->
+  <section class="tokenomics-section">
+    <h2>Tokenomics</h2>
+    <div class="tokenomics-cards">
+      <div class="tokenomics-card">
+        <h3>🔥 2% Burn</h3>
+        <p>Reduces supply automatically with every transaction.</p>
       </div>
-      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-        <h3 style="color:#002d72; font-size:1.3rem;">🎁 2% Reflections</h3>
-        <p style="color:#333; font-family:'Montserrat', Arial, sans-serif;">Redistributed to all holders to reward loyalty.</p>
+      <div class="tokenomics-card">
+        <h3>🎁 2% Reflections</h3>
+        <p>Redistributed to all holders to reward loyalty.</p>
       </div>
-      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-        <h3 style="color:#002d72; font-size:1.3rem;">💧 1.5% Liquidity</h3>
-        <p style="color:#333; font-family:'Montserrat', Arial, sans-serif;">Automatically added to PancakeSwap to strengthen price floors.</p>
+      <div class="tokenomics-card">
+        <h3>💧 1.5% Liquidity</h3>
+        <p>Automatically added to PancakeSwap to strengthen price floors.</p>
       </div>
-      <div style="background:#f4f8fb; padding:1.5rem; border-radius:12px;">
-        <h3 style="color:#002d72; font-size:1.3rem;">💙 0.5% Charity</h3>
-        <p style="color:#333; font-family:'Montserrat', Arial, sans-serif;">Supports vetted real-world causes transparently on-chain.</p>
+      <div class="tokenomics-card">
+        <h3>💙 0.5% Charity</h3>
+        <p>Supports vetted real-world causes transparently on-chain.</p>
       </div>
     </div>
-    <p style="margin-top:2.5rem; font-size:1.15rem; max-width:760px; margin-left:auto; margin-right:auto; color:#444; font-family:'Montserrat', Arial, sans-serif;">
+    <p class="tokenomics-text">
       SuperDoge uses a deflationary token model with a 6% transaction fee: 2% is burned to reduce supply and increase value, 2% is automatically redistributed to holders, and 2% strengthens liquidity while funding charitable efforts. Every transaction supports the community and generates real-world impact.
     </p>
-    <p style="margin-top:2rem; color:#333; font-size:1.05rem; font-family:'Montserrat', Arial, sans-serif;">
-      ✅ 100% supply in circulation &nbsp;|&nbsp; 🔒 Liquidity locked for 79 years &nbsp;|&nbsp; ✅ Certik-audited
+    <div class="tokenomics-bullets">
+      <span>✅ 100% supply in circulation</span>
+      <span class="tokenomics-divider">|</span>
+      <span>🔒 Liquidity locked for 79 years</span>
+      <span class="tokenomics-divider">|</span>
+      <span>✅ Certik-audited</span>
+    </div>
+  </section>
+
+  <!-- How to Buy Section -->
+  <section id="how-to-buy">
+    <div class="how-to-buy-header">
+      <h2>How to Buy SuperDoge ($SUPDOG)</h2>
+      <img src="/images/superdoge-full-crossed.png" alt="Superdoge" />
+    </div>
+    <p>
+      Use
+      <a href="https://metamask.io/download" target="_blank" style="color:#0057b8; text-decoration:underline;">MetaMask</a>
+      or
+      <a href="https://trustwallet.com/download" target="_blank" style="color:#0057b8; text-decoration:underline;">Trust Wallet</a>
+      (or any BSC-compatible wallet).
+    </p>
+    <ul>
+      <li>Set your wallet to use the <strong>Binance Smart Chain (BSC)</strong> network.</li>
+      <li>Buy or transfer <strong>BNB</strong> into your wallet (BEP-20 format).</li>
+      <li>Visit <a href="https://pancakeswap.finance" target="_blank" style="color:#0057b8;">PancakeSwap</a> and connect your wallet.</li>
+      <li>
+        Import SuperDoge token using this contract:<br />
+        <code>0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
+        <button onclick="navigator.clipboard.writeText('0x622A1297057ea233287ce77bdBF2AB4E63609F23')" style="margin-left: 10px; font-size: 0.85rem; padding: 3px 8px; cursor: pointer;">Copy</button>
+      </li>
+      <li>
+        Swap <strong>BNB</strong> for <strong>$SUPDOG</strong>.<br />
+        Set <strong>slippage to 6–8%</strong> (or up to 10%) to allow for the 6% fee.
+      </li>
+      <li>
+        Add <strong>$SUPDOG</strong> to your wallet manually:<br />
+        Symbol: <strong>SUPDOG</strong> &nbsp;&nbsp;|&nbsp;&nbsp; Decimals: <strong>9</strong>
+      </li>
+      <li>
+        Verify your balance anytime on <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" target="_blank" style="color:#0057b8;">BscScan</a>.
+      </li>
+    </ul>
+    <p style="margin-top: 2rem; background: #fff8dc; padding: 1rem; border-left: 4px solid #ffc107; font-size: 1rem;">
+      <strong>Reminder:</strong> Only use the official SuperDoge contract and trusted sites to avoid scams.
     </p>
   </section>
-  <!-- End of Tokenomics Section -->
 
-  <!-- ======================= HOW TO BUY ======================= -->
-  <section id="how-to-buy" style="background:#f9fafd; padding: 3rem 1.5rem;">
-    <div style="max-width: 900px; margin: auto; font-family: 'Montserrat', Arial, sans-serif;">
-      <div class="how-to-buy-header">
-        <h2 style="font-size: 2.5rem; color: #002d72; margin-bottom: 1.5rem; font-family: 'Bangers', cursive;">
-          How to Buy SuperDoge ($SUPDOG)
-        </h2>
-        <img src="/images/superdoge-full-crossed.png" alt="Superdoge">
-      </div>
-      <p style="font-size: 1.1rem; margin-bottom: 1rem;">
-        Use <a href="https://metamask.io/download" target="_blank" style="color:#0057b8; text-decoration:underline;">MetaMask</a> or 
-        <a href="https://trustwallet.com/download" target="_blank" style="color:#0057b8; text-decoration:underline;">Trust Wallet</a> (or any BSC-compatible wallet).
-      </p>
-      <ul style="font-size: 1.05rem; line-height: 1.7; padding-left: 1.2rem;">
-        <li>Set your wallet to use the <strong>Binance Smart Chain (BSC)</strong> network.</li>
-        <li>Buy or transfer <strong>BNB</strong> into your wallet (BEP-20 format).</li>
-        <li>Visit <a href="https://pancakeswap.finance" target="_blank" style="color:#0057b8;">PancakeSwap</a> and connect your wallet.</li>
-        <li>Import SuperDoge token using this contract:<br>
-          <code style="font-size: 1rem;">0x622A1297057ea233287ce77bdBF2AB4E63609F23</code>
-          <button onclick="navigator.clipboard.writeText('0x622A1297057ea233287ce77bdBF2AB4E63609F23')" 
-            style="margin-left: 10px; font-size: 0.85rem; padding: 3px 8px; cursor: pointer;">Copy</button>
-        </li>
-        <li>Swap <strong>BNB</strong> for <strong>$SUPDOG</strong>.<br>
-          Set <strong>slippage to 6–8%</strong> (or up to 10%) to allow for the 6% fee.
-        </li>
-        <li>Add <strong>$SUPDOG</strong> to your wallet manually:
-          <br>Symbol: <strong>SUPDOG</strong> &nbsp;&nbsp;|&nbsp;&nbsp; Decimals: <strong>9</strong>
-        </li>
-        <li>Verify your balance anytime on <a href="https://bscscan.com/token/0x622A1297057ea233287ce77bdBF2AB4E63609F23" 
-          target="_blank" style="color:#0057b8;">BscScan</a>.</li>
-      </ul>
-      <p style="margin-top: 2rem; background: #fff8dc; padding: 1rem; border-left: 4px solid #ffc107; font-size: 1rem;">
-        <strong>Reminder:</strong> Only use the official SuperDoge contract and trusted sites to avoid scams.
-      </p>
-    </div>
-  </section>
-  <!-- ===================== END HOW TO BUY ===================== -->
-
-  <!-- ===================== USEFUL LINKS & SOCIALS ===================== -->
-  <section class="links-section" style="background:#fff; padding: 3rem 1.5rem; text-align:center; font-family: 'Montserrat', Arial, sans-serif; max-width: 900px; margin: 2rem auto;">
-    <h2 style="font-size: 2.2rem; color: #002d72; margin-bottom: 1.2rem;">Useful Links</h2>
-    <ul style="list-style:none; padding:0; max-width: 600px; margin: auto; font-size: 1rem;">
-      <li style="margin-bottom: 0.8rem;"><a href="https://bscscan.com/token/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank" style="color:#0057b8; text-decoration:none;">BSCSCAN</a></li>
-      <li style="margin-bottom: 0.8rem;"><a href="https://bscscan.com/address/0x6096bd38ec74579026e51dac897f3a16800177da#asset-tokens" target="_blank" style="color:#0057b8; text-decoration:none;">Liquidity Pool (Main)</a></li>
-      <li style="margin-bottom: 0.8rem;"><a href="https://poocoin.app/tokens/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank" style="color:#0057b8; text-decoration:none;">PooCoin Chart</a></li>
-      <li style="margin-bottom: 0.8rem;"><a href="https://www.certik.com/projects/superdoge" target="_blank" style="color:#0057b8; text-decoration:none;">Certik Audit</a></li>
-      <li style="margin-bottom: 0.8rem;"><a href="https://www.charitynavigator.org/" target="_blank" style="color:#0057b8; text-decoration:none;">Charity Navigator</a></li>
-      <li style="margin-bottom: 0.8rem;"><a href="https://superdoge.org/locked-liquidity.html" target="_blank" style="color:#0057b8; text-decoration:none;">Proof of Liquidity</a></li>
-      <li style="margin-bottom: 0.8rem;"><a href="https://dex.coinmarketcap.com/token/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23/" target="_blank" style="color:#0057b8; text-decoration:none;">CoinMarketCap Dex V1</a></li>
+  <!-- Useful Links & Socials -->
+  <section class="links-section">
+    <h2>Useful Links</h2>
+    <ul>
+      <li><a href="https://bscscan.com/token/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">BSCSCAN</a></li>
+      <li><a href="https://bscscan.com/address/0x6096bd38ec74579026e51dac897f3a16800177da#asset-tokens" target="_blank">Liquidity Pool (Main)</a></li>
+      <li><a href="https://poocoin.app/tokens/0x622a1297057ea233287ce77bdbf2ab4e63609f23" target="_blank">PooCoin Chart</a></li>
+      <li><a href="https://www.certik.com/projects/superdoge" target="_blank">Certik Audit</a></li>
+      <li><a href="https://www.charitynavigator.org/" target="_blank">Charity Navigator</a></li>
+      <li><a href="https://superdoge.org/locked-liquidity.html" target="_blank">Proof of Liquidity</a></li>
+      <li><a href="https://dex.coinmarketcap.com/token/bsc/0x622a1297057ea233287ce77bdbf2ab4e63609f23/" target="_blank">CoinMarketCap Dex V1</a></li>
     </ul>
-    <div class="socials" style="display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; flex-wrap: wrap;">
-      <a href="https://x.com/SUPERDOGEorg" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; text-decoration:none; color:#0057b8; font-weight:bold;">
-        <img src="/images/x-twitter-log.png" alt="X/Twitter" style="width: 28px; height: 28px;">X/Twitter
+    <div class="socials">
+      <a href="https://x.com/SUPERDOGEorg" target="_blank">
+        <img src="/images/x-twitter-log.png" alt="X/Twitter" />X/Twitter
       </a>
-      <a href="https://t.me/SUPERDOGEio" target="_blank" style="display: flex; align-items: center; gap: 0.5rem; text-decoration:none; color:#0057b8; font-weight:bold;">
-        <img src="/images/telegram.png" alt="Telegram" style="width: 28px; height: 28px;">Telegram
+      <a href="https://t.me/SUPERDOGEio" target="_blank">
+        <img src="/images/telegram.png" alt="Telegram" />Telegram
       </a>
-      <a href="mailto:Superdoge2021@gmail.com" style="display: flex; align-items: center; gap: 0.5rem; text-decoration:none; color:#0057b8; font-weight:bold;">
-        <img src="/images/email-logo.png" alt="Email" style="width: 28px; height: 28px;">Email Us
+      <a href="mailto:Superdoge2021@gmail.com">
+        <img src="/images/email-logo.png" alt="Email" />Email Us
       </a>
     </div>
   </section>
 
-  <footer style="background:#f7f7f7; color:#555; font-family: 'Montserrat', Arial, sans-serif; font-size: 0.9rem; padding: 2rem 1rem; text-align: center; max-width: 900px; margin: 0 auto 3rem;">
+  <footer>
     <strong>Disclaimer:</strong> Superdoge (SUPDOG) is a meme coin parody of Superdoge and Dogecoin, with zero intrinsic value or promise of financial gain—use at your own risk! This is an experiment in community run charity meme coin. Data is sourced from blockchain and APIs, which may occasionally glitch, so always double-check. Liquidity (USD/BNB) shows total value if converted to one currency—not combined. Verify smart contract details. Not affiliated with Krypto the Superdog, Superman, Dogecoin, Floki, or Babydogecoin. This is a community-run site and may have errors—let us know to fix them! Superdoge.org: The First Crypto Superhero, Saving the World One Block at a Time! (2025)
   </footer>
 
   <script>
-    const formatter = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
-    const formatter0 = n => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
+    const formatter = (n) => Number(n).toLocaleString(undefined, { maximumFractionDigits: 6 });
+    const formatter0 = (n) => Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 });
 
     async function loadStats() {
       try {
         const [totalData, tokenData, bnbData, liquidity, allLog] = await Promise.all([
-          fetch("/stats/total-supply.json").then(r => r.json()),
-          fetch("/stats/token-price.json").then(r => r.json()),
-          fetch("/stats/bnb-price.json").then(r => r.json()),
-          fetch("/stats/liquidity.json").then(r => r.json()),
-          fetch("/stats/all-data.json").then(r => r.json())
+          fetch("/stats/total-supply.json").then((r) => r.json()),
+          fetch("/stats/token-price.json").then((r) => r.json()),
+          fetch("/stats/bnb-price.json").then((r) => r.json()),
+          fetch("/stats/liquidity.json").then((r) => r.json()),
+          fetch("/stats/all-data.json").then((r) => r.json()),
         ]);
 
         const latest = allLog[allLog.length - 1];
@@ -515,13 +700,12 @@
 
         let bnbPrice = bnbData.price;
         document.getElementById("bnbUsdValue").textContent = "$" + formatter0(836.34 * bnbPrice);
-
       } catch (err) {
         console.error("❌ Failed to load stats:", err);
       }
     }
 
-    function animateCount(id, start, end, suffix = '', duration = 1000, burnStyle = false) {
+    function animateCount(id, start, end, suffix = "", duration = 1000, burnStyle = false) {
       const el = document.getElementById(id);
       const range = end - start;
       const increment = range / (duration / 30);
@@ -534,7 +718,7 @@
           current = end;
           clearInterval(interval);
         }
-        el.innerHTML = `<span class="${burnStyle ? 'burn-anim' : ''}">${formatter0(current)}${suffix}</span>`;
+        el.innerHTML = `<span class="${burnStyle ? "burn-anim" : ""}">${formatter0(current)}${suffix}</span>`;
       }, 30);
     }
 
