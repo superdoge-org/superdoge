@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const DAILY_LOG_PATH = path.join("stats", "daily-log.json");
-const OUTPUT_FILE = path.join("stats", "volume-estimate.json");
+const OUTPUT_FILE = path.join("stats", "total-volume.json");
 
 // Load daily log safely
 function loadJSON(filepath) {
