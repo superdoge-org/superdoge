@@ -5,7 +5,7 @@ const STATS_DIR = path.join(__dirname, "stats");
 const DAILY_LOG_FILE = path.join(STATS_DIR, "daily-log.json");
 const PRICE_LOG_FILE = path.join(STATS_DIR, "token-price-log.json");
 const LIQUIDITY_LOG_FILE = path.join(STATS_DIR, "liquidity-log.json");
-const SUPPLY_LOG_FILE = path.join(STATS_DIR, "total-supply-log.json");
+const SUPPLY_FILE = path.join(STATS_DIR, "total-supply.json"); // latest snapshot
 const OUTPUT_FILE = path.join(STATS_DIR, "all-data.json");
 
 function load(file) {
@@ -29,13 +29,12 @@ function generateAllData() {
   const dailyLog = load(DAILY_LOG_FILE);
   const priceLog = load(PRICE_LOG_FILE);
   const liquidityLog = load(LIQUIDITY_LOG_FILE);
-  const supplyLog = load(SUPPLY_LOG_FILE);
+  const supplySnapshot = load(SUPPLY_FILE); // { totalSupply, timestamp }
 
-  const todayUTC = getTodayUTC();
   const result = [];
 
-  // Daily loop
-  for (let i = 1; i < dailyLog.length; i++) {
+  // Process all completed days (all but the latest)
+  for (let i = 1; i < dailyLog.length - 1; i++) {
     const prev = dailyLog[i - 1];
     const curr = dailyLog[i];
 
@@ -56,35 +55,29 @@ function generateAllData() {
     });
   }
 
-  // Handle latest hourly supply update for today
-  const latestHourly = supplyLog
-    .filter(e => getDateOnly(e.date) === todayUTC)
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  // Handle the current day using the latest supply snapshot
+  if (dailyLog.length > 1 && supplySnapshot && supplySnapshot.totalSupply) {
+    const prev = dailyLog[dailyLog.length - 2]; // yesterday
+    const today = dailyLog[dailyLog.length - 1]; // today's start-of-day snapshot
 
-  if (latestHourly) {
-    const prev = dailyLog[dailyLog.length - 1];
-    const burned = +(prev.totalSupply - latestHourly.totalSupply).toFixed(2);
+    // Use the latest supply snapshot for "today so far"
+    const burned = +(prev.totalSupply - supplySnapshot.totalSupply).toFixed(2);
     const volume = +(burned * 50).toFixed(2);
 
-    const priceEntry = priceLog.find(e => e.date === latestHourly.date) || priceLog.slice(-1)[0];
-    const liquidityEntry = liquidityLog.find(e => e.date === latestHourly.date) || liquidityLog.slice(-1)[0];
+    // Find the latest price and liquidity for the current snapshot
+    // Fallback to the most recent if exact timestamp not found
+    const priceEntry = priceLog.find(e => e.date === supplySnapshot.timestamp) || priceLog.slice(-1)[0];
+    const liquidityEntry = liquidityLog.find(e => e.date === supplySnapshot.timestamp) || liquidityLog.slice(-1)[0];
 
-    const hourlyEntry = {
-      date: latestHourly.date,
-      totalSupply: +latestHourly.totalSupply.toFixed(2),
+    result.push({
+      date: getDateOnly(supplySnapshot.timestamp),
+      totalSupply: +supplySnapshot.totalSupply.toFixed(2),
       burned,
       volume,
       price: priceEntry ? +priceEntry.price.toFixed(9) : null,
       liquidityUSD: liquidityEntry ? +liquidityEntry.totalUSD.toFixed(2) : null,
       liquidityBNB: liquidityEntry ? +liquidityEntry.totalBNB.toFixed(5) : null
-    };
-
-    const lastIndex = result.findIndex(e => getDateOnly(e.date) === todayUTC);
-    if (lastIndex >= 0) {
-      result[lastIndex] = hourlyEntry;
-    } else {
-      result.push(hourlyEntry);
-    }
+    });
   }
 
   result.sort((a, b) => new Date(a.date) - new Date(b.date));
