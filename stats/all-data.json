@@ -379,9 +379,9 @@
   },
   {
     "date": "2025-08-15",
-    "totalSupply": 885524445.58,
-    "burned": 0,
-    "volume": 0,
+    "totalSupply": 885524440.58,
+    "burned": 5,
+    "volume": 250,
     "price": 0.000375716,
     "liquidityUSD": 366463.39,
     "liquidityBNB": 431.0573
