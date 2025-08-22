@@ -432,10 +432,19 @@
     "liquidityBNB": 430.9069
   },
   {
+    "date": "2025-08-21",
+    "totalSupply": 885517267.28,
+    "burned": 5.66,
+    "volume": 283,
+    "price": 0.000392564,
+    "liquidityUSD": 372109.86,
+    "liquidityBNB": 430.9071
+  },
+  {
     "date": "2025-08-22",
     "totalSupply": 885517245.96,
-    "burned": 26.98,
-    "volume": 1349,
+    "burned": 21.32,
+    "volume": 1066,
     "price": 0.000377265,
     "liquidityUSD": 366133.95,
     "liquidityBNB": 430.908
